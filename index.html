@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE JUS — AI Creative Studio | הפקת וידאו וקריאייטיב מבוסס AI</title>
+  <meta name="description"
+    content="THE JUS — סטודיו קריאייטיב מבוסס AI הפקת וידאו וקמפיינים ברמת פרימיום למותגים, ללא לוגיסטיקה וללא ימי צילום" />
+
+  <!-- Fonts: Assistant (Hebrew UI) + JetBrains Mono (structural micro-labels) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Assistant', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ink: '#1F2124',   /* primary typography */
+            slate2: '#5F6368',   /* secondary typography */
+            paper: '#F8F9FA',   /* light section background */
+            card: '#F1F3F4',   /* bento card background */
+            line: '#E6E8EB',   /* hairline borders */
+          },
+          maxWidth: { site: '76rem' },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ============ Base ============ */
+    ::selection {
+      background: #1F2124;
+      color: #fff;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    section[id] {
+      scroll-margin-top: 6rem;
+    }
+
+    /* ============ Scroll reveal (fade-in-up) ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s cubic-bezier(.22, .61, .36, 1), transform .8s cubic-bezier(.22, .61, .36, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============ Spotlight bento cards ============ */
+    .spotlight-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%),
+          rgba(31, 33, 36, .055), transparent 65%);
+      opacity: 0;
+      transition: opacity .45s ease;
+      pointer-events: none;
+    }
+
+    .spotlight-card:hover::before {
+      opacity: 1;
+    }
+
+    /* border spotlight — a hairline that brightens near the cursor */
+    .spotlight-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
+          rgba(31, 33, 36, .28), transparent 70%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity .45s ease;
+      pointer-events: none;
+    }
+
+    .spotlight-card:hover::after {
+      opacity: 1;
+    }
+
+    /* ============ Magnetic buttons ============ */
+    .magnetic {
+      transition: transform .35s cubic-bezier(.22, .61, .36, 1), background-color .25s ease, color .25s ease;
+      will-change: transform;
+    }
+
+    .magnetic:hover {
+      transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.03);
+    }
+
+    .magnetic:active {
+      transform: scale(.98);
+    }
+
+    /* ============ Mobile menu ============ */
+    #mobileMenu {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .4s cubic-bezier(.22, .61, .36, 1);
+    }
+
+    #mobileMenu.open {
+      grid-template-rows: 1fr;
+    }
+
+    #mobileMenu>div {
+      overflow: hidden;
+    }
+
+    /* Hamburger → X */
+    .burger span {
+      transition: transform .3s ease, opacity .3s ease;
+      transform-origin: center;
+    }
+
+    .burger.open span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .burger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger.open span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    /* ============ Process connector line (desktop) ============ */
+    @media (min-width: 1024px) {
+      .process-track::before {
+        content: '';
+        position: absolute;
+        top: 1.25rem;
+        /* aligns with the step dots */
+        right: 3rem;
+        left: 3rem;
+        height: 1px;
+        background: #E6E8EB;
+      }
+    }
+
+    /* ============ Hero aurora background (pure CSS) ============ */
+    .aurora-blob {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(90px);
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .aurora-1 {
+      width: 46rem;
+      height: 46rem;
+      top: -12rem;
+      right: -8rem;
+      background: radial-gradient(circle at 40% 40%, rgba(251, 146, 60, .9), transparent 68%);
+      /* orange */
+      animation: aurora-drift-1 26s ease-in-out infinite alternate;
+    }
+
+    .aurora-2 {
+      width: 42rem;
+      height: 42rem;
+      top: 2rem;
+      left: -10rem;
+      background: radial-gradient(circle at 60% 50%, rgba(239, 68, 68, .8), transparent 68%);
+      /* red */
+      animation: aurora-drift-2 32s ease-in-out infinite alternate;
+    }
+
+    .aurora-3 {
+      width: 38rem;
+      height: 38rem;
+      bottom: -6rem;
+      right: 20%;
+      background: radial-gradient(circle at 50% 50%, rgba(250, 204, 21, .85), transparent 68%);
+      /* yellow */
+      animation: aurora-drift-3 38s ease-in-out infinite alternate;
+    }
+
+    .aurora-4 {
+      width: 38rem;
+      height: 38rem;
+      top: 30%;
+      right: 34%;
+      background: radial-gradient(circle at 50% 50%, rgba(251, 113, 133, .7), transparent 68%);
+      /* warm coral-red */
+      animation: aurora-drift-2 29s ease-in-out infinite alternate-reverse;
+    }
+
+    .aurora-5 {
+      width: 34rem;
+      height: 34rem;
+      bottom: -10rem;
+      left: 8%;
+      background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, .75), transparent 68%);
+      /* amber */
+      animation: aurora-drift-1 35s ease-in-out infinite alternate-reverse;
+    }
+
+    .aurora-6 {
+      width: 40rem;
+      height: 40rem;
+      top: 8%;
+      right: 18%;
+      background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, .7), transparent 68%);
+      /* purple */
+      animation: aurora-drift-3 31s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes aurora-drift-1 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(-8rem, 5rem) scale(1.12);
+      }
+
+      100% {
+        transform: translate(-14rem, -2rem) scale(.95);
+      }
+    }
+
+    @keyframes aurora-drift-2 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(9rem, -4rem) scale(1.08);
+      }
+
+      100% {
+        transform: translate(4rem, 6rem) scale(1.15);
+      }
+    }
+
+    @keyframes aurora-drift-3 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(-6rem, -5rem) scale(1.1);
+      }
+
+      100% {
+        transform: translate(7rem, -2rem) scale(.92);
+      }
+    }
+
+    /* ============ Floating doodle characters ============ */
+    .char-float {
+      animation: char-bob 5.5s ease-in-out infinite;
+      will-change: transform, filter;
+    }
+
+    .char-float-2 {
+      animation-duration: 6.5s;
+      animation-delay: -2.6s;
+      /* out of phase with the first character */
+    }
+
+    @keyframes char-bob {
+
+      0%,
+      100% {
+        transform: translateY(0);
+        filter: drop-shadow(0 14px 10px rgba(31, 33, 36, .22));
+      }
+
+      50% {
+        transform: translateY(-16px);
+        filter: drop-shadow(0 32px 22px rgba(31, 33, 36, .12));
+        /* higher = softer, farther shadow */
+      }
+    }
+
+    /* ============ Hanging rope character ============ */
+    .char-hang {
+      transform-origin: top center;
+      /* pivot at the rope's anchor point */
+      animation: char-sway 6s ease-in-out infinite;
+      filter: drop-shadow(10px 24px 18px rgba(31, 33, 36, .16));
+      will-change: transform;
+    }
+
+    @keyframes char-sway {
+
+      0%,
+      100% {
+        transform: rotate(3deg);
+      }
+
+      50% {
+        transform: rotate(-3.5deg);
+      }
+    }
+
+    /* ============ Clients marquee ============ */
+    .marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+                       mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+    .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ============ Reels carousel ============ */
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ============ DJ robot dancing to the beat ============ */
+    .dj-playing {
+      animation: dj-bounce .588s ease-in-out infinite;
+      /* one beat at 102 BPM */
+      transform-origin: bottom center;
+    }
+
+    @keyframes dj-bounce {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-1.2deg) scaleY(1);
+      }
+
+      50% {
+        transform: translateY(-6px) rotate(1.2deg) scaleY(1.02);
+      }
+    }
+
+    /* ============ Reduced motion ============ */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .magnetic,
+      .spotlight-card::before,
+      .spotlight-card::after {
+        transition: none;
+      }
+
+      .aurora-blob {
+        animation: none;
+      }
+
+      .char-float {
+        animation: none;
+        filter: drop-shadow(0 14px 10px rgba(31, 33, 36, .2));
+      }
+
+      .char-hang {
+        animation: none;
+      }
+
+      .marquee-track {
+        animation: none;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-white font-sans text-ink">
+
+  <!-- ================= NAV ================= -->
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md">
+    <nav class="mx-auto flex h-16 max-w-site flex-row-reverse items-center justify-between px-5 sm:px-8">
+      <!-- Logo — left -->
+      <a href="#top" class="font-mono text-sm font-medium tracking-[0.18em] text-ink" dir="ltr">THE&nbsp;JUS</a>
+
+      <!-- Links — center (desktop) -->
+      <ul class="hidden items-center gap-9 text-[15px] font-medium text-slate2 md:flex">
+        <li><a href="#about" class="transition-colors hover:text-ink">אודות</a></li>
+        <li><a href="#services" class="transition-colors hover:text-ink">שירותים</a></li>
+        <li><a href="#process" class="transition-colors hover:text-ink">תהליך העבודה</a></li>
+        <li><a href="#works" class="transition-colors hover:text-ink">עבודות</a></li>
+      </ul>
+
+      <!-- CTA — right (desktop) / burger (mobile) -->
+      <div class="flex items-center gap-3">
+        <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
+          target="_blank" rel="noopener"
+          class="magnetic hidden rounded-full bg-ink px-5 py-2 text-[15px] font-semibold text-white md:inline-block">
+          צור קשר
+        </a>
+        <button id="burgerBtn"
+          class="burger flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-full md:hidden"
+          aria-label="פתיחת תפריט" aria-expanded="false">
+          <span class="block h-[1.5px] w-5 bg-ink"></span>
+          <span class="block h-[1.5px] w-5 bg-ink"></span>
+          <span class="block h-[1.5px] w-5 bg-ink"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="border-line md:hidden">
+      <div>
+        <ul class="space-y-1 border-t border-line px-5 py-4 text-lg font-medium">
+          <li><a href="#about" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">אודות</a></li>
+          <li><a href="#services" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">שירותים</a></li>
+          <li><a href="#process" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">תהליך העבודה</a></li>
+          <li><a href="#works" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">עבודות</a></li>
+          <li class="pt-2">
+            <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
+              target="_blank" rel="noopener"
+              class="mobile-link block rounded-full bg-ink px-4 py-3.5 text-center font-semibold text-white">צור קשר</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+    <section class="relative overflow-hidden px-5 pb-16 pt-32 sm:px-8 sm:pt-40 lg:pb-24">
+      <!-- Aurora background: blurred drifting blobs under a frosted white veil -->
+      <div class="absolute inset-0 z-0" aria-hidden="true">
+        <div class="aurora-blob aurora-1"></div>
+        <div class="aurora-blob aurora-2"></div>
+        <div class="aurora-blob aurora-3"></div>
+        <div class="aurora-blob aurora-4"></div>
+        <div class="aurora-blob aurora-5"></div>
+        <div class="aurora-blob aurora-6"></div>
+        <div class="absolute inset-0 bg-white/55 backdrop-blur-xl"></div>
+      </div>
+
+      <!-- Doodle character hanging on a rope from the top bar -->
+      <img src="assets/char-rope.png" alt="" aria-hidden="true" onerror="this.style.display='none'"
+        class="char-hang pointer-events-none absolute left-2 top-14 z-10 w-20 select-none sm:left-[4%] sm:w-36 lg:w-44 xl:w-52" />
+
+      <div class="relative z-10 mx-auto max-w-site">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="reveal font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[
+            AI&nbsp;CREATIVE&nbsp;STUDIO ]</p>
+          <h1 class="reveal mt-6 text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-6xl lg:text-7xl"
+            style="--reveal-delay:90ms">
+            הפקת וידאו וקריאייטיב<br class="hidden sm:block" />
+            מבוסס AI.
+          </h1>
+          <p class="reveal mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate2 sm:text-xl"
+            style="--reveal-delay:180ms">
+            אנחנו מייצרים תוצרי וידאו וקמפיינים ברמת פרימיום למותגים – ללא לוגיסטיקה, ללא ימי צילום, ועם רמת גימור
+            קולנועית.
+          </p>
+          <div class="reveal mt-9 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:270ms">
+            <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
+              target="_blank" rel="noopener"
+              class="magnetic rounded-full bg-ink px-8 py-3.5 text-base font-semibold text-white">
+              דבר איתנו
+            </a>
+            <a href="#works"
+              class="magnetic rounded-full border border-line bg-white px-8 py-3.5 text-base font-semibold text-ink hover:border-ink/30">
+              צפו בעבודות
+            </a>
+          </div>
+        </div>
+
+        <!-- Showreel -->
+        <div class="reveal mt-16 sm:mt-20" style="--reveal-delay:200ms">
+          <div class="relative mx-auto w-full max-w-5xl">
+            <!-- Doodle character floating above the showreel's top edge -->
+            <img src="assets/char-right.png" alt="" aria-hidden="true" onerror="this.style.display='none'"
+              class="char-float char-float-2 pointer-events-none absolute -right-3 bottom-[calc(100%-8px)] z-10 w-24 select-none sm:-right-12 sm:w-40 lg:w-48" />
+
+            <div
+              class="relative aspect-video w-full overflow-hidden rounded-2xl border border-line bg-card sm:rounded-3xl">
+              <iframe class="absolute inset-0 h-full w-full"
+                src="https://www.youtube.com/embed/zi8LEzT2sfo?autoplay=1&mute=1&loop=1&playlist=zi8LEzT2sfo&rel=0&playsinline=1"
+                title="THE JUS — Showreel" frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section id="about" class="border-t border-line bg-white px-5 py-20 sm:px-8 lg:py-28">
+      <div class="mx-auto max-w-site">
+        <div class="reveal flex items-center justify-between gap-4">
+          <h2 class="text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl">
+            תכל'ס? באנו לעשות וידאו
+          </h2>
+          <p class="shrink-0 font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[
+            00&nbsp;—&nbsp;ABOUT ]</p>
+        </div>
+
+        <div class="reveal mt-12 max-w-3xl space-y-6 text-lg leading-relaxed text-slate2 sm:text-xl"
+          style="--reveal-delay:120ms">
+          <p class="font-medium text-ink">אנחנו מפיקים סרטונים למותגים, עסקים ואנשים פרטיים.</p>
+          <p>מה שאפשר לדמיין אפשר ליצור. אתם יכולים להגיע אלינו עם תסריט מוכן מראש, או לתת לנו ליצור עבורכם קריאייטיב
+            מאפס.</p>
+          <p>אנחנו מייצרים פרסומות ברמת ריאליזם קולנועי, אנימציה, סרטוני הדרכה ותוכן לאירועים.</p>
+          <div class="flex flex-wrap gap-3 pt-2">
+            <span class="rounded-full border border-line bg-paper px-5 py-2 text-base font-semibold text-ink">בלי
+              מגבלות</span>
+            <span
+              class="rounded-full border border-line bg-paper px-5 py-2 text-base font-semibold text-ink">במהירות</span>
+            <span class="rounded-full border border-line bg-paper px-5 py-2 text-base font-semibold text-ink">באיכות
+              גבוהה</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SERVICES / BENTO ================= -->
+    <section id="services" class="relative overflow-hidden border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
+      <!-- DVD-screensaver bouncing doodle, behind the content -->
+      <div id="bounceArea" class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <img id="bounceChar" src="assets/char-bounce.png" alt="" onerror="this.style.display='none'"
+          class="absolute left-0 top-0 w-72 select-none opacity-90 sm:w-[28rem]" />
+      </div>
+
+      <div class="relative z-10 mx-auto max-w-site">
+        <div class="reveal flex flex-col gap-3">
+          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 01&nbsp;—&nbsp;SERVICES ]
+          </p>
+          <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">שירותים</h2>
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-12">
+          <!-- Card 1 — large -->
+          <article class="spotlight-card reveal rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-7">
+            <div class="flex h-full flex-col justify-between gap-14">
+              <div class="flex items-start justify-between">
+                <span class="flex h-11 w-11 items-center justify-center rounded-xl border border-ink/10 bg-white">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2124" stroke-width="1.5">
+                    <rect x="2" y="5" width="15" height="14" rx="2.5" />
+                    <path d="M17 10.5 22 8v8l-5-2.5" />
+                  </svg>
+                </span>
+                <span class="font-mono text-xs text-slate2" dir="ltr">/ 01</span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold sm:text-3xl">הפקת פרסומות וסרטי תדמית</h3>
+                <p class="mt-3 max-w-md text-base leading-relaxed text-slate2 sm:text-lg">
+                  יצירת סרטונים באיכות גבוהה, מתנועה חלקה ועד סאונד מקורי, מותאם לכל פלטפורמה.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="spotlight-card reveal rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-5"
+            style="--reveal-delay:100ms">
+            <div class="flex h-full flex-col justify-between gap-14">
+              <div class="flex items-start justify-between">
+                <span class="flex h-11 w-11 items-center justify-center rounded-xl border border-ink/10 bg-white">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2124" stroke-width="1.5">
+                    <path d="M3 17 9 11l4 4 8-8" />
+                    <path d="M15 7h6v6" />
+                  </svg>
+                </span>
+                <span class="font-mono text-xs text-slate2" dir="ltr">/ 02</span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold">תוכן וקמפיינים לסושיאל</h3>
+                <p class="mt-3 text-base leading-relaxed text-slate2 sm:text-lg">
+                  יצירת תוכן קצר ודינמי מבוסס טרנדים עם הבנה שיווקית חדה.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 — wide -->
+          <article class="spotlight-card reveal rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-12"
+            style="--reveal-delay:180ms">
+            <div class="flex flex-col justify-between gap-10 sm:flex-row sm:items-end">
+              <div class="max-w-xl">
+                <span class="mb-8 flex h-11 w-11 items-center justify-center rounded-xl border border-ink/10 bg-white">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2124" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="3" />
+                    <circle cx="12" cy="12" r="9" stroke-dasharray="3 3.5" />
+                  </svg>
+                </span>
+                <h3 class="text-2xl font-bold sm:text-3xl">אסטרטגיה ושפה ויזואלית</h3>
+                <p class="mt-3 text-base leading-relaxed text-slate2 sm:text-lg">
+                  בניית קו עיצובי ייחודי למותג שלך לפני שמתחילים להפיק.
+                </p>
+              </div>
+              <span class="font-mono text-xs text-slate2" dir="ltr">/ 03</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PROCESS ================= -->
+    <section id="process" class="border-t border-line bg-white px-5 py-20 sm:px-8 lg:py-28">
+      <div class="mx-auto max-w-site">
+        <div class="reveal flex flex-col gap-3">
+          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 02&nbsp;—&nbsp;PROCESS ]
+          </p>
+          <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">תהליך העבודה</h2>
+        </div>
+
+        <ol class="process-track relative mt-14 grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-6">
+          <!-- Step -->
+          <li class="reveal relative flex gap-5 lg:block">
+            <span
+              class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-white font-mono text-xs font-medium">01</span>
+            <span class="absolute right-5 top-10 bottom-[-2.5rem] w-px bg-line lg:hidden"></span>
+            <div class="lg:mt-6">
+              <h3 class="text-lg font-bold">בריף ופיצוח</h3>
+              <p class="mt-1.5 text-[15px] leading-relaxed text-slate2">מבינים את המטרה, קהל היעד והמסר.</p>
+            </div>
+          </li>
+          <li class="reveal relative flex gap-5 lg:block" style="--reveal-delay:80ms">
+            <span
+              class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-white font-mono text-xs font-medium">02</span>
+            <span class="absolute right-5 top-10 bottom-[-2.5rem] w-px bg-line lg:hidden"></span>
+            <div class="lg:mt-6">
+              <h3 class="text-lg font-bold">קונספט</h3>
+              <p class="mt-1.5 text-[15px] leading-relaxed text-slate2">בונים מודבורד ומוודאים שהחזון ברור.</p>
+            </div>
+          </li>
+          <li class="reveal relative flex gap-5 lg:block" style="--reveal-delay:160ms">
+            <span
+              class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-white font-mono text-xs font-medium">03</span>
+            <span class="absolute right-5 top-10 bottom-[-2.5rem] w-px bg-line lg:hidden"></span>
+            <div class="lg:mt-6">
+              <h3 class="text-lg font-bold">הפקה</h3>
+              <p class="mt-1.5 text-[15px] leading-relaxed text-slate2">מייצרים את חומרי הגלם בכלים המתקדמים ביותר.</p>
+            </div>
+          </li>
+          <li class="reveal relative flex gap-5 lg:block" style="--reveal-delay:240ms">
+            <span
+              class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-white font-mono text-xs font-medium">04</span>
+            <span class="absolute right-5 top-10 bottom-[-2.5rem] w-px bg-line lg:hidden"></span>
+            <div class="lg:mt-6">
+              <h3 class="text-lg font-bold">עריכה וסאונד</h3>
+              <p class="mt-1.5 text-[15px] leading-relaxed text-slate2">מחברים הכל לפס קול, צבעוניות וטיפוגרפיה.</p>
+            </div>
+          </li>
+          <li class="reveal relative flex gap-5 lg:block" style="--reveal-delay:320ms">
+            <span
+              class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-ink bg-ink font-mono text-xs font-medium text-white">05</span>
+            <div class="lg:mt-6">
+              <h3 class="text-lg font-bold">מסירה</h3>
+              <p class="mt-1.5 text-[15px] leading-relaxed text-slate2">תוצר סופי ואיכותי מוכן לעלייה לאוויר.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= ADVANTAGE ================= -->
+    <section id="advantage" class="relative overflow-hidden border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
+      <!-- Pogo alien hopping along the drawn loop, behind the content -->
+      <div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <img id="pogoChar" src="assets/char-pogo.png" alt="" onerror="this.style.display='none'"
+          class="absolute left-0 top-0 w-56 select-none sm:w-72" />
+      </div>
+
+      <div class="relative z-10 mx-auto max-w-site">
+        <div class="reveal flex flex-col gap-3">
+          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 03&nbsp;—&nbsp;WHY&nbsp;US
+            ]</p>
+          <h2 id="advTitle" class="text-3xl font-extrabold tracking-tight sm:text-5xl">היתרון שלנו</h2>
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-3">
+          <div class="adv-col reveal border-t-2 border-ink pt-6">
+            <h3 class="text-xl font-bold">רמת גימור פרימיום</h3>
+            <p class="mt-2.5 leading-relaxed text-slate2">שליטה מלאה בטכנולוגיה כדי להפיק תוכן מוקפד ומקצועי.</p>
+          </div>
+          <div class="adv-col reveal border-t-2 border-ink pt-6" style="--reveal-delay:100ms">
+            <h3 class="text-xl font-bold">אפס לוגיסטיקה</h3>
+            <p class="mt-2.5 leading-relaxed text-slate2">חסכון עצום בזמן ובעלויות. הכל מופק בסטודיו.</p>
+          </div>
+          <div class="adv-col reveal border-t-2 border-ink pt-6" style="--reveal-delay:200ms">
+            <h3 class="text-xl font-bold">ממוקד המרות</h3>
+            <p class="mt-2.5 leading-relaxed text-slate2">קריאייטיב שנועד לא רק להיראות טוב, אלא גם להביא תוצאות.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WORKS ================= -->
+    <section id="works" class="border-t border-line bg-white px-5 py-20 sm:px-8 lg:py-28">
+      <div class="relative mx-auto max-w-[88rem]">
+        <!-- DJ robot — click to start/stop the beat -->
+        <button id="djBot" type="button" aria-pressed="false" title="לחצו למוזיקה"
+          class="absolute -top-6 left-[37%] z-20 hidden w-56 cursor-pointer transition-transform duration-300 hover:scale-105 md:block lg:w-72">
+          <img src="assets/char-dj.png" alt="רובוט די-ג'יי — לחצו להפעלת מוזיקה"
+            onerror="this.parentElement.style.display='none'" class="pointer-events-none w-full select-none"
+            style="filter: drop-shadow(0 16px 14px rgba(31,33,36,.15));" />
+        </button>
+
+        <div class="reveal flex flex-col gap-3">
+          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[
+            04&nbsp;—&nbsp;SELECTED&nbsp;WORK ]</p>
+          <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">עבודות</h2>
+        </div>
+
+        <!-- Vertical reels carousel (9:16) — placeholder slides, swap in real reels later -->
+        <div class="reveal mt-14">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="font-mono text-[11px] font-medium tracking-[0.28em] text-slate2" dir="ltr">[
+                VERTICAL&nbsp;/&nbsp;9:16 ]</p>
+              <h3 class="mt-2 text-xl font-bold sm:text-2xl">רילסים ותוכן אנכי</h3>
+            </div>
+            <div class="flex gap-2">
+              <button id="reelNext" type="button" aria-label="הבא"
+                class="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-white transition-colors hover:border-ink/40">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              <button id="reelPrev" type="button" aria-label="הקודם"
+                class="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-white transition-colors hover:border-ink/40">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M15 5l-7 7 7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div id="reelTrack" class="no-scrollbar mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+            <div class="w-44 shrink-0 snap-start sm:w-56">
+              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/F4yyQzu5_sQ?rel=0"
+                  title="BABA CASINO AD" loading="lazy" frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              </div>
+              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">BABA&nbsp;CASINO&nbsp;AD
+              </p>
+            </div>
+            <div class="w-44 shrink-0 snap-start sm:w-56">
+              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/Fe3lmQgQmno?rel=0"
+                  title="POKER FACE AD" loading="lazy" frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              </div>
+              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">POKER&nbsp;FACE&nbsp;AD</p>
+            </div>
+            <div class="w-44 shrink-0 snap-start sm:w-56">
+              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/lfK2ZqKTPwo?rel=0"
+                  title="UGC AD FOR MANEKI WALLET" loading="lazy" frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              </div>
+              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">
+                UGC&nbsp;AD&nbsp;—&nbsp;MANEKI&nbsp;WALLET</p>
+            </div>
+            <div class="w-44 shrink-0 snap-start sm:w-56">
+              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/s8VXMFSM2VY?rel=0"
+                  title="UGC AD FOR MANEKI WALLET 2" loading="lazy" frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              </div>
+              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">
+                UGC&nbsp;AD&nbsp;—&nbsp;MANEKI&nbsp;WALLET&nbsp;2</p>
+            </div>
+            <div class="w-44 shrink-0 snap-start sm:w-56">
+              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/0YOPfGrgN4w?rel=0"
+                  title="DUREX SPEC AD" loading="lazy" frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              </div>
+              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">DUREX&nbsp;SPEC&nbsp;AD</p>
+            </div>
+            <div class="w-44 shrink-0 snap-start sm:w-56">
+              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/YiYDknTMxqc?rel=0"
+                  title="F35" loading="lazy" frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              </div>
+              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">F35</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main video gallery -->
+        <div class="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
+          <article class="reveal">
+            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/sJV-jwg2zao?rel=0"
+                title="GECKO'S — Short Action Story" loading="lazy" frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between px-1">
+              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">GECKO'S — Short Action Story</h3>
+              <span class="font-mono text-xs text-slate2" dir="ltr">ACTION&nbsp;SHORT</span>
+            </div>
+          </article>
+          <article class="reveal" style="--reveal-delay:100ms">
+            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/DJhr-xOOV9k?rel=0"
+                title="Short Comedy Action Trailer" loading="lazy" frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between px-1">
+              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Short Comedy Action Trailer</h3>
+              <span class="font-mono text-xs text-slate2" dir="ltr">TRAILER</span>
+            </div>
+          </article>
+          <article class="reveal">
+            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/9fpN4EfSm4o?rel=0"
+                title="Wildlife" loading="lazy" frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between px-1">
+              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Wildlife</h3>
+              <span class="font-mono text-xs text-slate2" dir="ltr">WILDLIFE</span>
+            </div>
+          </article>
+          <article class="reveal" style="--reveal-delay:100ms">
+            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/eJf6V14qmAg?rel=0"
+                title="Extreme Donkey Concept" loading="lazy" frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between px-1">
+              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Extreme Donkey Concept</h3>
+              <span class="font-mono text-xs text-slate2" dir="ltr">CONCEPT</span>
+            </div>
+          </article>
+          <article class="reveal">
+            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/vLnmvSnLq1A?rel=0"
+                title="Creative Spec Ad" loading="lazy" frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between px-1">
+              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Creative Spec Ad</h3>
+              <span class="font-mono text-xs text-slate2" dir="ltr">SPEC&nbsp;AD</span>
+            </div>
+          </article>
+          <article class="reveal" style="--reveal-delay:100ms">
+            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/CsOnM86RLYM?rel=0"
+                title="Funny Viral Video Concept" loading="lazy" frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between px-1">
+              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Funny Viral Video Concept</h3>
+              <span class="font-mono text-xs text-slate2" dir="ltr">VIRAL</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TESTIMONIALS / CLIENTS ================= -->
+    <section id="clients" class="border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
+      <div class="mx-auto max-w-site">
+        <div class="reveal flex items-center justify-between gap-4">
+          <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">מה אומרים עלינו</h2>
+          <p class="shrink-0 font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 05&nbsp;—&nbsp;CLIENTS ]</p>
+        </div>
+
+        <!-- Single floating client logo -->
+        <div class="reveal mt-12 flex justify-center">
+          <img src="assets/maneki-logo.png" alt="Maneki Wallet"
+               class="char-float h-24 w-auto object-contain sm:h-28" style="animation-duration: 4.5s;" />
+        </div>
+
+        <!-- Description under the logo -->
+        <p class="reveal mx-auto mt-10 max-w-2xl text-center text-lg leading-relaxed text-slate2 sm:text-xl" style="--reveal-delay:120ms">
+          „היי.. ראיתי את הסרטון, התגובה של האישה נראית דרמטית וטבעית, שזה הוק מעולה... שבוע מעולה!"
+          <span class="mt-3 block font-mono text-sm text-ink" dir="ltr">— Maneki Wallet</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= FINAL CTA + FOOTER ================= -->
+    <footer class="relative overflow-hidden border-t border-line bg-paper px-5 pt-24 sm:px-8 lg:pt-32">
+      <!-- Aurora background (same treatment as the hero) -->
+      <div class="absolute inset-0 z-0" aria-hidden="true">
+        <div class="aurora-blob aurora-1"></div>
+        <div class="aurora-blob aurora-2"></div>
+        <div class="aurora-blob aurora-4"></div>
+        <div class="aurora-blob aurora-5"></div>
+        <div class="aurora-blob aurora-6"></div>
+        <div class="absolute inset-0 bg-white/55 backdrop-blur-xl"></div>
+      </div>
+
+      <div class="relative z-10 mx-auto max-w-site">
+        <div class="mx-auto max-w-4xl text-center">
+          <p class="reveal font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ LET'S&nbsp;TALK ]
+          </p>
+          <h2 class="reveal mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-6xl lg:text-7xl"
+            style="--reveal-delay:90ms">
+            מוכנים לקחת את המותג שלכם צעד אחד קדימה?
+          </h2>
+
+          <div class="reveal mt-12 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:200ms">
+            <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
+              target="_blank" rel="noopener"
+              class="magnetic inline-flex items-center gap-2.5 rounded-full bg-ink px-7 py-3.5 font-semibold text-white">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.6.2-.8l.4-.5c.1-.2.2-.3.3-.5v-.5c0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.4-.4Z" />
+              </svg>
+              WhatsApp
+            </a>
+            <a href="https://ig.me/m/thejus.ai" target="_blank" rel="noopener"
+              class="magnetic inline-flex items-center gap-2.5 rounded-full border border-line bg-white px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              Instagram
+            </a>
+            <a href="https://www.facebook.com/share/1apmCBD7er/?mibextid=wwXIfr" target="_blank" rel="noopener"
+              class="magnetic inline-flex items-center gap-2.5 rounded-full border border-line bg-white px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.2 0-1-.1-1.9-.1-1.9 0-3.3 1.2-3.3 3.4V11H8.5v3h2.7v7h2.3Z" />
+              </svg>
+              Facebook
+            </a>
+          </div>
+        </div>
+
+        <div
+          class="mt-20 flex flex-col items-center justify-between gap-4 border-t border-line py-8 sm:flex-row lg:mt-28">
+          <span class="font-mono text-sm font-medium tracking-[0.18em]" dir="ltr">THE&nbsp;JUS</span>
+          <p class="text-sm text-slate2" dir="ltr">© 2026 THE JUS. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ================= FLOATING WHATSAPP BUBBLE ================= -->
+  <a id="waBubble"
+    href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
+    target="_blank" rel="noopener" aria-label="דברו איתנו בוואטסאפ"
+    class="group fixed bottom-5 left-5 z-50 flex items-center gap-2.5 rounded-full bg-[#25D366] py-3.5 pr-4 pl-4 text-white shadow-lg shadow-black/15 transition-all duration-300 hover:pl-5 hover:shadow-xl">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="shrink-0">
+      <path
+        d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.6.2-.8l.4-.5c.1-.2.2-.3.3-.5v-.5c0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.4-.4Z" />
+    </svg>
+    <span
+      class="max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:max-w-[180px] group-hover:opacity-100">דברו
+      איתנו בוואטסאפ</span>
+  </a>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script>
+    // --- Mobile menu ---
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    burgerBtn.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      burgerBtn.classList.toggle('open', open);
+      burgerBtn.setAttribute('aria-expanded', open);
+    });
+    document.querySelectorAll('.mobile-link').forEach(link =>
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        burgerBtn.classList.remove('open');
+        burgerBtn.setAttribute('aria-expanded', 'false');
+      })
+    );
+
+    // --- Scroll reveal ---
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // --- Spotlight cards ---
+    document.querySelectorAll('.spotlight-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+
+    // --- Magnetic buttons (subtle pull toward the cursor) ---
+    document.querySelectorAll('.magnetic').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r = btn.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+        const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+        btn.style.setProperty('--tx', (dx * 6) + 'px');
+        btn.style.setProperty('--ty', (dy * 4) + 'px');
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.setProperty('--tx', '0px');
+        btn.style.setProperty('--ty', '0px');
+      });
+    });
+
+    // --- DVD-style bouncing character in the services section ---
+    const bounceChar = document.getElementById('bounceChar');
+    if (bounceChar && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const area = document.getElementById('bounceArea');
+      // The PNG has transparent padding around the drawing; these fractions mark
+      // where the visible character actually sits, so bounces happen on his body.
+      const INSET = { left: .30, right: .30, top: .10, bottom: .08 };
+      let x = 20, y = 20, vx = 85, vy = 65, last = null, raf = null;
+
+      function step(t) {
+        if (last === null) last = t;
+        const dt = Math.min((t - last) / 1000, .05);
+        last = t;
+        const w = bounceChar.offsetWidth, h = bounceChar.offsetHeight;
+        const minX = -INSET.left * w, maxX = area.clientWidth - w + INSET.right * w;
+        const minY = -INSET.top * h, maxY = area.clientHeight - h + INSET.bottom * h;
+        x += vx * dt; y += vy * dt;
+        if (x <= minX) { x = minX; vx = Math.abs(vx); }
+        else if (x >= maxX) { x = maxX; vx = -Math.abs(vx); }
+        if (y <= minY) { y = minY; vy = Math.abs(vy); }
+        else if (y >= maxY) { y = maxY; vy = -Math.abs(vy); }
+        bounceChar.style.transform = `translate(${x}px, ${y}px)`;
+        raf = requestAnimationFrame(step);
+      }
+
+      // Only animate while the section is on screen
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          if (raf === null) { last = null; raf = requestAnimationFrame(step); }
+        } else if (raf !== null) {
+          cancelAnimationFrame(raf);
+          raf = null;
+        }
+      }).observe(area);
+    }
+
+    // --- Pogo alien hopping loop in the advantage section ---
+    const pogoChar = document.getElementById('pogoChar');
+    if (pogoChar && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const pogoSec = document.getElementById('advantage');
+      // Where the alien's feet / horizontal center sit inside the PNG canvas
+      const FEET_Y = .95, CENTER_X = .5;
+
+      // Landing spots: beside the title (start), then each column's top border.
+      // Sorted left-to-right so the hop order follows the drawing regardless of RTL.
+      function getAnchors() {
+        const sec = pogoSec.getBoundingClientRect();
+        const title = document.getElementById('advTitle').getBoundingClientRect();
+        const cols = [...pogoSec.querySelectorAll('.adv-col')]
+          .map(c => c.getBoundingClientRect())
+          .map(r => ({ x: r.left - sec.left + r.width / 2, y: r.top - sec.top }))
+          .sort((a, b) => a.x - b.x);
+        const start = { x: title.left - sec.left - 40, y: title.bottom - sec.top };
+        return [start, ...cols, start]; // start -> left -> middle -> right -> back
+      }
+
+      function placeAt(p, lift, tilt) {
+        const w = pogoChar.offsetWidth, h = pogoChar.offsetHeight;
+        pogoChar.style.transform =
+          `translate(${p.x - w * CENTER_X}px, ${p.y - h * FEET_Y - lift}px) rotate(${tilt}deg)`;
+      }
+
+      let leg = 0, legStart = null, raf = null;
+      function hop(t) {
+        const pts = getAnchors();
+        const from = pts[leg], to = pts[leg + 1];
+        const dist = Math.hypot(to.x - from.x, to.y - from.y);
+        const dur = 700 + dist * 0.9;                       // longer jumps take longer
+        const jumpH = 55;                                   // same low hop height every jump
+        if (legStart === null) legStart = t;
+        let k = Math.max(0, Math.min((t - legStart) / dur, 1));
+        const ease = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        const p = { x: from.x + (to.x - from.x) * ease, y: from.y + (to.y - from.y) * ease };
+        const lift = jumpH * 4 * k * (1 - k);               // parabolic arc
+        const tilt = Math.sign(to.x - from.x) * 7 * Math.sin(Math.PI * k);
+        placeAt(p, lift, tilt);
+        if (k >= 1) { leg = (leg + 1) % (pts.length - 1); legStart = t + 140; } // beat between hops
+        raf = requestAnimationFrame(hop);
+      }
+
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          if (raf === null) { legStart = null; raf = requestAnimationFrame(hop); }
+        } else if (raf !== null) {
+          cancelAnimationFrame(raf);
+          raf = null;
+        }
+      }).observe(pogoSec);
+    }
+
+    // --- Floating WhatsApp bubble: hidden until scrolled past the hero ---
+    const waBubble = document.getElementById('waBubble');
+    if (waBubble) {
+      waBubble.style.transform = 'translateY(150%)';
+      waBubble.style.opacity = '0';
+      waBubble.style.pointerEvents = 'none';
+      const onScroll = () => {
+        const past = window.scrollY > window.innerHeight * 0.6;
+        waBubble.style.transform = past ? 'translateY(0)' : 'translateY(150%)';
+        waBubble.style.opacity = past ? '1' : '0';
+        waBubble.style.pointerEvents = past ? 'auto' : 'none';
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    // --- Reels carousel arrows ---
+    const reelTrack = document.getElementById('reelTrack');
+    if (reelTrack) {
+      const amount = () => Math.round(reelTrack.clientWidth * 0.7);
+      // In RTL, advancing through content means scrolling toward negative left
+      document.getElementById('reelNext').addEventListener('click', () =>
+        reelTrack.scrollBy({ left: -amount(), behavior: 'smooth' }));
+      document.getElementById('reelPrev').addEventListener('click', () =>
+        reelTrack.scrollBy({ left: amount(), behavior: 'smooth' }));
+    }
+
+    // --- DJ robot: click to toggle a generative Web Audio beat ---
+    const djBtn = document.getElementById('djBot');
+    if (djBtn) {
+      const djImg = djBtn.querySelector('img');
+      const BPM = 102, STEP = 60 / BPM / 4; // 16th-note duration in seconds
+      let ctx = null, master = null, noise = null, timer = null, nextTime = 0, step = 0;
+
+      function makeNoise(c) {
+        const b = c.createBuffer(1, c.sampleRate / 2, c.sampleRate), d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+        return b;
+      }
+      function kick(t) {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.frequency.setValueAtTime(150, t);
+        o.frequency.exponentialRampToValueAtTime(42, t + .12);
+        g.gain.setValueAtTime(.9, t);
+        g.gain.exponentialRampToValueAtTime(.001, t + .28);
+        o.connect(g).connect(master); o.start(t); o.stop(t + .3);
+      }
+      function snare(t) {
+        const s = ctx.createBufferSource(); s.buffer = noise;
+        const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1800;
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(.5, t);
+        g.gain.exponentialRampToValueAtTime(.001, t + .18);
+        s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + .2);
+      }
+      function hat(t, open) {
+        const s = ctx.createBufferSource(); s.buffer = noise;
+        const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7500;
+        const g = ctx.createGain(), d = open ? .3 : .05;
+        g.gain.setValueAtTime(open ? .22 : .15, t);
+        g.gain.exponentialRampToValueAtTime(.001, t + d);
+        s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + d + .02);
+      }
+      function bass(t, freq, len) {
+        const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = freq;
+        const f = ctx.createBiquadFilter(); f.type = 'lowpass';
+        f.frequency.setValueAtTime(900, t);
+        f.frequency.exponentialRampToValueAtTime(250, t + len);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(.28, t);
+        g.gain.exponentialRampToValueAtTime(.001, t + len);
+        o.connect(f).connect(g).connect(master); o.start(t); o.stop(t + len);
+      }
+      function blip(t, freq) {
+        const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = freq;
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(.1, t);
+        g.gain.exponentialRampToValueAtTime(.001, t + .12);
+        o.connect(g).connect(master); o.start(t); o.stop(t + .14);
+      }
+      function scratch(t) {
+        const s = ctx.createBufferSource(); s.buffer = noise;
+        const f = ctx.createBiquadFilter(); f.type = 'bandpass';
+        f.frequency.setValueAtTime(400, t);
+        f.frequency.exponentialRampToValueAtTime(4000, t + .4);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(.18, t);
+        g.gain.exponentialRampToValueAtTime(.001, t + .45);
+        s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + .5);
+      }
+
+      const A1 = 55, C2 = 65.41, D2 = 73.42, E2 = 82.41;
+      const bassPat = [{ s: 0, f: A1, l: 2 }, { s: 3, f: A1, l: 1 }, { s: 6, f: C2, l: 2 }, { s: 10, f: D2, l: 2 }, { s: 14, f: E2, l: 2 }];
+      const blipPat = { 2: 440, 5: 523.25, 9: 659.25, 13: 587.33 };
+
+      function schedule() {
+        while (nextTime < ctx.currentTime + .12) {
+          const s16 = step % 16, bar = Math.floor(step / 16);
+          if (s16 === 0 || s16 === 7 || s16 === 10) kick(nextTime);
+          if (s16 === 4 || s16 === 12) snare(nextTime);
+          if (s16 % 2 === 0) hat(nextTime, false);
+          if (s16 === 14) hat(nextTime, true);
+          bassPat.forEach(n => { if (n.s === s16) bass(nextTime, n.f, n.l * STEP * .95); });
+          if (bar % 2 === 1 && blipPat[s16]) blip(nextTime, blipPat[s16]);
+          if (s16 === 0 && bar > 0 && bar % 4 === 0) scratch(nextTime);
+          nextTime += STEP; step++;
+        }
+      }
+
+      djBtn.addEventListener('click', async () => {
+        if (!ctx) {
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          master = ctx.createGain(); master.gain.value = .5; master.connect(ctx.destination);
+          noise = makeNoise(ctx);
+        }
+        if (timer === null) {
+          await ctx.resume();
+          step = 0; nextTime = ctx.currentTime + .06;
+          timer = setInterval(schedule, 25);
+          djImg.classList.add('dj-playing');
+          djBtn.setAttribute('aria-pressed', 'true');
+        } else {
+          clearInterval(timer); timer = null;
+          ctx.suspend();
+          djImg.classList.remove('dj-playing');
+          djBtn.setAttribute('aria-pressed', 'false');
+        }
+      });
+    }
+
+  </script>
+</body>
+
+</html>
