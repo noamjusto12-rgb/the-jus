@@ -1242,23 +1242,21 @@
               <p class="font-medium text-ink">הרקע שלי בשיווק דיגיטלי, קופירייטינג וחשיבה יצירתית הוא מה שגורם
                 לתוכן לא רק להיראות טוב, אלא לעבוד.</p>
             </div>
-          </div>
-        </div>
 
-        <div class="mt-16 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:mt-20">
-          <div class="adv-col reveal border-t-2 border-ink pt-6">
-            <h3 class="text-xl font-bold">קונספט מקורי</h3>
-            <p class="mt-2.5 leading-relaxed text-slate2">
-              כל פרויקט מתחיל מרעיון שנבנה למותג שלכם. לא תבנית מוכנה ולא גרסה ממוחזרת של משהו שכבר רץ אצל מישהו
-              אחר.
-            </p>
-          </div>
-          <div class="adv-col reveal border-t-2 border-ink pt-6" style="--reveal-delay:100ms">
-            <h3 class="text-xl font-bold">יחס אישי</h3>
-            <p class="mt-2.5 leading-relaxed text-slate2">
-              עובדים ישירות מולי, בלי מנהל לקוח באמצע. אני מלווה אתכם מהבריף ועד העלייה לאוויר, ויודע בדיוק איפה
-              כל פרויקט עומד.
-            </p>
+            <ul class="mt-7 flex flex-wrap items-center gap-2.5">
+              <li
+                class="inline-flex items-center gap-2 rounded-full border border-line bg-shell px-4 py-2 text-sm font-semibold text-ink">
+                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true"></span>קונספט מקורי
+              </li>
+              <li
+                class="inline-flex items-center gap-2 rounded-full border border-line bg-shell px-4 py-2 text-sm font-semibold text-ink">
+                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true"></span>יחס אישי
+              </li>
+              <li
+                class="inline-flex items-center gap-2 rounded-full border border-line bg-shell px-4 py-2 text-sm font-semibold text-ink">
+                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true"></span>זמינות
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -1513,17 +1511,17 @@
       // Where the alien's feet / horizontal center sit inside the PNG canvas
       const FEET_Y = .95, CENTER_X = .5;
 
-      // Landing spots: beside the title (start), then each column's top border.
+      // Landing spots: beside the title (start), then the top of each bullet pill.
       // Sorted left-to-right so the hop order follows the drawing regardless of RTL.
       function getAnchors() {
         const sec = pogoSec.getBoundingClientRect();
         const title = document.getElementById('advTitle').getBoundingClientRect();
-        const cols = [...pogoSec.querySelectorAll('.adv-col')]
+        const stops = [...pogoSec.querySelectorAll('ul li')]
           .map(c => c.getBoundingClientRect())
           .map(r => ({ x: r.left - sec.left + r.width / 2, y: r.top - sec.top }))
           .sort((a, b) => a.x - b.x);
         const start = { x: title.left - sec.left - 40, y: title.bottom - sec.top };
-        return [start, ...cols, start]; // start -> left -> middle -> right -> back
+        return [start, ...stops, start]; // start -> left -> middle -> right -> back
       }
 
       function placeAt(p, lift, tilt) {
