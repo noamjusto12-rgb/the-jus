@@ -433,6 +433,28 @@
       fill: #1F2124;
     }
 
+    /* Cards lift off the page on hover so the grid feels tactile */
+    .work-card {
+      transition: transform .45s cubic-bezier(.2, .7, .3, 1), box-shadow .45s ease,
+        border-color .45s ease;
+    }
+
+    .work-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 42px rgba(31, 33, 36, .16);
+      border-color: rgba(31, 33, 36, .22);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .work-card {
+        transition: none;
+      }
+
+      .work-card:hover {
+        transform: none;
+      }
+    }
+
     /* Smaller play badge on the narrow vertical cards */
     .vid-sm .vid-play {
       width: 46px;
@@ -1055,7 +1077,7 @@
           <div id="reelTrack"
             class="no-scrollbar rail-fade mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="ZH07ViJvxlY" data-ratio="9/16"
                   data-title="CONFERENCE AD" aria-label="נגן: CONFERENCE AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt=""
@@ -1069,7 +1091,7 @@
                 dir="ltr">CONFERENCE&nbsp;AD</p>
             </div>
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="VfMJoEypc7o" data-ratio="9/16"
                   data-title="SKATE SKULLS" aria-label="נגן: SKATE SKULLS">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt=""
@@ -1083,7 +1105,7 @@
                 dir="ltr">SKATE&nbsp;SKULLS</p>
             </div>
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="F4yyQzu5_sQ" data-ratio="9/16"
                   data-title="BABA CASINO AD" aria-label="נגן: BABA CASINO AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt=""
@@ -1097,7 +1119,7 @@
                 dir="ltr">BABA&nbsp;CASINO&nbsp;AD</p>
             </div>
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="Fe3lmQgQmno" data-ratio="9/16"
                   data-title="POKER FACE AD" aria-label="נגן: POKER FACE AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt=""
@@ -1111,7 +1133,7 @@
                 dir="ltr">POKER&nbsp;FACE&nbsp;AD</p>
             </div>
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="lfK2ZqKTPwo" data-ratio="9/16"
                   data-title="UGC AD / MANEKI WALLET" aria-label="נגן: UGC AD / MANEKI WALLET">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt=""
@@ -1125,7 +1147,7 @@
                 dir="ltr">UGC&nbsp;AD&nbsp;/&nbsp;MANEKI&nbsp;WALLET</p>
             </div>
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="s8VXMFSM2VY" data-ratio="9/16"
                   data-title="UGC AD / MANEKI WALLET 2" aria-label="נגן: UGC AD / MANEKI WALLET 2">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt=""
@@ -1139,7 +1161,7 @@
                 dir="ltr">UGC&nbsp;AD&nbsp;/&nbsp;MANEKI&nbsp;WALLET&nbsp;2</p>
             </div>
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="0YOPfGrgN4w" data-ratio="9/16"
                   data-title="DUREX SPEC AD" aria-label="נגן: DUREX SPEC AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt=""
@@ -1153,7 +1175,7 @@
                 dir="ltr">DUREX&nbsp;SPEC&nbsp;AD</p>
             </div>
             <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
                 <button type="button" class="vid vid-sm" data-yt="YiYDknTMxqc" data-ratio="9/16" data-title="F35"
                   aria-label="נגן: F35">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt=""
@@ -1169,10 +1191,16 @@
           </div>
         </div>
 
-        <!-- Main video gallery -->
-        <div class="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
-          <article class="reveal">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+        <!-- Main video gallery (16:9) -->
+        <div class="reveal mt-20 border-t border-line pt-14 lg:mt-24">
+          <p class="font-mono text-[11px] font-medium tracking-[0.28em] text-slate2" dir="ltr">[
+            HORIZONTAL&nbsp;/&nbsp;16:9 ]</p>
+          <h3 class="mt-2 text-xl font-bold sm:text-2xl">פרסומות וסרטונים</h3>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
+          <article class="reveal sm:col-span-2">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="R48ngAvojF8" data-ratio="16/9" data-title="FINQ Ad Concept"
                 aria-label="נגן: FINQ Ad Concept">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt="" loading="lazy"
@@ -1183,12 +1211,12 @@
               </button>
             </div>
             <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">FINQ Ad Concept</h3>
+              <h3 class="text-xl font-bold sm:text-3xl" dir="ltr">FINQ Ad Concept</h3>
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">AD&nbsp;CONCEPT</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+          <article class="reveal">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="mBHoNeZBcOY" data-ratio="16/9" data-title="Surf Skulls"
                 aria-label="נגן: Surf Skulls">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt="" loading="lazy"
@@ -1203,8 +1231,8 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SURF</span>
             </div>
           </article>
-          <article class="reveal">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+          <article class="reveal" style="--reveal-delay:100ms">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="sJV-jwg2zao" data-ratio="16/9"
                 data-title="GECKO'S Short Action Story" aria-label="נגן: GECKO'S Short Action Story">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt="" loading="lazy"
@@ -1219,8 +1247,8 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">ACTION&nbsp;SHORT</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+          <article class="reveal">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="DJhr-xOOV9k" data-ratio="16/9"
                 data-title="Short Comedy Action Trailer" aria-label="נגן: Short Comedy Action Trailer">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt="" loading="lazy"
@@ -1235,8 +1263,8 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">TRAILER</span>
             </div>
           </article>
-          <article class="reveal">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+          <article class="reveal" style="--reveal-delay:100ms">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="9fpN4EfSm4o" data-ratio="16/9" data-title="Wildlife"
                 aria-label="נגן: Wildlife">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt="" loading="lazy"
@@ -1251,8 +1279,8 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">WILDLIFE</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+          <article class="reveal">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="eJf6V14qmAg" data-ratio="16/9"
                 data-title="Extreme Donkey Concept" aria-label="נגן: Extreme Donkey Concept">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt="" loading="lazy"
@@ -1267,8 +1295,8 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">CONCEPT</span>
             </div>
           </article>
-          <article class="reveal">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+          <article class="reveal" style="--reveal-delay:100ms">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="vLnmvSnLq1A" data-ratio="16/9" data-title="Creative Spec Ad"
                 aria-label="נגן: Creative Spec Ad">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt="" loading="lazy"
@@ -1283,8 +1311,8 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SPEC&nbsp;AD</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
-            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+          <article class="reveal">
+            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="CsOnM86RLYM" data-ratio="16/9"
                 data-title="Funny Viral Video Concept" aria-label="נגן: Funny Viral Video Concept">
                 <img class="vid-thumb" src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt="" loading="lazy"
