@@ -346,6 +346,195 @@
       display: none;
     }
 
+    /* Soft edges so the rail reads as "continues off-screen" */
+    .rail-fade {
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent);
+    }
+
+    /* ============ Video cards (lite facade — no player chrome until clicked) ============ */
+    .vid {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: #1F2124;
+      cursor: pointer;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .vid-thumb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .7s cubic-bezier(.2, .7, .3, 1), filter .4s ease;
+    }
+
+    .vid::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(31, 33, 36, 0) 50%, rgba(31, 33, 36, .45));
+      opacity: 0;
+      transition: opacity .4s ease;
+      pointer-events: none;
+    }
+
+    .vid:hover .vid-thumb,
+    .vid:focus-visible .vid-thumb {
+      transform: scale(1.05);
+      filter: brightness(.86);
+    }
+
+    .vid:hover::after,
+    .vid:focus-visible::after {
+      opacity: 1;
+    }
+
+    .vid:focus-visible {
+      outline: 2px solid #1F2124;
+      outline-offset: 3px;
+    }
+
+    .vid-play {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .9);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .3);
+      transition: transform .35s cubic-bezier(.2, .7, .3, 1), background-color .3s ease;
+      pointer-events: none;
+    }
+
+    .vid:hover .vid-play,
+    .vid:focus-visible .vid-play {
+      transform: translate(-50%, -50%) scale(1.12);
+      background: #fff;
+    }
+
+    .vid-play svg {
+      width: 18px;
+      height: 18px;
+      margin-inline-start: 3px;
+      fill: #1F2124;
+    }
+
+    /* Smaller play badge on the narrow vertical cards */
+    .vid-sm .vid-play {
+      width: 46px;
+      height: 46px;
+    }
+
+    .vid-sm .vid-play svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* ============ Video lightbox ============ */
+    #vidModal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      background: rgba(15, 16, 18, .82);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .3s ease, visibility .3s ease;
+    }
+
+    /* Blur only while open — a permanent full-screen backdrop-filter layer
+       forces compositing over the whole page and hurts scroll performance. */
+    #vidModal.is-open {
+      opacity: 1;
+      visibility: visible;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+
+    #vidModalInner {
+      position: relative;
+      width: 100%;
+      max-width: min(1080px, 100%);
+      transform: scale(.97);
+      transition: transform .35s cubic-bezier(.2, .7, .3, 1);
+    }
+
+    #vidModal.is-open #vidModalInner {
+      transform: scale(1);
+    }
+
+    #vidFrame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 82vh;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #000;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+    }
+
+    /* Vertical reels open as a tall, phone-shaped player */
+    #vidModalInner[data-ratio="9/16"] #vidFrame {
+      aspect-ratio: 9 / 16;
+      height: min(80vh, 820px);
+      width: auto;
+      margin-inline: auto;
+    }
+
+    #vidFrame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    #vidCaption {
+      margin-top: .9rem;
+      text-align: center;
+      color: rgba(255, 255, 255, .82);
+      font-size: 13px;
+      letter-spacing: .06em;
+    }
+
+    #vidClose {
+      position: absolute;
+      top: -46px;
+      inset-inline-end: 0;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .25);
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+      cursor: pointer;
+      transition: background-color .25s ease, transform .25s ease;
+    }
+
+    #vidClose:hover {
+      background: rgba(255, 255, 255, .22);
+      transform: scale(1.06);
+    }
+
     /* ============ DJ robot dancing to the beat ============ */
     .dj-playing {
       animation: dj-bounce .588s ease-in-out infinite;
@@ -763,65 +952,119 @@
               </button>
             </div>
           </div>
-          <div id="reelTrack" class="no-scrollbar mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
-            <div class="w-44 shrink-0 snap-start sm:w-56">
+          <div id="reelTrack"
+            class="no-scrollbar rail-fade mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
               <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/VfMJoEypc7o?rel=0"
-                  title="SKATE SKULLS" loading="lazy" frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <button type="button" class="vid vid-sm" data-yt="ZH07ViJvxlY" data-ratio="9/16"
+                  data-title="CONFERENCE AD" aria-label="נגן: CONFERENCE AD">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
               </div>
-              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">SKATE&nbsp;SKULLS</p>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">CONFERENCE&nbsp;AD</p>
             </div>
-            <div class="w-44 shrink-0 snap-start sm:w-56">
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
               <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/F4yyQzu5_sQ?rel=0"
-                  title="BABA CASINO AD" loading="lazy" frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <button type="button" class="vid vid-sm" data-yt="VfMJoEypc7o" data-ratio="9/16"
+                  data-title="SKATE SKULLS" aria-label="נגן: SKATE SKULLS">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
               </div>
-              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">BABA&nbsp;CASINO&nbsp;AD
-              </p>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">SKATE&nbsp;SKULLS</p>
             </div>
-            <div class="w-44 shrink-0 snap-start sm:w-56">
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
               <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/Fe3lmQgQmno?rel=0"
-                  title="POKER FACE AD" loading="lazy" frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <button type="button" class="vid vid-sm" data-yt="F4yyQzu5_sQ" data-ratio="9/16"
+                  data-title="BABA CASINO AD" aria-label="נגן: BABA CASINO AD">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
               </div>
-              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">POKER&nbsp;FACE&nbsp;AD</p>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">BABA&nbsp;CASINO&nbsp;AD</p>
             </div>
-            <div class="w-44 shrink-0 snap-start sm:w-56">
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
               <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/lfK2ZqKTPwo?rel=0"
-                  title="UGC AD FOR MANEKI WALLET" loading="lazy" frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <button type="button" class="vid vid-sm" data-yt="Fe3lmQgQmno" data-ratio="9/16"
+                  data-title="POKER FACE AD" aria-label="נגן: POKER FACE AD">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
               </div>
-              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">
-                UGC&nbsp;AD&nbsp;—&nbsp;MANEKI&nbsp;WALLET</p>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">POKER&nbsp;FACE&nbsp;AD</p>
             </div>
-            <div class="w-44 shrink-0 snap-start sm:w-56">
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
               <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/s8VXMFSM2VY?rel=0"
-                  title="UGC AD FOR MANEKI WALLET 2" loading="lazy" frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <button type="button" class="vid vid-sm" data-yt="lfK2ZqKTPwo" data-ratio="9/16"
+                  data-title="UGC AD — MANEKI WALLET" aria-label="נגן: UGC AD — MANEKI WALLET">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
               </div>
-              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">
-                UGC&nbsp;AD&nbsp;—&nbsp;MANEKI&nbsp;WALLET&nbsp;2</p>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">UGC&nbsp;AD&nbsp;—&nbsp;MANEKI&nbsp;WALLET</p>
             </div>
-            <div class="w-44 shrink-0 snap-start sm:w-56">
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
               <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/0YOPfGrgN4w?rel=0"
-                  title="DUREX SPEC AD" loading="lazy" frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <button type="button" class="vid vid-sm" data-yt="s8VXMFSM2VY" data-ratio="9/16"
+                  data-title="UGC AD — MANEKI WALLET 2" aria-label="נגן: UGC AD — MANEKI WALLET 2">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
               </div>
-              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">DUREX&nbsp;SPEC&nbsp;AD</p>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">UGC&nbsp;AD&nbsp;—&nbsp;MANEKI&nbsp;WALLET&nbsp;2</p>
             </div>
-            <div class="w-44 shrink-0 snap-start sm:w-56">
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
               <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/YiYDknTMxqc?rel=0"
-                  title="F35" loading="lazy" frameborder="0"
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+                <button type="button" class="vid vid-sm" data-yt="0YOPfGrgN4w" data-ratio="9/16"
+                  data-title="DUREX SPEC AD" aria-label="נגן: DUREX SPEC AD">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
               </div>
-              <p class="mt-3 px-1 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">F35</p>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">DUREX&nbsp;SPEC&nbsp;AD</p>
+            </div>
+            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
+              <div class="relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
+                <button type="button" class="vid vid-sm" data-yt="YiYDknTMxqc" data-ratio="9/16" data-title="F35"
+                  aria-label="נגן: F35">
+                  <img class="vid-thumb" src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt=""
+                    loading="lazy" decoding="async" />
+                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg></span>
+                </button>
+              </div>
+              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
+                dir="ltr">F35</p>
             </div>
           </div>
         </div>
@@ -830,79 +1073,130 @@
         <div class="mt-16 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
           <article class="reveal">
             <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/mBHoNeZBcOY?rel=0"
-                title="Surf Skulls" loading="lazy" frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              <button type="button" class="vid" data-yt="R48ngAvojF8" data-ratio="16/9" data-title="FINQ — Ad Concept"
+                aria-label="נגן: FINQ — Ad Concept">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between px-1">
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
+              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">FINQ — Ad Concept</h3>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">AD&nbsp;CONCEPT</span>
+            </div>
+          </article>
+          <article class="reveal" style="--reveal-delay:100ms">
+            <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+              <button type="button" class="vid" data-yt="mBHoNeZBcOY" data-ratio="16/9" data-title="Surf Skulls"
+                aria-label="נגן: Surf Skulls">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
+            </div>
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
               <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Surf Skulls</h3>
-              <span class="font-mono text-xs text-slate2" dir="ltr">SURF</span>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SURF</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
+          <article class="reveal">
             <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/sJV-jwg2zao?rel=0"
-                title="GECKO'S — Short Action Story" loading="lazy" frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              <button type="button" class="vid" data-yt="sJV-jwg2zao" data-ratio="16/9"
+                data-title="GECKO'S — Short Action Story" aria-label="נגן: GECKO'S — Short Action Story">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between px-1">
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
               <h3 class="text-lg font-bold sm:text-xl" dir="ltr">GECKO'S — Short Action Story</h3>
-              <span class="font-mono text-xs text-slate2" dir="ltr">ACTION&nbsp;SHORT</span>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">ACTION&nbsp;SHORT</span>
             </div>
           </article>
           <article class="reveal" style="--reveal-delay:100ms">
             <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/DJhr-xOOV9k?rel=0"
-                title="Short Comedy Action Trailer" loading="lazy" frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              <button type="button" class="vid" data-yt="DJhr-xOOV9k" data-ratio="16/9"
+                data-title="Short Comedy Action Trailer" aria-label="נגן: Short Comedy Action Trailer">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between px-1">
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
               <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Short Comedy Action Trailer</h3>
-              <span class="font-mono text-xs text-slate2" dir="ltr">TRAILER</span>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">TRAILER</span>
             </div>
           </article>
           <article class="reveal">
             <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/9fpN4EfSm4o?rel=0"
-                title="Wildlife" loading="lazy" frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              <button type="button" class="vid" data-yt="9fpN4EfSm4o" data-ratio="16/9" data-title="Wildlife"
+                aria-label="נגן: Wildlife">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between px-1">
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
               <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Wildlife</h3>
-              <span class="font-mono text-xs text-slate2" dir="ltr">WILDLIFE</span>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">WILDLIFE</span>
             </div>
           </article>
           <article class="reveal" style="--reveal-delay:100ms">
             <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/eJf6V14qmAg?rel=0"
-                title="Extreme Donkey Concept" loading="lazy" frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              <button type="button" class="vid" data-yt="eJf6V14qmAg" data-ratio="16/9"
+                data-title="Extreme Donkey Concept" aria-label="נגן: Extreme Donkey Concept">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between px-1">
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
               <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Extreme Donkey Concept</h3>
-              <span class="font-mono text-xs text-slate2" dir="ltr">CONCEPT</span>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">CONCEPT</span>
             </div>
           </article>
           <article class="reveal">
             <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/vLnmvSnLq1A?rel=0"
-                title="Creative Spec Ad" loading="lazy" frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              <button type="button" class="vid" data-yt="vLnmvSnLq1A" data-ratio="16/9" data-title="Creative Spec Ad"
+                aria-label="נגן: Creative Spec Ad">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between px-1">
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
               <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Creative Spec Ad</h3>
-              <span class="font-mono text-xs text-slate2" dir="ltr">SPEC&nbsp;AD</span>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SPEC&nbsp;AD</span>
             </div>
           </article>
           <article class="reveal" style="--reveal-delay:100ms">
             <div class="relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/CsOnM86RLYM?rel=0"
-                title="Funny Viral Video Concept" loading="lazy" frameborder="0"
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+              <button type="button" class="vid" data-yt="CsOnM86RLYM" data-ratio="16/9"
+                data-title="Funny Viral Video Concept" aria-label="נגן: Funny Viral Video Concept">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt="" loading="lazy"
+                  decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between px-1">
+            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
               <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Funny Viral Video Concept</h3>
-              <span class="font-mono text-xs text-slate2" dir="ltr">VIRAL</span>
+              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">VIRAL</span>
             </div>
           </article>
         </div>
@@ -1004,6 +1298,20 @@
       class="max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:max-w-[180px] group-hover:opacity-100">דברו
       איתנו בוואטסאפ</span>
   </a>
+
+  <!-- ================= VIDEO LIGHTBOX ================= -->
+  <div id="vidModal" role="dialog" aria-modal="true" aria-label="נגן וידאו">
+    <div id="vidModalInner" data-ratio="16/9">
+      <button id="vidClose" type="button" aria-label="סגירה">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+      <div id="vidFrame"></div>
+      <p id="vidCaption" class="font-mono" dir="ltr"></p>
+    </div>
+  </div>
 
   <!-- ================= SCRIPTS ================= -->
   <script>
@@ -1174,6 +1482,65 @@
       document.getElementById('reelPrev').addEventListener('click', () =>
         reelTrack.scrollBy({ left: amount(), behavior: 'smooth' }));
     }
+
+    // --- Video cards: thumbnail facade → lightbox player ---
+    // Nothing from YouTube loads until a card is clicked, so the grid stays
+    // free of player chrome (Shorts badge, channel bar, "Watch on YouTube").
+    (function () {
+      const modal = document.getElementById('vidModal');
+      if (!modal) return;
+      const inner = document.getElementById('vidModalInner');
+      const frame = document.getElementById('vidFrame');
+      const caption = document.getElementById('vidCaption');
+      const closeBtn = document.getElementById('vidClose');
+      let lastFocus = null;
+
+      // maxresdefault is missing on some uploads — fall back to hqdefault once.
+      document.querySelectorAll('.vid-thumb').forEach(img => {
+        img.addEventListener('error', function () {
+          if (this.dataset.fellBack) return;
+          this.dataset.fellBack = '1';
+          this.src = this.src.replace('maxresdefault', 'hqdefault');
+        });
+      });
+
+      function openVid(btn) {
+        const id = btn.dataset.yt;
+        if (!id) return;
+        lastFocus = btn;
+        inner.dataset.ratio = btn.dataset.ratio || '16/9';
+        caption.textContent = btn.dataset.title || '';
+
+        const f = document.createElement('iframe');
+        f.src = 'https://www.youtube.com/embed/' + encodeURIComponent(id) +
+          '?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3';
+        f.title = btn.dataset.title || 'Video';
+        f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+        f.setAttribute('allowfullscreen', '');
+        frame.replaceChildren(f);
+
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      }
+
+      function closeVid() {
+        if (!modal.classList.contains('is-open')) return;
+        modal.classList.remove('is-open');
+        frame.replaceChildren();          // stops playback
+        document.body.style.overflow = '';
+        if (lastFocus) lastFocus.focus();
+      }
+
+      document.querySelectorAll('.vid').forEach(btn =>
+        btn.addEventListener('click', () => openVid(btn)));
+
+      closeBtn.addEventListener('click', closeVid);
+      modal.addEventListener('click', e => { if (e.target === modal) closeVid(); });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeVid();
+      });
+    })();
 
     // --- DJ robot: click to toggle a generative Web Audio beat ---
     const djBtn = document.getElementById('djBot');
