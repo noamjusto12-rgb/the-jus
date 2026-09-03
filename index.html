@@ -535,6 +535,54 @@
       transform: scale(1.06);
     }
 
+    /* ============ Lead form ============ */
+    .field-label {
+      display: block;
+      margin-bottom: .4rem;
+      font-size: 13px;
+      font-weight: 600;
+      color: #5F6368;
+    }
+
+    .field {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #E6E8EB;
+      background: #fff;
+      padding: .8rem 1rem;
+      font-size: 15px;
+      font-family: inherit;
+      color: #1F2124;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .field::placeholder {
+      color: #9AA0A6;
+    }
+
+    .field:focus {
+      outline: none;
+      border-color: #1F2124;
+      box-shadow: 0 0 0 3px rgba(31, 33, 36, .08);
+    }
+
+    .field[aria-invalid="true"] {
+      border-color: #D93025;
+      box-shadow: 0 0 0 3px rgba(217, 48, 37, .08);
+    }
+
+    .field-error {
+      margin-top: .35rem;
+      font-size: 12px;
+      color: #D93025;
+      min-height: 1em;
+    }
+
+    #leadSubmit[disabled] {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
     /* ============ DJ robot dancing to the beat ============ */
     .dj-playing {
       animation: dj-bounce .588s ease-in-out infinite;
@@ -1246,7 +1294,48 @@
             מוכנים לקחת את המותג שלכם צעד אחד קדימה?
           </h2>
 
-          <div class="reveal mt-12 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:200ms">
+          <!-- Lead form — posts to the studio's Google Form (responses land in Sheets) -->
+          <form id="leadForm" class="reveal mx-auto mt-12 max-w-xl text-right" style="--reveal-delay:150ms" novalidate>
+            <div class="rounded-3xl border border-line bg-white/75 p-6 shadow-sm backdrop-blur-sm sm:p-8">
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="field-label" for="leadName">שם</label>
+                  <input class="field" id="leadName" name="name" type="text" required autocomplete="name"
+                    placeholder="איך קוראים לך?" />
+                  <p class="field-error" data-error-for="leadName"></p>
+                </div>
+                <div>
+                  <label class="field-label" for="leadPhone">טלפון ליצירת קשר</label>
+                  <input class="field" id="leadPhone" name="phone" type="tel" required inputmode="tel"
+                    autocomplete="tel" dir="ltr" placeholder="050-0000000" />
+                  <p class="field-error" data-error-for="leadPhone"></p>
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="field-label" for="leadIdea">רעיון או סוג העסק</label>
+                  <textarea class="field" id="leadIdea" name="idea" rows="3" required
+                    placeholder="ספרו לי בכמה מילים על הרעיון או על העסק שלכם"></textarea>
+                  <p class="field-error" data-error-for="leadIdea"></p>
+                </div>
+              </div>
+
+              <!-- Honeypot: real people never see or fill this -->
+              <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true"
+                style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
+
+              <button type="submit" id="leadSubmit"
+                class="magnetic mt-6 w-full rounded-full bg-ink px-7 py-3.5 font-semibold text-white">
+                <span id="leadBtnText">שלחו לי פרטים ואחזור אליכם</span>
+              </button>
+
+              <p id="leadStatus" role="status" aria-live="polite" class="mt-4 hidden text-center text-sm"></p>
+            </div>
+          </form>
+
+          <p class="reveal mt-12 text-base text-slate2" style="--reveal-delay:220ms">
+            מעדיפים לדבר ישירות? מוזמנים לפנות אליי בוואטסאפ או באינסטגרם —
+          </p>
+
+          <div class="reveal mt-6 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:280ms">
             <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
               target="_blank" rel="noopener"
               class="magnetic inline-flex items-center gap-2.5 rounded-full bg-ink px-7 py-3.5 font-semibold text-white">
@@ -1539,6 +1628,99 @@
       modal.addEventListener('click', e => { if (e.target === modal) closeVid(); });
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeVid();
+      });
+    })();
+
+    // --- Lead form → Google Form (answers collect in the linked Google Sheet) ---
+    (function () {
+      const form = document.getElementById('leadForm');
+      if (!form) return;
+
+      // Filled from the Google Form's "Get pre-filled link" URL.
+      const GFORM = {
+        action: '',   // https://docs.google.com/forms/d/e/<FORM_ID>/formResponse
+        name: '',     // entry.XXXXXXXXX
+        phone: '',    // entry.XXXXXXXXX
+        idea: ''      // entry.XXXXXXXXX
+      };
+
+      const btn = document.getElementById('leadSubmit');
+      const btnText = document.getElementById('leadBtnText');
+      const statusEl = document.getElementById('leadStatus');
+      const IDLE_LABEL = btnText.textContent;
+      const honeypot = form.querySelector('[name="company"]');
+
+      const fields = {
+        leadName: { el: document.getElementById('leadName'), msg: 'נא למלא שם' },
+        leadPhone: { el: document.getElementById('leadPhone'), msg: 'נא למלא מספר טלפון תקין' },
+        leadIdea: { el: document.getElementById('leadIdea'), msg: 'נא לכתוב כמה מילים' }
+      };
+
+      function showStatus(msg, ok) {
+        statusEl.textContent = msg;
+        statusEl.className = 'mt-4 text-center text-sm ' +
+          (ok ? 'font-semibold text-ink' : 'text-[#D93025]');
+      }
+
+      function setError(key, msg) {
+        fields[key].el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        form.querySelector('[data-error-for="' + key + '"]').textContent = msg || '';
+      }
+
+      function validate() {
+        let ok = true;
+        const name = fields.leadName.el.value.trim();
+        setError('leadName', name ? '' : fields.leadName.msg);
+        if (!name) ok = false;
+
+        // Accept any format as long as there are enough digits to call back.
+        const digits = (fields.leadPhone.el.value.match(/\d/g) || []).length;
+        setError('leadPhone', digits >= 9 ? '' : fields.leadPhone.msg);
+        if (digits < 9) ok = false;
+
+        const idea = fields.leadIdea.el.value.trim();
+        setError('leadIdea', idea ? '' : fields.leadIdea.msg);
+        if (!idea) ok = false;
+        return ok;
+      }
+
+      Object.keys(fields).forEach(key =>
+        fields[key].el.addEventListener('input', () => setError(key, '')));
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        if (honeypot && honeypot.value) return;   // bot filled the hidden field
+        if (!validate()) return;
+
+        if (!GFORM.action || !GFORM.name) {
+          showStatus('הטופס עדיין בהקמה. בינתיים מוזמנים לפנות אליי בוואטסאפ 🙏', false);
+          console.warn('Lead form: GFORM is not configured — nothing is being saved.');
+          return;
+        }
+
+        btn.disabled = true;
+        btnText.textContent = 'שולח…';
+        showStatus('', true);
+
+        const body = new URLSearchParams();
+        body.append(GFORM.name, fields.leadName.el.value.trim());
+        body.append(GFORM.phone, fields.leadPhone.el.value.trim());
+        body.append(GFORM.idea, fields.leadIdea.el.value.trim());
+
+        try {
+          // Google forbids reading this response cross-origin, so success can't be
+          // inspected — but the POST itself does record the answer.
+          await fetch(GFORM.action, { method: 'POST', mode: 'no-cors', body });
+          form.reset();
+          Object.keys(fields).forEach(key => setError(key, ''));
+          showStatus('קיבלתי! אחזור אליכם בהקדם 🙌', true);
+          btnText.textContent = 'נשלח בהצלחה';
+          setTimeout(() => { btnText.textContent = IDLE_LABEL; btn.disabled = false; }, 4000);
+        } catch (err) {
+          showStatus('משהו השתבש בשליחה. אפשר לפנות אליי בוואטסאפ ואטפל בזה מיד.', false);
+          btnText.textContent = IDLE_LABEL;
+          btn.disabled = false;
+        }
       });
     })();
 
