@@ -593,28 +593,6 @@
         0 3px 16px rgba(0, 0, 0, .6);
     }
 
-    /* Warm accent picked from the logo's yellow, so it reads as brand rather
-       than decoration. Gradient text can't take a text-shadow (the shadow shows
-       through the transparent fill), so it gets a drop-shadow filter instead. */
-    .accent {
-      background: linear-gradient(100deg, #FFD65E 0%, #FFA83A 52%, #FF7E3C 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      text-shadow: none;
-      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .5));
-    }
-
-    /* Older engines without background-clip:text keep a solid amber */
-    @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
-      .accent {
-        background: none;
-        color: #FFB43D;
-        -webkit-text-fill-color: #FFB43D;
-      }
-    }
-
     /* ============ Lead form ============ */
     .field-label {
       display: block;
@@ -796,11 +774,11 @@
             class="hero-title reveal mt-7 text-[2.6rem] font-extrabold leading-[1.06] tracking-tight text-white sm:text-6xl lg:text-[5.2rem]"
             style="--reveal-delay:90ms">
             אפשר להפסיק לחפש<br />
-            בואו נתחיל <span class="accent">ליצור</span>
+            בואו נתחיל ליצור
           </h1>
           <p class="hero-sub reveal mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl"
             style="--reveal-delay:180ms">
-            פרסומות, סרטונים ותוכן שפעם היה אפשר רק <span class="accent">לדמיין</span>, סגנון ייחודי ויצירתי,
+            פרסומות, סרטונים ותוכן שפעם היה אפשר רק לדמיין, סגנון ייחודי ויצירתי,
             כזה שצופים בו יותר מפעם אחת
           </p>
           <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:270ms">
