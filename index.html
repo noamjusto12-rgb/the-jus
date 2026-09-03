@@ -593,6 +593,28 @@
         0 3px 16px rgba(0, 0, 0, .6);
     }
 
+    /* Warm accent picked from the logo's yellow, so it reads as brand rather
+       than decoration. Gradient text can't take a text-shadow (the shadow shows
+       through the transparent fill), so it gets a drop-shadow filter instead. */
+    .accent {
+      background: linear-gradient(100deg, #FFD65E 0%, #FFA83A 52%, #FF7E3C 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      text-shadow: none;
+      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .5));
+    }
+
+    /* Older engines without background-clip:text keep a solid amber */
+    @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+      .accent {
+        background: none;
+        color: #FFB43D;
+        -webkit-text-fill-color: #FFB43D;
+      }
+    }
+
     /* ============ Lead form ============ */
     .field-label {
       display: block;
@@ -773,12 +795,13 @@
           <h1
             class="hero-title reveal mt-7 text-[2.6rem] font-extrabold leading-[1.06] tracking-tight text-white sm:text-6xl lg:text-[5.2rem]"
             style="--reveal-delay:90ms">
-            כל רעיון. כל עולם.<br />
-            תוך ימים.
+            אפשר להפסיק לחפש<br />
+            בואו נתחיל <span class="accent">ליצור</span>
           </h1>
           <p class="hero-sub reveal mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl"
             style="--reveal-delay:180ms">
-            אנחנו מפיקים פרסומות וסרטוני מותג בבינה מלאכותית, מסצנות שאי אפשר לצלם ועד קמפיין שלם לסושיאל.
+            פרסומות, סרטונים ותוכן שפעם היה אפשר רק <span class="accent">לדמיין</span>, סגנון ייחודי ויצירתי,
+            כזה שצופים בו יותר מפעם אחת
           </p>
           <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:270ms">
             <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
