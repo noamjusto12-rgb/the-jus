@@ -556,33 +556,14 @@
       overflow: hidden;
     }
 
-    /* Poster always paints, so the hero is never empty while the video loads
-       (and stands in for it entirely on phones, where it never loads). */
-    .hero-poster {
+    /* Self-hosted so it also autoplays on phones, which block iframe autoplay.
+       The poster attribute paints instantly while the file streams in. */
+    .hero-video-el {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-
-    /* aspect-ratio + min-width/height = object-fit:cover, which iframes lack */
-    .hero-media {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      aspect-ratio: 16 / 9;
-      min-width: 100%;
-      min-height: 100%;
-    }
-
-    .hero-media iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
       pointer-events: none;
     }
 
@@ -766,9 +747,10 @@
     <section class="hero relative overflow-hidden px-5 pb-24 pt-36 sm:px-8 sm:pt-44 lg:pb-32">
       <!-- The showreel itself is the backdrop -->
       <div class="hero-bg" aria-hidden="true">
-        <img class="hero-poster" src="https://i.ytimg.com/vi/zi8LEzT2sfo/maxresdefault.jpg" alt=""
-          decoding="async" />
-        <div class="hero-media" id="heroMedia"></div>
+        <video id="heroVideo" class="hero-video-el" autoplay muted loop playsinline preload="metadata"
+          poster="assets/showreel-poster.jpg" tabindex="-1">
+          <source src="assets/showreel-loop.mp4" type="video/mp4" />
+        </video>
         <div class="hero-scrim"></div>
       </div>
 
@@ -1691,25 +1673,14 @@
       });
     })();
 
-    // --- Hero: play the showreel as the backdrop on larger screens ---
-    // Phones keep the poster only: iOS blocks iframe autoplay anyway, and it
-    // saves visitors a heavy video load on mobile data.
+    // --- Hero backdrop: hold on the poster for visitors who asked for less motion ---
     (function () {
-      const holder = document.getElementById('heroMedia');
-      if (!holder) return;
-      const roomy = window.matchMedia('(min-width: 768px)').matches;
-      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!roomy || calm) return;
-
-      const f = document.createElement('iframe');
-      f.src = 'https://www.youtube.com/embed/zi8LEzT2sfo?autoplay=1&mute=1&loop=1' +
-        '&playlist=zi8LEzT2sfo&controls=0&modestbranding=1&rel=0&iv_load_policy=3' +
-        '&playsinline=1&disablekb=1&fs=0';
-      f.title = 'The Juice — Showreel';
-      f.setAttribute('allow', 'autoplay; encrypted-media');
-      f.setAttribute('tabindex', '-1');
-      f.setAttribute('aria-hidden', 'true');
-      holder.appendChild(f);
+      const v = document.getElementById('heroVideo');
+      if (!v) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        v.removeAttribute('autoplay');
+        v.pause();
+      }
     })();
 
     // --- Lead form → Google Form (answers collect in the linked Google Sheet) ---
