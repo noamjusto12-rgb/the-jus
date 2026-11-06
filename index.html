@@ -585,6 +585,53 @@
       transform: scale(1.06);
     }
 
+    /* ============ Accessibility ============ */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      z-index: 200;
+      padding: .75rem 1.25rem;
+      border-radius: 0 0 12px 12px;
+      background: rgb(var(--c-ink));
+      color: rgb(var(--c-shell));
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* A visible focus ring on every interactive element, not just the cards */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid rgb(var(--c-ink));
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    /* The hero sits on dark video, so an ink ring would disappear there */
+    .hero a:focus-visible,
+    .hero button:focus-visible {
+      outline-color: #fff;
+    }
+
+    .hp-play {
+      display: none;
+    }
+
+    #heroPause.is-paused .hp-pause {
+      display: none;
+    }
+
+    #heroPause.is-paused .hp-play {
+      display: block;
+    }
+
     /* ============ Theme toggle ============ */
     .theme-moon {
       display: none;
@@ -763,6 +810,8 @@
 
 <body class="bg-shell font-sans text-ink">
 
+  <a href="#top" class="skip-link">דלג לתוכן הראשי</a>
+
   <!-- ================= NAV ================= -->
   <header class="fixed inset-x-0 top-0 z-50 border-b border-line bg-shell/85 backdrop-blur-md">
     <nav class="mx-auto flex h-16 max-w-site flex-row-reverse items-center justify-between px-5 sm:px-8">
@@ -832,6 +881,17 @@
           data-src-sm="assets/showreel-loop-sm.mp4"></video>
         <div class="hero-scrim"></div>
       </div>
+
+      <button id="heroPause" type="button" aria-label="עצירת סרטון הרקע"
+        class="absolute bottom-5 right-5 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white backdrop-blur-sm transition-colors hover:bg-black/55">
+        <svg class="hp-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="6" y="5" width="4" height="14" rx="1" />
+          <rect x="14" y="5" width="4" height="14" rx="1" />
+        </svg>
+        <svg class="hp-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </button>
 
       <!-- Doodle character hanging on a rope from the top bar -->
       <img src="assets/char-rope.png" alt="" aria-hidden="true" onerror="this.style.display='none'"
@@ -1765,6 +1825,30 @@
         ? v.dataset.srcLg
         : v.dataset.srcSm;
       v.play().catch(() => { /* poster stays if the browser refuses */ });
+    })();
+
+    // --- Pause control for the looping hero video (WCAG 2.2.2) ---
+    (function () {
+      const v = document.getElementById('heroVideo');
+      const btn = document.getElementById('heroPause');
+      if (!v || !btn) return;
+
+      function sync() {
+        const paused = v.paused;
+        btn.classList.toggle('is-paused', paused);
+        btn.setAttribute('aria-label', paused ? 'הפעלת סרטון הרקע' : 'עצירת סרטון הרקע');
+      }
+
+      btn.addEventListener('click', () => {
+        if (v.paused) v.play().catch(() => { }); else v.pause();
+        sync();
+      });
+      v.addEventListener('play', sync);
+      v.addEventListener('pause', sync);
+
+      // Visitors who asked for less motion get the still poster and a play button.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) v.pause();
+      sync();
     })();
 
     // --- Lead form → Google Form (answers collect in the linked Google Sheet) ---
