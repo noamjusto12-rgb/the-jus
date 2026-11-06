@@ -176,27 +176,33 @@ main>section.band-dark{background:var(--dark)}
 
 /* ---------- section shell ---------- */
 .section{padding:88px 0}
-.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;margin-bottom:48px}
-.section-head h2{color:var(--red);font-size:clamp(2.4rem,6vw,4rem);font-weight:800}
-.styles{text-align:start;color:var(--muted);font-size:.98rem;line-height:1.9}
-.styles .lbl{color:var(--red);font-weight:600;display:block;margin-bottom:4px}
+.wrap-wide{max-width:1520px;margin-inline:auto;padding-inline:clamp(18px,3vw,46px)}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:68px}
+.section-head h2{color:var(--red);font-size:clamp(2.1rem,3.9vw,3.4rem);font-weight:800;line-height:1}
+.styles{display:flex;align-items:flex-start;gap:clamp(18px,4.4vw,70px);margin-inline-end:clamp(0px,10vw,160px)}
+.styles .lbl{color:var(--red);font-weight:700;font-size:clamp(1.2rem,2.4vw,2.1rem);line-height:1.2;white-space:nowrap}
+.styles ul{color:var(--red);font-weight:400;font-size:clamp(1rem,1.9vw,1.5rem);line-height:1.5;text-align:start;white-space:nowrap}
+@media (max-width:640px){
+  .section-head{flex-direction:column-reverse;align-items:flex-end;gap:18px;margin-bottom:44px}
+  .styles{margin-inline-end:0}
+}
 
 /* ---------- 16:9 grid ---------- */
-.grid-wide{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 36px}
-@media (max-width:760px){ .grid-wide{grid-template-columns:1fr;gap:32px} }
+.grid-wide{display:grid;grid-template-columns:repeat(2,1fr);gap:58px clamp(28px,7vw,124px)}
+@media (max-width:760px){ .grid-wide{grid-template-columns:1fr;gap:38px} }
 .vid-card{margin:0}
 .vid-label{
-  color:var(--red);font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
-  margin-bottom:10px;direction:ltr;text-align:right
+  color:var(--red);font-weight:700;font-size:clamp(1rem,1.8vw,1.45rem);letter-spacing:.05em;
+  text-transform:uppercase;margin-bottom:14px;direction:ltr;text-align:right
 }
 .vid-frame{
-  padding:8px;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--r-lg);box-shadow:var(--shadow);transition:border-color .2s;
+  padding:0;background:var(--bg-alt);border:1px solid var(--line);
+  border-radius:4px;overflow:hidden;transition:border-color .2s;
 }
 .vid-frame:hover{border-color:color-mix(in srgb, var(--red) 55%, var(--line))}
 .vid-btn{
   display:block;width:100%;padding:0;border:0;background:var(--bg-alt);cursor:pointer;
-  position:relative;overflow:hidden;border-radius:calc(var(--r-lg) - 8px);
+  position:relative;overflow:hidden;
 }
 .vid-btn img{width:100%;height:100%;object-fit:cover;transition:opacity .25s}
 .vid-frame:hover .vid-btn img{opacity:.85}
@@ -218,7 +224,7 @@ main>section.band-dark{background:var(--dark)}
   transition:transform .55s cubic-bezier(.22,.61,.36,1), opacity .4s;will-change:transform;
 }
 @media (prefers-reduced-motion: reduce){ .flow-item{transition:none} }
-.flow-item .vid-frame{padding:7px;border-radius:var(--r-lg)}
+.flow-item .vid-frame{padding:7px;background:var(--surface);border-radius:var(--r-lg)}
 .flow-item.is-front .vid-frame{border-color:color-mix(in srgb, var(--ink) 55%, var(--line));
   box-shadow:0 30px 60px -28px rgba(23,24,26,.55)}
 :root[data-theme="dark"] .flow-item.is-front .vid-frame{box-shadow:0 30px 60px -24px rgba(0,0,0,.9)}
@@ -274,6 +280,8 @@ main>section.band-dark{background:var(--dark)}
 .marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
 .marquee img{height:42px;width:auto;object-fit:contain;filter:brightness(0) invert(1);opacity:.85}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-track.solo{width:100%;justify-content:flex-start;animation:cross 17s linear infinite}
+@keyframes cross{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
 @media (prefers-reduced-motion: reduce){
   .marquee-track{animation:none;justify-content:center;width:100%}
 }
@@ -412,12 +420,17 @@ main>section.band-dark{background:var(--dark)}
 
   <!-- WORKS -->
   <section class="section" id="works">
-    <div class="wrap">
+    <div class="wrap-wide">
       <div class="section-head">
         <h2>עבודות</h2>
         <div class="styles">
           <span class="lbl">סגנונות :</span>
-          פרסומות<br />קמפיינים לסושיאל<br />סרטוני הדרכה<br />קונספטים
+          <ul>
+            <li>פרסומות</li>
+            <li>קליפים</li>
+            <li>סרטוני הדרכה</li>
+            <li>קונספטים</li>
+          </ul>
         </div>
       </div>
 
@@ -839,6 +852,11 @@ block(function(){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var originals = [].slice.call(track.children);
   if(!originals.length) return;
+
+  /* a single logo travels across the band on its own: cloning it would just
+     look like a motionless row of identical marks */
+  if(originals.length === 1){ track.classList.add('solo'); return; }
+
   var guard = 0;
   while(track.scrollWidth < box.offsetWidth * 2 && guard < 40){
     originals.forEach(function(el){ track.appendChild(el.cloneNode(true)); });
