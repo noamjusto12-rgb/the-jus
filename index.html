@@ -300,7 +300,8 @@ main>section.band-dark{background:var(--dark)}
 .marquee-track{display:flex;align-items:center;gap:64px;width:max-content;direction:ltr;
   animation:drift 26s linear infinite}
 .marquee:hover .marquee-track,.marquee:focus-within .marquee-track{animation-play-state:paused}
-.marquee img{height:42px;width:auto;object-fit:contain;filter:brightness(0) invert(1);opacity:.85}
+.marquee img{height:36px;width:auto;max-width:170px;object-fit:contain;
+  filter:brightness(0) invert(1);opacity:.85}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .marquee-track.solo{width:100%;justify-content:flex-start;animation:cross 17s linear infinite}
 @keyframes cross{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
@@ -638,6 +639,7 @@ main>section.band-dark{background:var(--dark)}
     <div class="marquee" id="marquee">
       <div class="marquee-track" id="marqueeTrack">
         <img src="assets/maneki-logo.png" alt="Maneki Wallet" loading="lazy" />
+        <img src="assets/griffin-logo.png" alt="Griffin" loading="lazy" />
         <!-- הוסיפו כאן לוגואים נוספים: <img src="assets/LOGO.png" alt="שם המותג" loading="lazy" /> -->
       </div>
     </div>
@@ -880,6 +882,18 @@ block(function(){
   }
   /* second identical half, so translateX(-50%) lands exactly on a repeat */
   [].slice.call(track.children).forEach(function(el){ track.appendChild(el.cloneNode(true)); });
+
+  /* a fixed duration means more logos scroll faster; pin it to ~55px a second.
+     Lazy logos have no width until they load, so pace it again once they do. */
+  function pace(){
+    var half = track.scrollWidth / 2;
+    if(half > 40) track.style.animationDuration = Math.max(14, Math.round(half / 55)) + 's';
+  }
+  pace();
+  [].slice.call(track.querySelectorAll('img')).forEach(function(im){
+    if(!im.complete) im.addEventListener('load', pace, { once: true });
+  });
+  window.addEventListener('load', pace);
 });
 
 /* ---- English version: one dictionary keyed by the Hebrew on the page ---- */
