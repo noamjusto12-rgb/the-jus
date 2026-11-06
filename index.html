@@ -93,77 +93,6 @@
     section[id] {
       scroll-margin-top: 6rem;
     }
-
-    /* ============ Scroll reveal (fade-in-up) ============ */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity .8s cubic-bezier(.22, .61, .36, 1), transform .8s cubic-bezier(.22, .61, .36, 1);
-      transition-delay: var(--reveal-delay, 0ms);
-    }
-
-    .reveal.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ============ Spotlight bento cards ============ */
-    .spotlight-card {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .spotlight-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%),
-          rgb(var(--c-ink) / .055), transparent 65%);
-      opacity: 0;
-      transition: opacity .45s ease;
-      pointer-events: none;
-    }
-
-    .spotlight-card:hover::before {
-      opacity: 1;
-    }
-
-    /* border spotlight - a hairline that brightens near the cursor */
-    .spotlight-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
-          rgb(var(--c-ink) / .28), transparent 70%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity .45s ease;
-      pointer-events: none;
-    }
-
-    .spotlight-card:hover::after {
-      opacity: 1;
-    }
-
-    /* ============ Magnetic buttons ============ */
-    .magnetic {
-      transition: transform .35s cubic-bezier(.22, .61, .36, 1), background-color .25s ease, color .25s ease;
-      will-change: transform;
-    }
-
-    .magnetic:hover {
-      transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.03);
-    }
-
-    .magnetic:active {
-      transform: scale(.98);
-    }
-
     /* ============ Mobile menu ============ */
     #mobileMenu {
       display: grid;
@@ -197,172 +126,6 @@
       transform: translateY(-6px) rotate(-45deg);
     }
 
-
-    /* ============ Hero aurora background (pure CSS) ============ */
-    .aurora-blob {
-      position: absolute;
-      border-radius: 9999px;
-      filter: blur(90px);
-      will-change: transform;
-      pointer-events: none;
-    }
-
-    .aurora-1 {
-      width: 46rem;
-      height: 46rem;
-      top: -12rem;
-      right: -8rem;
-      background: radial-gradient(circle at 40% 40%, rgba(251, 146, 60, .9), transparent 68%);
-      /* orange */
-      animation: aurora-drift-1 26s ease-in-out infinite alternate;
-    }
-
-    .aurora-2 {
-      width: 42rem;
-      height: 42rem;
-      top: 2rem;
-      left: -10rem;
-      background: radial-gradient(circle at 60% 50%, rgba(239, 68, 68, .8), transparent 68%);
-      /* red */
-      animation: aurora-drift-2 32s ease-in-out infinite alternate;
-    }
-
-    .aurora-3 {
-      width: 38rem;
-      height: 38rem;
-      bottom: -6rem;
-      right: 20%;
-      background: radial-gradient(circle at 50% 50%, rgba(250, 204, 21, .85), transparent 68%);
-      /* yellow */
-      animation: aurora-drift-3 38s ease-in-out infinite alternate;
-    }
-
-    .aurora-4 {
-      width: 38rem;
-      height: 38rem;
-      top: 30%;
-      right: 34%;
-      background: radial-gradient(circle at 50% 50%, rgba(251, 113, 133, .7), transparent 68%);
-      /* warm coral-red */
-      animation: aurora-drift-2 29s ease-in-out infinite alternate-reverse;
-    }
-
-    .aurora-5 {
-      width: 34rem;
-      height: 34rem;
-      bottom: -10rem;
-      left: 8%;
-      background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, .75), transparent 68%);
-      /* amber */
-      animation: aurora-drift-1 35s ease-in-out infinite alternate-reverse;
-    }
-
-    .aurora-6 {
-      width: 40rem;
-      height: 40rem;
-      top: 8%;
-      right: 18%;
-      background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, .7), transparent 68%);
-      /* purple */
-      animation: aurora-drift-3 31s ease-in-out infinite alternate-reverse;
-    }
-
-    @keyframes aurora-drift-1 {
-      0% {
-        transform: translate(0, 0) scale(1);
-      }
-
-      50% {
-        transform: translate(-8rem, 5rem) scale(1.12);
-      }
-
-      100% {
-        transform: translate(-14rem, -2rem) scale(.95);
-      }
-    }
-
-    @keyframes aurora-drift-2 {
-      0% {
-        transform: translate(0, 0) scale(1);
-      }
-
-      50% {
-        transform: translate(9rem, -4rem) scale(1.08);
-      }
-
-      100% {
-        transform: translate(4rem, 6rem) scale(1.15);
-      }
-    }
-
-    @keyframes aurora-drift-3 {
-      0% {
-        transform: translate(0, 0) scale(1);
-      }
-
-      50% {
-        transform: translate(-6rem, -5rem) scale(1.1);
-      }
-
-      100% {
-        transform: translate(7rem, -2rem) scale(.92);
-      }
-    }
-
-    /* ============ Floating doodle characters ============ */
-    .char-float {
-      animation: char-bob 5.5s ease-in-out infinite;
-      will-change: transform, filter;
-    }
-
-    .char-float-2 {
-      animation-duration: 6.5s;
-      animation-delay: -2.6s;
-      /* out of phase with the first character */
-    }
-
-    @keyframes char-bob {
-
-      0%,
-      100% {
-        transform: translateY(0);
-        filter: drop-shadow(0 14px 10px rgba(31, 33, 36, .22));
-      }
-
-      50% {
-        transform: translateY(-16px);
-        filter: drop-shadow(0 32px 22px rgba(31, 33, 36, .12));
-        /* higher = softer, farther shadow */
-      }
-    }
-
-    /* ============ Hanging rope character ============ */
-    .char-hang {
-      transform-origin: top center;
-      /* pivot at the rope's anchor point */
-      animation: char-sway 6s ease-in-out infinite;
-      filter: drop-shadow(10px 24px 18px rgba(31, 33, 36, .16));
-      will-change: transform;
-    }
-
-    @keyframes char-sway {
-
-      0%,
-      100% {
-        transform: rotate(3deg);
-      }
-
-      50% {
-        transform: rotate(-3.5deg);
-      }
-    }
-
-    /* ============ Clients marquee ============ */
-    .marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-                       mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
-    .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
-    .marquee:hover .marquee-track { animation-play-state: paused; }
-    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
     /* ============ Reels carousel ============ */
     .no-scrollbar {
@@ -751,56 +514,8 @@
       cursor: not-allowed;
     }
 
-    /* ============ DJ robot dancing to the beat ============ */
-    .dj-playing {
-      animation: dj-bounce .588s ease-in-out infinite;
-      /* one beat at 102 BPM */
-      transform-origin: bottom center;
-    }
-
-    @keyframes dj-bounce {
-
-      0%,
-      100% {
-        transform: translateY(0) rotate(-1.2deg) scaleY(1);
-      }
-
-      50% {
-        transform: translateY(-6px) rotate(1.2deg) scaleY(1.02);
-      }
-    }
-
     /* ============ Reduced motion ============ */
     @media (prefers-reduced-motion: reduce) {
-      .reveal {
-        opacity: 1;
-        transform: none;
-        transition: none;
-      }
-
-      .magnetic,
-      .spotlight-card::before,
-      .spotlight-card::after {
-        transition: none;
-      }
-
-      .aurora-blob {
-        animation: none;
-      }
-
-      .char-float {
-        animation: none;
-        filter: drop-shadow(0 14px 10px rgba(31, 33, 36, .2));
-      }
-
-      .char-hang {
-        animation: none;
-      }
-
-      .marquee-track {
-        animation: none;
-      }
-
       html {
         scroll-behavior: auto;
       }
@@ -828,7 +543,7 @@
       <!-- CTA - right (desktop) / burger (mobile) -->
       <div class="flex items-center gap-3">
         <a href="#contact"
-          class="magnetic hidden rounded-full bg-ink px-5 py-2 text-[15px] font-semibold text-shell md:inline-block">
+          class="hidden rounded-full bg-ink px-5 py-2 text-[15px] font-semibold text-shell md:inline-block">
           צור קשר
         </a>
         <button id="themeBtn" type="button"
@@ -893,33 +608,28 @@
         </svg>
       </button>
 
-      <!-- Doodle character hanging on a rope from the top bar -->
-      <img src="assets/char-rope.png" alt="" aria-hidden="true" onerror="this.style.display='none'"
-        class="char-hang pointer-events-none absolute left-2 top-14 z-10 w-20 select-none sm:left-[4%] sm:w-36 lg:w-44 xl:w-52" />
 
       <div class="relative z-10 mx-auto w-full max-w-site">
         <div class="mx-auto max-w-3xl text-center">
-          <p class="reveal font-mono text-xs font-medium tracking-[0.28em] text-white/65" dir="ltr">[
+          <p class="font-mono text-xs font-medium tracking-[0.28em] text-white/65" dir="ltr">[
             AI&nbsp;CREATIVE&nbsp;STUDIO ]</p>
           <h1
-            class="hero-title reveal mt-7 text-[2.6rem] font-extrabold leading-[1.06] tracking-tight text-white sm:text-6xl lg:text-[5.2rem]"
-            style="--reveal-delay:90ms">
+            class="hero-title mt-7 text-[2.6rem] font-extrabold leading-[1.06] tracking-tight text-white sm:text-6xl lg:text-[5.2rem]">
             אפשר להפסיק לחפש<br />
             בואו נתחיל ליצור
           </h1>
-          <p class="hero-sub reveal mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl"
-            style="--reveal-delay:180ms">
+          <p class="hero-sub mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
             פרסומות סרטונים ותוכן שפעם היה אפשר רק לדמיין<br />
             סגנון ייחודי ויצירתי<br />
             כזה שצופים בו יותר מפעם אחת
           </p>
-          <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:270ms">
+          <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
             <a href="#contact"
-              class="magnetic rounded-full bg-white px-8 py-3.5 text-base font-semibold text-[#1F2124]">
+              class="rounded-full bg-white px-8 py-3.5 text-base font-semibold text-[#1F2124]">
               בואו נדבר
             </a>
             <a href="#works"
-              class="magnetic rounded-full border border-white/35 bg-white/10 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20">
+              class="rounded-full border border-white/35 bg-white/10 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20">
               צפו בעבודות
             </a>
           </div>
@@ -930,7 +640,7 @@
     <!-- ================= ABOUT ================= -->
     <section id="about" class="border-t border-line bg-shell px-5 py-20 sm:px-8 lg:py-28">
       <div class="mx-auto max-w-site">
-        <div class="reveal flex items-center justify-between gap-4">
+        <div class="flex items-center justify-between gap-4">
           <h2 class="text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl">
             תכל'ס? באנו לעשות וידאו
           </h2>
@@ -940,7 +650,7 @@
 
         <div class="mt-12 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <!-- Text (right in RTL) -->
-          <div class="reveal space-y-6 text-lg leading-relaxed text-slate2 sm:text-xl" style="--reveal-delay:120ms">
+          <div class="space-y-6 text-lg leading-relaxed text-slate2 sm:text-xl">
             <p class="font-medium text-ink">אנחנו מפיקים סרטונים למותגים, עסקים ואנשים פרטיים.</p>
             <p>מה שאפשר לדמיין אפשר ליצור. אתם יכולים להגיע אלינו עם תסריט מוכן מראש, או לתת לנו ליצור עבורכם קריאייטיב מאפס.</p>
             <p>אנחנו מייצרים פרסומות בסגנון קולנועי, אנימציה, ריאליסטי, סרטוני הדרכה, לאירועים וכל רעיון נוסף
@@ -953,7 +663,7 @@
           </div>
 
           <!-- Looping video (left in RTL) -->
-          <div class="reveal" style="--reveal-delay:200ms">
+          <div class="">
             <div class="relative aspect-video w-full overflow-hidden rounded-2xl border border-line bg-card sm:rounded-3xl">
               <video class="absolute inset-0 h-full w-full object-cover" autoplay muted loop playsinline>
                 <source src="assets/about-loop.webm" type="video/webm" />
@@ -965,22 +675,15 @@
     </section>
     <section id="works" class="border-t border-line bg-shell px-5 py-20 sm:px-8 lg:py-28">
       <div class="relative mx-auto max-w-[88rem]">
-        <!-- DJ robot - click to start/stop the beat -->
-        <button id="djBot" type="button" aria-pressed="false" title="לחצו למוזיקה"
-          class="absolute -top-6 left-[37%] z-20 hidden w-56 cursor-pointer transition-transform duration-300 hover:scale-105 md:block lg:w-72">
-          <img src="assets/char-dj.png" alt="רובוט די-ג'יי, לחצו להפעלת מוזיקה"
-            onerror="this.parentElement.style.display='none'" class="pointer-events-none w-full select-none"
-            style="filter: drop-shadow(0 16px 14px rgba(31,33,36,.15));" />
-        </button>
 
-        <div class="reveal flex flex-col gap-3">
+        <div class="flex flex-col gap-3">
           <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[
             01&nbsp;/&nbsp;SELECTED&nbsp;WORK ]</p>
           <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">עבודות</h2>
         </div>
 
         <!-- Vertical reels carousel (9:16) - placeholder slides, swap in real reels later -->
-        <div class="reveal mt-14">
+        <div class="mt-14">
           <div class="flex items-center justify-between gap-4">
             <div>
               <p class="font-mono text-[11px] font-medium tracking-[0.28em] text-slate2" dir="ltr">[
@@ -1120,14 +823,14 @@
         </div>
 
         <!-- Main video gallery (16:9) -->
-        <div class="reveal mt-20 border-t border-line pt-14 lg:mt-24">
+        <div class="mt-20 border-t border-line pt-14 lg:mt-24">
           <p class="font-mono text-[11px] font-medium tracking-[0.28em] text-slate2" dir="ltr">[
             HORIZONTAL&nbsp;/&nbsp;16:9 ]</p>
           <h3 class="mt-2 text-xl font-bold sm:text-2xl">פרסומות וסרטונים</h3>
         </div>
 
         <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
-          <article class="reveal sm:col-span-2">
+          <article class="sm:col-span-2">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="R48ngAvojF8" data-ratio="16/9" data-title="FINQ Ad Concept"
                 aria-label="נגן: FINQ Ad Concept">
@@ -1143,7 +846,7 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">AD&nbsp;CONCEPT</span>
             </div>
           </article>
-          <article class="reveal">
+          <article class="">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="mBHoNeZBcOY" data-ratio="16/9" data-title="Surf Skulls"
                 aria-label="נגן: Surf Skulls">
@@ -1159,7 +862,7 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SURF</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
+          <article class="">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="sJV-jwg2zao" data-ratio="16/9"
                 data-title="GECKO'S Short Action Story" aria-label="נגן: GECKO'S Short Action Story">
@@ -1175,7 +878,7 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">ACTION&nbsp;SHORT</span>
             </div>
           </article>
-          <article class="reveal">
+          <article class="">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="DJhr-xOOV9k" data-ratio="16/9"
                 data-title="Short Comedy Action Trailer" aria-label="נגן: Short Comedy Action Trailer">
@@ -1191,7 +894,7 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">TRAILER</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
+          <article class="">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="9fpN4EfSm4o" data-ratio="16/9" data-title="Wildlife"
                 aria-label="נגן: Wildlife">
@@ -1207,7 +910,7 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">WILDLIFE</span>
             </div>
           </article>
-          <article class="reveal">
+          <article class="">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="eJf6V14qmAg" data-ratio="16/9"
                 data-title="Extreme Donkey Concept" aria-label="נגן: Extreme Donkey Concept">
@@ -1223,7 +926,7 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">CONCEPT</span>
             </div>
           </article>
-          <article class="reveal" style="--reveal-delay:100ms">
+          <article class="">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="vLnmvSnLq1A" data-ratio="16/9" data-title="Creative Spec Ad"
                 aria-label="נגן: Creative Spec Ad">
@@ -1239,7 +942,7 @@
               <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SPEC&nbsp;AD</span>
             </div>
           </article>
-          <article class="reveal">
+          <article class="">
             <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
               <button type="button" class="vid" data-yt="CsOnM86RLYM" data-ratio="16/9"
                 data-title="Funny Viral Video Concept" aria-label="נגן: Funny Viral Video Concept">
@@ -1262,13 +965,9 @@
     <!-- ================= SERVICES / BENTO ================= -->
     <section id="services" class="relative overflow-hidden border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
       <!-- DVD-screensaver bouncing doodle, behind the content -->
-      <div id="bounceArea" class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        <img id="bounceChar" src="assets/char-bounce.png" alt="" onerror="this.style.display='none'"
-          class="absolute left-0 top-0 w-72 select-none opacity-90 sm:w-[28rem]" />
-      </div>
 
       <div class="relative z-10 mx-auto max-w-site">
-        <div class="reveal flex flex-col gap-3">
+        <div class="flex flex-col gap-3">
           <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 02&nbsp;/&nbsp;SERVICES ]
           </p>
           <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">שירותים</h2>
@@ -1276,7 +975,7 @@
 
         <div class="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-12">
           <!-- Card 1 - large -->
-          <article class="spotlight-card reveal rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-7">
+          <article class="rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-7">
             <div class="flex h-full flex-col justify-between gap-14">
               <div class="flex items-start justify-between">
                 <img src="assets/service-camera.png" alt="" aria-hidden="true"
@@ -1293,8 +992,7 @@
           </article>
 
           <!-- Card 2 -->
-          <article class="spotlight-card reveal rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-5"
-            style="--reveal-delay:100ms">
+          <article class="rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-5">
             <div class="flex h-full flex-col justify-between gap-14">
               <div class="flex items-start justify-between">
                 <img src="assets/service-selfie.png" alt="" aria-hidden="true"
@@ -1311,8 +1009,7 @@
           </article>
 
           <!-- Card 3 - wide -->
-          <article class="spotlight-card reveal rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-12"
-            style="--reveal-delay:180ms">
+          <article class="rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-12">
             <div class="flex h-full flex-col justify-between gap-14">
               <div class="flex items-start justify-between">
                 <img src="assets/service-strategy.png" alt="" aria-hidden="true"
@@ -1337,12 +1034,10 @@
     <section id="advantage" class="relative overflow-hidden border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
       <!-- Pogo alien hopping along the drawn loop, behind the content -->
       <div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        <img id="pogoChar" src="assets/char-pogo.png" alt="" onerror="this.style.display='none'"
-          class="absolute left-0 top-0 w-56 select-none sm:w-72" />
       </div>
 
       <div class="relative z-10 mx-auto max-w-site">
-        <div class="reveal flex flex-col gap-3">
+        <div class="flex flex-col gap-3">
           <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 03&nbsp;/&nbsp;ABOUT&nbsp;ME
             ]</p>
           <h2 id="advTitle" class="text-3xl font-extrabold tracking-tight sm:text-5xl">מי אני</h2>
@@ -1350,12 +1045,12 @@
 
         <!-- Founder: portrait beside the personal intro -->
         <div class="mt-12 grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-16">
-          <div class="reveal">
+          <div class="">
             <img src="assets/noam.jpg" alt="נעם, היוצר מאחורי The Juice" loading="lazy" decoding="async"
               onerror="this.parentElement.style.display='none'"
               class="w-full rounded-2xl border border-line object-cover shadow-sm sm:rounded-3xl" />
           </div>
-          <div class="reveal" style="--reveal-delay:100ms">
+          <div class="">
             <h3 class="text-2xl font-extrabold sm:text-3xl">היי, אני נעם</h3>
             <div class="mt-5 space-y-4 text-base leading-relaxed text-slate2 sm:text-lg">
               <p>יוצר תוכן בבינה מלאכותית. <span dir="ltr">The Juice</span> זה הכינוי וגם השם של הסטודיו.</p>
@@ -1389,19 +1084,19 @@
     <!-- ================= TESTIMONIALS / CLIENTS ================= -->
     <section id="clients" class="border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
       <div class="mx-auto max-w-site">
-        <div class="reveal flex items-center justify-between gap-4">
+        <div class="flex items-center justify-between gap-4">
           <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">מה אומרים עלינו</h2>
           <p class="shrink-0 font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 04&nbsp;/&nbsp;CLIENTS ]</p>
         </div>
 
         <!-- Single floating client logo -->
-        <div class="reveal mt-12 flex justify-center">
+        <div class="mt-12 flex justify-center">
           <img src="assets/maneki-logo.png" alt="Maneki Wallet"
                class="char-float h-24 w-auto object-contain sm:h-28" style="animation-duration: 4.5s;" />
         </div>
 
         <!-- Description under the logo -->
-        <p class="reveal mx-auto mt-10 max-w-2xl text-center text-lg leading-relaxed text-slate2 sm:text-xl" style="--reveal-delay:120ms">
+        <p class="mx-auto mt-10 max-w-2xl text-center text-lg leading-relaxed text-slate2 sm:text-xl">
           „היי.. ראיתי את הסרטון, התגובה של האישה נראית דרמטית וטבעית, שזה הוק מעולה... שבוע מעולה!"
           <span class="mt-3 block font-mono text-sm text-ink" dir="ltr">Maneki Wallet</span>
         </p>
@@ -1412,25 +1107,19 @@
     <footer id="contact" class="scroll-mt-20 relative overflow-hidden border-t border-line bg-paper px-5 pt-24 sm:px-8 lg:pt-32">
       <!-- Aurora background (same treatment as the hero) -->
       <div class="absolute inset-0 z-0" aria-hidden="true">
-        <div class="aurora-blob aurora-1"></div>
-        <div class="aurora-blob aurora-2"></div>
-        <div class="aurora-blob aurora-4"></div>
-        <div class="aurora-blob aurora-5"></div>
-        <div class="aurora-blob aurora-6"></div>
         <div class="absolute inset-0 bg-shell/55 backdrop-blur-xl"></div>
       </div>
 
       <div class="relative z-10 mx-auto max-w-site">
         <div class="mx-auto max-w-4xl text-center">
-          <p class="reveal font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ LET'S&nbsp;TALK ]
+          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ LET'S&nbsp;TALK ]
           </p>
-          <h2 class="reveal mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-6xl lg:text-7xl"
-            style="--reveal-delay:90ms">
+          <h2 class="mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-6xl lg:text-7xl">
             מוכנים לקחת את המותג שלכם צעד אחד קדימה?
           </h2>
 
           <!-- Lead form - posts to the studio's Google Form (responses land in Sheets) -->
-          <form id="leadForm" class="reveal mx-auto mt-12 max-w-xl text-right" style="--reveal-delay:150ms" novalidate>
+          <form id="leadForm" class="mx-auto mt-12 max-w-xl text-right" novalidate>
             <div class="rounded-3xl border border-line bg-surface/75 p-6 shadow-sm backdrop-blur-sm sm:p-8">
               <div class="grid gap-4 sm:grid-cols-2">
                 <div>
@@ -1470,7 +1159,7 @@
                 style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
 
               <button type="submit" id="leadSubmit"
-                class="magnetic mt-6 w-full rounded-full bg-ink px-7 py-3.5 font-semibold text-shell">
+                class="mt-6 w-full rounded-full bg-ink px-7 py-3.5 font-semibold text-shell">
                 <span id="leadBtnText">שלחו לי פרטים ואחזור אליכם</span>
               </button>
 
@@ -1478,14 +1167,14 @@
             </div>
           </form>
 
-          <p class="reveal mt-12 text-base text-slate2" style="--reveal-delay:220ms">
+          <p class="mt-12 text-base text-slate2">
             מעדיפים לדבר ישירות? מוזמנים לפנות אליי בוואטסאפ או באינסטגרם
           </p>
 
-          <div class="reveal mt-6 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:280ms">
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
             <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
               target="_blank" rel="noopener"
-              class="magnetic inline-flex items-center gap-2.5 rounded-full bg-ink px-7 py-3.5 font-semibold text-shell">
+              class="inline-flex items-center gap-2.5 rounded-full bg-ink px-7 py-3.5 font-semibold text-shell">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.6.2-.8l.4-.5c.1-.2.2-.3.3-.5v-.5c0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.4-.4Z" />
@@ -1493,7 +1182,7 @@
               WhatsApp
             </a>
             <a href="https://ig.me/m/bythejuice" target="_blank" rel="noopener"
-              class="magnetic inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
+              class="inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
                 <rect x="3" y="3" width="18" height="18" rx="5" />
                 <circle cx="12" cy="12" r="4" />
@@ -1502,7 +1191,7 @@
               Instagram
             </a>
             <a href="https://www.facebook.com/share/1apmCBD7er/?mibextid=wwXIfr" target="_blank" rel="noopener"
-              class="magnetic inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
+              class="inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.2 0-1-.1-1.9-.1-1.9 0-3.3 1.2-3.3 3.4V11H8.5v3h2.7v7h2.3Z" />
@@ -1570,131 +1259,6 @@
         burgerBtn.setAttribute('aria-expanded', 'false');
       })
     );
-
-    // --- Scroll reveal ---
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // --- Spotlight cards ---
-    document.querySelectorAll('.spotlight-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
-    });
-
-    // --- Magnetic buttons (subtle pull toward the cursor) ---
-    document.querySelectorAll('.magnetic').forEach(btn => {
-      btn.addEventListener('mousemove', e => {
-        const r = btn.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
-        const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
-        btn.style.setProperty('--tx', (dx * 6) + 'px');
-        btn.style.setProperty('--ty', (dy * 4) + 'px');
-      });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.setProperty('--tx', '0px');
-        btn.style.setProperty('--ty', '0px');
-      });
-    });
-
-    // --- DVD-style bouncing character in the services section ---
-    const bounceChar = document.getElementById('bounceChar');
-    if (bounceChar && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const area = document.getElementById('bounceArea');
-      // The PNG has transparent padding around the drawing; these fractions mark
-      // where the visible character actually sits, so bounces happen on his body.
-      const INSET = { left: .30, right: .30, top: .10, bottom: .08 };
-      let x = 20, y = 20, vx = 85, vy = 65, last = null, raf = null;
-
-      function step(t) {
-        if (last === null) last = t;
-        const dt = Math.min((t - last) / 1000, .05);
-        last = t;
-        const w = bounceChar.offsetWidth, h = bounceChar.offsetHeight;
-        const minX = -INSET.left * w, maxX = area.clientWidth - w + INSET.right * w;
-        const minY = -INSET.top * h, maxY = area.clientHeight - h + INSET.bottom * h;
-        x += vx * dt; y += vy * dt;
-        if (x <= minX) { x = minX; vx = Math.abs(vx); }
-        else if (x >= maxX) { x = maxX; vx = -Math.abs(vx); }
-        if (y <= minY) { y = minY; vy = Math.abs(vy); }
-        else if (y >= maxY) { y = maxY; vy = -Math.abs(vy); }
-        bounceChar.style.transform = `translate(${x}px, ${y}px)`;
-        raf = requestAnimationFrame(step);
-      }
-
-      // Only animate while the section is on screen
-      new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          if (raf === null) { last = null; raf = requestAnimationFrame(step); }
-        } else if (raf !== null) {
-          cancelAnimationFrame(raf);
-          raf = null;
-        }
-      }).observe(area);
-    }
-
-    // --- Pogo alien hopping loop in the advantage section ---
-    const pogoChar = document.getElementById('pogoChar');
-    if (pogoChar && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const pogoSec = document.getElementById('advantage');
-      // Where the alien's feet / horizontal center sit inside the PNG canvas
-      const FEET_Y = .95, CENTER_X = .5;
-
-      // Landing spots: beside the title (start), then the top of each bullet pill.
-      // Sorted left-to-right so the hop order follows the drawing regardless of RTL.
-      function getAnchors() {
-        const sec = pogoSec.getBoundingClientRect();
-        const title = document.getElementById('advTitle').getBoundingClientRect();
-        const stops = [...pogoSec.querySelectorAll('ul li')]
-          .map(c => c.getBoundingClientRect())
-          .map(r => ({ x: r.left - sec.left + r.width / 2, y: r.top - sec.top }))
-          .sort((a, b) => a.x - b.x);
-        const start = { x: title.left - sec.left - 40, y: title.bottom - sec.top };
-        return [start, ...stops, start]; // start -> left -> middle -> right -> back
-      }
-
-      function placeAt(p, lift, tilt) {
-        const w = pogoChar.offsetWidth, h = pogoChar.offsetHeight;
-        pogoChar.style.transform =
-          `translate(${p.x - w * CENTER_X}px, ${p.y - h * FEET_Y - lift}px) rotate(${tilt}deg)`;
-      }
-
-      let leg = 0, legStart = null, raf = null;
-      function hop(t) {
-        const pts = getAnchors();
-        const from = pts[leg], to = pts[leg + 1];
-        const dist = Math.hypot(to.x - from.x, to.y - from.y);
-        const dur = 700 + dist * 0.9;                       // longer jumps take longer
-        const jumpH = 55;                                   // same low hop height every jump
-        if (legStart === null) legStart = t;
-        let k = Math.max(0, Math.min((t - legStart) / dur, 1));
-        const ease = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-        const p = { x: from.x + (to.x - from.x) * ease, y: from.y + (to.y - from.y) * ease };
-        const lift = jumpH * 4 * k * (1 - k);               // parabolic arc
-        const tilt = Math.sign(to.x - from.x) * 7 * Math.sin(Math.PI * k);
-        placeAt(p, lift, tilt);
-        if (k >= 1) { leg = (leg + 1) % (pts.length - 1); legStart = t + 140; } // beat between hops
-        raf = requestAnimationFrame(hop);
-      }
-
-      new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          if (raf === null) { legStart = null; raf = requestAnimationFrame(hop); }
-        } else if (raf !== null) {
-          cancelAnimationFrame(raf);
-          raf = null;
-        }
-      }).observe(pogoSec);
-    }
 
     // --- Floating WhatsApp bubble: hidden until scrolled past the hero ---
     const waBubble = document.getElementById('waBubble');
@@ -1977,109 +1541,6 @@
         }
       });
     })();
-
-    // --- DJ robot: click to toggle a generative Web Audio beat ---
-    const djBtn = document.getElementById('djBot');
-    if (djBtn) {
-      const djImg = djBtn.querySelector('img');
-      const BPM = 102, STEP = 60 / BPM / 4; // 16th-note duration in seconds
-      let ctx = null, master = null, noise = null, timer = null, nextTime = 0, step = 0;
-
-      function makeNoise(c) {
-        const b = c.createBuffer(1, c.sampleRate / 2, c.sampleRate), d = b.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-        return b;
-      }
-      function kick(t) {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.frequency.setValueAtTime(150, t);
-        o.frequency.exponentialRampToValueAtTime(42, t + .12);
-        g.gain.setValueAtTime(.9, t);
-        g.gain.exponentialRampToValueAtTime(.001, t + .28);
-        o.connect(g).connect(master); o.start(t); o.stop(t + .3);
-      }
-      function snare(t) {
-        const s = ctx.createBufferSource(); s.buffer = noise;
-        const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1800;
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(.5, t);
-        g.gain.exponentialRampToValueAtTime(.001, t + .18);
-        s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + .2);
-      }
-      function hat(t, open) {
-        const s = ctx.createBufferSource(); s.buffer = noise;
-        const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7500;
-        const g = ctx.createGain(), d = open ? .3 : .05;
-        g.gain.setValueAtTime(open ? .22 : .15, t);
-        g.gain.exponentialRampToValueAtTime(.001, t + d);
-        s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + d + .02);
-      }
-      function bass(t, freq, len) {
-        const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = freq;
-        const f = ctx.createBiquadFilter(); f.type = 'lowpass';
-        f.frequency.setValueAtTime(900, t);
-        f.frequency.exponentialRampToValueAtTime(250, t + len);
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(.28, t);
-        g.gain.exponentialRampToValueAtTime(.001, t + len);
-        o.connect(f).connect(g).connect(master); o.start(t); o.stop(t + len);
-      }
-      function blip(t, freq) {
-        const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = freq;
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(.1, t);
-        g.gain.exponentialRampToValueAtTime(.001, t + .12);
-        o.connect(g).connect(master); o.start(t); o.stop(t + .14);
-      }
-      function scratch(t) {
-        const s = ctx.createBufferSource(); s.buffer = noise;
-        const f = ctx.createBiquadFilter(); f.type = 'bandpass';
-        f.frequency.setValueAtTime(400, t);
-        f.frequency.exponentialRampToValueAtTime(4000, t + .4);
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(.18, t);
-        g.gain.exponentialRampToValueAtTime(.001, t + .45);
-        s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + .5);
-      }
-
-      const A1 = 55, C2 = 65.41, D2 = 73.42, E2 = 82.41;
-      const bassPat = [{ s: 0, f: A1, l: 2 }, { s: 3, f: A1, l: 1 }, { s: 6, f: C2, l: 2 }, { s: 10, f: D2, l: 2 }, { s: 14, f: E2, l: 2 }];
-      const blipPat = { 2: 440, 5: 523.25, 9: 659.25, 13: 587.33 };
-
-      function schedule() {
-        while (nextTime < ctx.currentTime + .12) {
-          const s16 = step % 16, bar = Math.floor(step / 16);
-          if (s16 === 0 || s16 === 7 || s16 === 10) kick(nextTime);
-          if (s16 === 4 || s16 === 12) snare(nextTime);
-          if (s16 % 2 === 0) hat(nextTime, false);
-          if (s16 === 14) hat(nextTime, true);
-          bassPat.forEach(n => { if (n.s === s16) bass(nextTime, n.f, n.l * STEP * .95); });
-          if (bar % 2 === 1 && blipPat[s16]) blip(nextTime, blipPat[s16]);
-          if (s16 === 0 && bar > 0 && bar % 4 === 0) scratch(nextTime);
-          nextTime += STEP; step++;
-        }
-      }
-
-      djBtn.addEventListener('click', async () => {
-        if (!ctx) {
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
-          master = ctx.createGain(); master.gain.value = .5; master.connect(ctx.destination);
-          noise = makeNoise(ctx);
-        }
-        if (timer === null) {
-          await ctx.resume();
-          step = 0; nextTime = ctx.currentTime + .06;
-          timer = setInterval(schedule, 25);
-          djImg.classList.add('dj-playing');
-          djBtn.setAttribute('aria-pressed', 'true');
-        } else {
-          clearInterval(timer); timer = null;
-          ctx.suspend();
-          djImg.classList.remove('dj-playing');
-          djBtn.setAttribute('aria-pressed', 'false');
-        }
-      });
-    }
 
   </script>
 </body>
