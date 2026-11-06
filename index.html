@@ -1,1803 +1,794 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl" class="scroll-smooth">
-
+<!doctype html>
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Juice | AI Creative Studio | הפקת וידאו וקריאייטיב מבוסס AI</title>
-  <meta name="description"
-    content="The Juice. סטודיו קריאייטיב מבוסס AI הפקת וידאו וקמפיינים ברמת פרימיום למותגים, ללא לוגיסטיקה וללא ימי צילום" />
-
-  <!-- Fonts: Assistant (Hebrew UI) + JetBrains Mono (structural micro-labels) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet" />
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Assistant', 'system-ui', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          /* Every colour resolves through a CSS variable, so flipping
-             data-theme on <html> re-themes the whole site at once. */
-          colors: {
-            ink: 'rgb(var(--c-ink) / <alpha-value>)',
-            slate2: 'rgb(var(--c-slate2) / <alpha-value>)',
-            shell: 'rgb(var(--c-shell) / <alpha-value>)',
-            paper: 'rgb(var(--c-paper) / <alpha-value>)',
-            card: 'rgb(var(--c-card) / <alpha-value>)',
-            line: 'rgb(var(--c-line) / <alpha-value>)',
-            surface: 'rgb(var(--c-surface) / <alpha-value>)',
-          },
-          maxWidth: { site: '76rem' },
-        },
-      },
-    };
-  </script>
-
-  <script>
-    (function () {
-      try {
-        var saved = localStorage.getItem('theme');
-        var dark = saved ? saved === 'dark'
-          : window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (dark) document.documentElement.setAttribute('data-theme', 'dark');
-      } catch (e) { /* private mode: fall back to light */ }
-    })();
-  </script>
-
-  <style>
-    /* ============ Theme tokens ============ */
-    :root {
-      color-scheme: light;
-      --c-ink: 31 33 36;
-      --c-slate2: 95 99 104;
-      --c-shell: 250 248 244;
-      --c-paper: 244 241 234;
-      --c-card: 239 235 226;
-      --c-line: 231 226 216;
-      --c-surface: 255 255 255;
-      --c-placeholder: 154 160 166;
-      --shadow: 31 33 36;
-    }
-
-    :root[data-theme="dark"] {
-      color-scheme: dark;
-      --c-ink: 240 238 233;
-      --c-slate2: 163 161 155;
-      --c-shell: 16 17 19;
-      --c-paper: 22 24 27;
-      --c-card: 31 33 37;
-      --c-line: 48 51 56;
-      --c-surface: 27 29 33;
-      --c-placeholder: 120 124 130;
-      --shadow: 0 0 0;
-    }
-    /* ============ Base ============ */
-    ::selection {
-      background: rgb(var(--c-ink));
-      color: rgb(var(--c-shell));
-    }
-
-    html {
-      -webkit-font-smoothing: antialiased;
-    }
-
-    section[id] {
-      scroll-margin-top: 6rem;
-    }
-    /* ============ Mobile menu ============ */
-    #mobileMenu {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows .4s cubic-bezier(.22, .61, .36, 1);
-    }
-
-    #mobileMenu.open {
-      grid-template-rows: 1fr;
-    }
-
-    #mobileMenu>div {
-      overflow: hidden;
-    }
-
-    /* Hamburger → X */
-    .burger span {
-      transition: transform .3s ease, opacity .3s ease;
-      transform-origin: center;
-    }
-
-    .burger.open span:nth-child(1) {
-      transform: translateY(6px) rotate(45deg);
-    }
-
-    .burger.open span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .burger.open span:nth-child(3) {
-      transform: translateY(-6px) rotate(-45deg);
-    }
-
-
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* ============ Scroll: hero stays, content rises over it ============ */
-    @media (prefers-reduced-motion: no-preference) {
-      /* Tailwind's .relative utility is injected after this block, so the
-         selector has to out-specify it rather than rely on order. */
-      main>section.hero {
-        position: sticky;
-        top: 0;
-        z-index: 0;
-      }
-
-      /* Everything after the hero rides above it on its own opaque surface */
-      main > section:not(.hero),
-      main > footer {
-        position: relative;
-        z-index: 1;
-      }
-    }
-
-
-    /* ============ Footer colour wash ============ */
-    /* The original blobs drifted; the colour is kept, the motion is not. */
-    .aurora-blob {
-      position: absolute;
-      border-radius: 9999px;
-      filter: blur(90px);
-      pointer-events: none;
-    }
-
-    .aurora-1 {
-      width: 46rem;
-      height: 46rem;
-      top: -12rem;
-      right: -8rem;
-      background: radial-gradient(circle at 40% 40%, rgba(251, 146, 60, .9), transparent 68%);
-    }
-
-    .aurora-2 {
-      width: 42rem;
-      height: 42rem;
-      top: 2rem;
-      left: -10rem;
-      background: radial-gradient(circle at 60% 50%, rgba(239, 68, 68, .8), transparent 68%);
-    }
-
-    .aurora-4 {
-      width: 38rem;
-      height: 38rem;
-      top: 30%;
-      right: 34%;
-      background: radial-gradient(circle at 50% 50%, rgba(251, 113, 133, .7), transparent 68%);
-    }
-
-    .aurora-5 {
-      width: 34rem;
-      height: 34rem;
-      bottom: -10rem;
-      left: 8%;
-      background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, .75), transparent 68%);
-    }
-
-    .aurora-6 {
-      width: 30rem;
-      height: 30rem;
-      bottom: 10%;
-      right: 6%;
-      background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, .7), transparent 68%);
-    }
-
-
-    /* ============ Client brand logos ============ */
-    /* Normalised by height so logos of any size sit on one optical line. */
-    .brand-logo {
-      height: 3rem;
-      width: auto;
-      max-width: 12rem;
-      object-fit: contain;
-      filter: grayscale(1);
-      opacity: .6;
-      transition: opacity .3s ease, filter .3s ease;
-    }
-
-    @media (min-width: 640px) {
-      .brand-logo {
-        height: 4rem;
-        max-width: 16rem;
-      }
-    }
-
-    .brand-logo:hover {
-      filter: grayscale(0);
-      opacity: 1;
-    }
-
-    /* Most brand marks are dark artwork; on a dark page they would vanish, so
-       they are flipped to a white silhouette instead. */
-    :root[data-theme="dark"] .brand-logo {
-      filter: grayscale(1) brightness(0) invert(1);
-      opacity: .72;
-    }
-
-    :root[data-theme="dark"] .brand-logo:hover {
-      filter: grayscale(1) brightness(0) invert(1);
-      opacity: 1;
-    }
-
-
-    /* ============ Work gallery ============ */
-    /* Metadata line under the title, spread across the full width. */
-    .work-meta {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: .75rem 2rem;
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid rgb(var(--c-line));
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: .18em;
-      color: rgb(var(--c-slate2));
-      direction: ltr;
-    }
-
-    @media (min-width: 640px) {
-      .work-meta {
-        font-size: 12px;
-      }
-    }
-
-    /* Two rows of small cards that pan together. Padding leaves room for the
-       focused card to grow without being clipped by the scroll container. */
-    .reel-strip {
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding: 1.5rem 1.25rem;
-    }
-
-    .reel-strip::-webkit-scrollbar {
-      display: none;
-    }
-
-    @media (min-width: 640px) {
-      .reel-strip {
-        padding-inline: 2rem;
-      }
-    }
-
-    .reel-track {
-      display: flex;
-      gap: .5rem;
-      width: max-content;
-    }
-
-    .reel-row-b {
-      margin-top: .5rem;
-    }
-
-    .strip-item {
-      flex: 0 0 auto;
-      margin: 0;
-      opacity: .52;
-      transform: scale(.94);
-      transform-origin: center;
-      transition: opacity .45s ease, transform .45s cubic-bezier(.2, .7, .3, 1);
-    }
-
-    .strip-item.is-tall {
-      width: 8.5rem;
-    }
-
-    .strip-item.is-wide {
-      width: 15rem;
-    }
-
-    @media (min-width: 1024px) {
-      .strip-item.is-tall {
-        width: 10rem;
-      }
-
-      .strip-item.is-wide {
-        width: 17.75rem;
-      }
-    }
-
-    /* The card nearest the centre of the screen comes forward */
-    .strip-item.is-focus {
-      opacity: 1;
-      transform: scale(1.1);
-      position: relative;
-      z-index: 2;
-    }
-
-    .strip-cap {
-      margin-top: .5rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: .04em;
-      line-height: 1.3;
-      color: rgb(var(--c-slate2));
-      opacity: 0;
-      transition: opacity .35s ease;
-    }
-
-    .strip-item.is-focus .strip-cap {
-      opacity: 1;
-    }
-
-    .reel-pin-inner {
-      position: sticky;
-      top: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 0;
-    }
-
-    .reel-pin.is-pinned .reel-pin-inner {
-      min-height: 100vh;
-    }
-
-    .reel-pin.is-pinned .reel-strip {
-      overflow-x: hidden;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .strip-item {
-        transition: none;
-      }
-    }
-
-
-    /* ============ Video cards (lite facade - no player chrome until clicked) ============ */
-    .vid {
-      position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      border: 0;
-      background: #1F2124;
-      cursor: pointer;
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .vid-thumb {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform .7s cubic-bezier(.2, .7, .3, 1), filter .4s ease;
-    }
-
-    .vid::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(31, 33, 36, 0) 50%, rgba(31, 33, 36, .45));
-      opacity: 0;
-      transition: opacity .4s ease;
-      pointer-events: none;
-    }
-
-    .vid:hover .vid-thumb,
-    .vid:focus-visible .vid-thumb {
-      transform: scale(1.05);
-      filter: brightness(.86);
-    }
-
-    .vid:hover::after,
-    .vid:focus-visible::after {
-      opacity: 1;
-    }
-
-    .vid:focus-visible {
-      outline: 2px solid rgb(var(--c-ink));
-      outline-offset: 3px;
-    }
-
-    .vid-play {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      display: grid;
-      place-items: center;
-      width: 58px;
-      height: 58px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .9);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .3);
-      transition: transform .35s cubic-bezier(.2, .7, .3, 1), background-color .3s ease;
-      pointer-events: none;
-    }
-
-    .vid:hover .vid-play,
-    .vid:focus-visible .vid-play {
-      transform: translate(-50%, -50%) scale(1.12);
-      background: #fff;
-    }
-
-    .vid-play svg {
-      width: 18px;
-      height: 18px;
-      margin-inline-start: 3px;
-      fill: #1F2124;
-    }
-
-    /* Cards lift off the page on hover so the grid feels tactile */
-    .work-card {
-      transition: transform .45s cubic-bezier(.2, .7, .3, 1), box-shadow .45s ease,
-        border-color .45s ease;
-    }
-
-    .work-card:hover {
-      box-shadow: 0 14px 34px rgb(var(--shadow) / .16);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .work-card {
-        transition: none;
-      }
-
-      .work-card:hover {
-        transform: none;
-      }
-    }
-
-    /* Smaller play badge on the narrow vertical cards */
-    .vid-sm .vid-play {
-      width: 46px;
-      height: 46px;
-    }
-
-    .vid-sm .vid-play svg {
-      width: 15px;
-      height: 15px;
-    }
-
-    /* ============ Video lightbox ============ */
-    #vidModal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.25rem;
-      background: rgba(15, 16, 18, .82);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity .3s ease, visibility .3s ease;
-    }
-
-    /* Blur only while open - a permanent full-screen backdrop-filter layer
-       forces compositing over the whole page and hurts scroll performance. */
-    #vidModal.is-open {
-      opacity: 1;
-      visibility: visible;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-    }
-
-    #vidModalInner {
-      position: relative;
-      width: 100%;
-      max-width: min(1080px, 100%);
-      transform: scale(.97);
-      transition: transform .35s cubic-bezier(.2, .7, .3, 1);
-    }
-
-    #vidModal.is-open #vidModalInner {
-      transform: scale(1);
-    }
-
-    #vidFrame {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      max-height: 82vh;
-      overflow: hidden;
-      border-radius: 18px;
-      background: #000;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
-    }
-
-    /* Vertical reels open as a tall, phone-shaped player */
-    #vidModalInner[data-ratio="9/16"] #vidFrame {
-      aspect-ratio: 9 / 16;
-      height: min(80vh, 820px);
-      width: auto;
-      margin-inline: auto;
-    }
-
-    #vidFrame iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    #vidCaption {
-      margin-top: .9rem;
-      text-align: center;
-      color: rgba(255, 255, 255, .82);
-      font-size: 13px;
-      letter-spacing: .06em;
-    }
-
-    #vidClose {
-      position: absolute;
-      top: -46px;
-      inset-inline-end: 0;
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, .25);
-      background: rgba(255, 255, 255, .1);
-      color: #fff;
-      cursor: pointer;
-      transition: background-color .25s ease, transform .25s ease;
-    }
-
-    #vidClose:hover {
-      background: rgba(255, 255, 255, .22);
-      transform: scale(1.06);
-    }
-
-    /* ============ Accessibility ============ */
-    /* Parked above the viewport, not off to the side: a negative `left` in an
-       RTL document extends the scrollable width and causes a page-wide
-       horizontal scrollbar. */
-    .skip-link {
-      position: absolute;
-      top: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 200;
-      padding: .75rem 1.25rem;
-      border-radius: 0 0 12px 12px;
-      background: rgb(var(--c-ink));
-      color: rgb(var(--c-shell));
-      font-weight: 600;
-    }
-
-    .skip-link:focus {
-      top: 0;
-    }
-
-    /* A visible focus ring on every interactive element, not just the cards */
-    a:focus-visible,
-    button:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible,
-    [tabindex]:focus-visible {
-      outline: 2px solid rgb(var(--c-ink));
-      outline-offset: 3px;
-      border-radius: 6px;
-    }
-
-    /* The hero sits on dark video, so an ink ring would disappear there */
-    .hero a:focus-visible,
-    .hero button:focus-visible {
-      outline-color: #fff;
-    }
-
-    .hp-play {
-      display: none;
-    }
-
-    #heroPause.is-paused .hp-pause {
-      display: none;
-    }
-
-    #heroPause.is-paused .hp-play {
-      display: block;
-    }
-
-    /* ============ Theme toggle ============ */
-    .theme-moon {
-      display: none;
-    }
-
-    :root[data-theme="dark"] .theme-sun {
-      display: none;
-    }
-
-    :root[data-theme="dark"] .theme-moon {
-      display: block;
-    }
-
-    /* ============ Hero with the showreel as backdrop ============ */
-    .hero {
-      background: #0B0C0D;
-    }
-
-    @media (min-width: 768px) {
-      .hero {
-        min-height: 86vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-    }
-
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    /* Self-hosted so it also autoplays on phones, which block iframe autoplay.
-       The poster attribute paints instantly while the file streams in. */
-    .hero-video-el {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-    }
-
-    .hero-scrim {
-      position: absolute;
-      inset: 0;
-      background:
-        /* Light enough to actually see the reel; the heavy lifting for text
-           contrast is done by the text-shadows instead of a thick veil. */
-        radial-gradient(105% 68% at 50% 44%, rgba(11, 12, 13, .12) 0%, rgba(11, 12, 13, .38) 62%, rgba(11, 12, 13, .58) 100%),
-        linear-gradient(180deg, rgba(11, 12, 13, .55) 0%, rgba(11, 12, 13, .08) 32%, rgba(11, 12, 13, .62) 100%);
-    }
-
-    /* Tight shadow defines the letter edges, wide ones cast a local halo -
-       together they keep the type readable without darkening the whole reel. */
-    .hero-title {
-      text-shadow:
-        0 1px 2px rgba(0, 0, 0, .6),
-        0 4px 20px rgba(0, 0, 0, .62),
-        0 12px 56px rgba(0, 0, 0, .5);
-    }
-
-    .hero-sub,
-    .hero-eyebrow {
-      text-shadow:
-        0 1px 2px rgba(0, 0, 0, .6),
-        0 3px 16px rgba(0, 0, 0, .6);
-    }
-
-    /* ============ Lead form ============ */
-    .field-label {
-      display: block;
-      margin-bottom: .4rem;
-      font-size: 13px;
-      font-weight: 600;
-      color: rgb(var(--c-slate2));
-    }
-
-    .field {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid rgb(var(--c-line));
-      background: rgb(var(--c-surface));
-      padding: .8rem 1rem;
-      font-size: 15px;
-      font-family: inherit;
-      color: rgb(var(--c-ink));
-      transition: border-color .2s ease, box-shadow .2s ease;
-    }
-
-    .field::placeholder {
-      color: rgb(var(--c-placeholder));
-    }
-
-    .field:focus {
-      outline: none;
-      border-color: rgb(var(--c-ink));
-      box-shadow: 0 0 0 3px rgb(var(--c-ink) / .12);
-    }
-
-    .field[aria-invalid="true"] {
-      border-color: #D93025;
-      box-shadow: 0 0 0 3px rgba(217, 48, 37, .08);
-    }
-
-    .field-error {
-      margin-top: .35rem;
-      font-size: 12px;
-      color: #D93025;
-      min-height: 1em;
-    }
-
-    #leadSubmit[disabled] {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    /* ============ Reduced motion ============ */
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Juice — סטודיו קריאייטיב בבינה מלאכותית</title>
+<meta name="description" content="The Juice — סטודיו להפקת פרסומות, קמפיינים ותוכן בבינה מלאכותית. קולנועי, אנימציה, ריאליסטי. מותאם לכל פלטפורמה." />
+<meta property="og:title" content="The Juice — סטודיו קריאייטיב בבינה מלאכותית" />
+<meta property="og:description" content="פרסומות, קמפיינים ותוכן שפעם היה אפשר רק לדמיין." />
+<meta property="og:image" content="assets/showreel-poster.jpg" />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#A51C20" />
+<script>
+  try {
+    var t = localStorage.getItem('juice-theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700;800&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ---------- tokens ---------- */
+:root{
+  color-scheme: light;
+  --bg:#F7F5F1;
+  --bg-alt:#F1EEE8;
+  --ink:#17181A;
+  --muted:#5F6368;
+  --line:#E2DDD3;
+  --surface:#FFFFFF;
+  --red:#A51C20;
+  --red-deep:#8E171B;
+  --on-red:#FFFFFF;
+  --dark:#2B2B2D;
+  --on-dark:#F4F2EE;
+  --shadow:0 1px 2px rgba(23,24,26,.05), 0 12px 32px -18px rgba(23,24,26,.25);
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#101113;
+  --bg-alt:#17181B;
+  --ink:#F0EEE9;
+  --muted:#A3A19B;
+  --line:#2C2F34;
+  --surface:#1A1C1F;
+  --red:#C32A2E;
+  --red-deep:#A51C20;
+  --on-red:#FFFFFF;
+  --dark:#08090A;
+  --on-dark:#F4F2EE;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.8);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none !important} }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Assistant',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:17px; line-height:1.75; font-weight:400;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+img,video{display:block;max-width:100%}
+h1,h2,h3,h4{margin:0;font-family:'Frank Ruhl Libre',Georgia,serif;font-weight:700;line-height:1.12;letter-spacing:-.01em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:2px}
+:root[data-theme="dark"] :focus-visible{outline-color:#E86A6E}
+
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:24px}
+.wrap-narrow{max-width:860px;margin-inline:auto;padding-inline:24px}
+.en{font-family:'Playfair Display',Georgia,serif;direction:ltr;unicode-bidi:isolate}
+.eyebrow{
+  font-family:'Assistant',sans-serif;font-size:.72rem;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+}
+
+.skip-link{position:absolute;top:-100px;left:50%;transform:translateX(-50%);z-index:200;
+  background:var(--red);color:#fff;padding:10px 18px;font-weight:600}
+.skip-link:focus{top:0}
+
+/* ---------- header ---------- */
+.site-header{
+  position:sticky;top:0;z-index:60;background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);
+}
+.header-in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:64px}
+.logo{font-family:'Playfair Display',serif;font-size:1.25rem;letter-spacing:.04em;font-weight:600;direction:ltr}
+.nav{display:flex;align-items:center;gap:28px}
+.nav a{font-size:.95rem;font-weight:500;color:var(--muted);transition:color .18s}
+.nav a:hover{color:var(--ink)}
+.header-tools{display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:38px;height:38px;display:grid;place-items:center;background:transparent;
+  border:1px solid var(--line);border-radius:999px;cursor:pointer;transition:border-color .18s,background .18s;
+}
+.icon-btn:hover{border-color:var(--ink)}
+.icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+:root[data-theme="dark"] .ic-sun{display:none}
+:root:not([data-theme="dark"]) .ic-moon{display:none}
+.nav-toggle{display:none}
+@media (max-width:860px){
+  .nav{display:none;position:absolute;inset-inline:0;top:64px;flex-direction:column;align-items:stretch;
+    gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 24px 18px}
+  .nav.open{display:flex}
+  .nav a{padding:12px 0;border-bottom:1px solid var(--line);font-size:1.05rem}
+  .nav a:last-child{border-bottom:0}
+  .nav-toggle{display:grid}
+}
+
+/* ---------- hero ---------- */
+.hero{padding:18px 18px 0}
+.hero-media{
+  position:relative;width:100%;aspect-ratio:16/7;min-height:320px;max-height:78vh;
+  overflow:hidden;background:var(--dark);
+}
+@media (max-width:700px){ .hero-media{aspect-ratio:4/5;min-height:0} }
+.hero-media video,.hero-media img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-media::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.12) 40%,rgba(0,0,0,.45) 100%)}
+.hero-mark{
+  position:absolute;inset:0;z-index:2;display:grid;place-content:center;place-items:center;gap:14px;text-align:center;padding:24px;
+}
+.hero-mark h1{
+  font-family:'Playfair Display',serif;color:#fff;direction:ltr;font-weight:500;
+  font-size:clamp(2.6rem,9vw,7rem);letter-spacing:.06em;line-height:1;
+  text-shadow:0 2px 40px rgba(0,0,0,.45);
+}
+.hero-mark .tag{
+  color:rgba(255,255,255,.92);font-size:clamp(.95rem,2.2vw,1.2rem);font-weight:300;
+  letter-spacing:.02em;max-width:34ch;text-shadow:0 1px 18px rgba(0,0,0,.5)
+}
+.media-toggle{
+  position:absolute;z-index:3;inset-block-end:14px;inset-inline-end:14px;
+  width:36px;height:36px;display:grid;place-items:center;border-radius:999px;cursor:pointer;
+  background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.35);color:#fff;
+}
+.media-toggle svg{width:14px;height:14px;fill:currentColor}
+
+/* ---------- red band ---------- */
+.band-red{background:var(--red);color:var(--on-red)}
+.band-dark{background:var(--dark);color:var(--on-dark)}
+.intro{padding:72px 24px;text-align:right}
+.intro h2{font-family:'Playfair Display',serif;direction:ltr;text-align:right;font-size:1.45rem;letter-spacing:.08em;font-weight:600;margin-bottom:22px}
+.intro p{font-size:clamp(1.02rem,2.1vw,1.22rem);line-height:2;font-weight:300;color:rgba(255,255,255,.95);max-width:62ch;margin-inline-start:auto}
+.intro p + p{margin-top:16px}
+@media (max-width:700px){ .intro{padding:56px 24px} }
+
+/* ---------- section shell ---------- */
+.section{padding:88px 0}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;margin-bottom:48px}
+.section-head h2{color:var(--red);font-size:clamp(2.4rem,6vw,4rem);font-weight:800}
+.styles{text-align:start;color:var(--muted);font-size:.98rem;line-height:1.9}
+.styles .lbl{color:var(--red);font-weight:600;display:block;margin-bottom:4px}
+
+/* ---------- 16:9 grid ---------- */
+.grid-wide{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 36px}
+@media (max-width:760px){ .grid-wide{grid-template-columns:1fr;gap:32px} }
+.vid-card{margin:0}
+.vid-label{
+  color:var(--red);font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:10px;direction:ltr;text-align:right
+}
+.vid-btn{
+  display:block;width:100%;padding:0;border:0;background:var(--bg-alt);cursor:pointer;position:relative;overflow:hidden;
+}
+.vid-btn img{width:100%;height:100%;object-fit:cover;transition:opacity .25s}
+.vid-btn:hover img{opacity:.82}
+.ratio-wide{aspect-ratio:16/9}
+.ratio-tall{aspect-ratio:9/16}
+.play{
+  position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
+}
+.play span{
+  width:56px;height:56px;border-radius:999px;display:grid;place-items:center;
+  background:rgba(23,24,26,.55);border:1px solid rgba(255,255,255,.6);backdrop-filter:blur(2px)
+}
+.play svg{width:16px;height:16px;fill:#fff;margin-inline-start:3px}
+
+/* ---------- 9:16 carousel ---------- */
+.reels{padding:72px 0}
+.reels-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px}
+.reels-head h3{color:#fff;font-size:1.5rem;font-weight:700}
+.reels-head .fmt{font-family:'Playfair Display',serif;direction:ltr;color:rgba(255,255,255,.8);letter-spacing:.14em;font-size:.9rem}
+.reel-scroller{
+  display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.reel-scroller::-webkit-scrollbar{display:none}
+.reel-item{flex:0 0 clamp(190px,24vw,250px);scroll-snap-align:center;margin:0}
+.reel-item .vid-btn{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.22)}
+.reel-item figcaption{
+  color:rgba(255,255,255,.92);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+  margin-top:10px;direction:ltr;text-align:right
+}
+.reel-ctl{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:26px}
+.reel-ctl button{
+  width:40px;height:40px;border-radius:999px;display:grid;place-items:center;cursor:pointer;
+  background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;transition:background .18s
+}
+.reel-ctl button:hover{background:rgba(255,255,255,.14)}
+.reel-ctl svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- cta strip ---------- */
+.cta{text-align:center;padding:96px 24px}
+.cta h2{font-size:clamp(1.7rem,4.4vw,2.6rem);line-height:1.35}
+.cta h2 em{font-style:normal;color:var(--red)}
+.cta p{color:var(--muted);margin-top:14px;font-size:1.05rem}
+.btn{
+  display:inline-block;margin-top:30px;background:var(--red);color:#fff;font-weight:600;
+  padding:15px 44px;border:1px solid var(--red);cursor:pointer;transition:background .18s,transform .18s;
+}
+.btn:hover{background:var(--red-deep)}
+.btn-ghost{background:transparent;color:var(--red)}
+.btn-ghost:hover{background:var(--red);color:#fff}
+.btn-light{background:#fff;color:var(--red);border-color:#fff}
+.btn-light:hover{background:rgba(255,255,255,.88)}
+
+/* ---------- about me ---------- */
+.about-me{padding:88px 24px;text-align:center}
+.about-me h2{color:#fff;font-size:clamp(1.9rem,5vw,3rem);margin-bottom:34px}
+.about-me .portrait{
+  width:clamp(160px,26vw,230px);aspect-ratio:3/4;object-fit:cover;margin:0 auto 28px;
+  border:1px solid rgba(255,255,255,.35)
+}
+.about-me .lead{font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:14px}
+.about-me p{color:rgba(255,255,255,.92);font-weight:300;max-width:62ch;margin:0 auto;line-height:2}
+.about-me p + p{margin-top:12px}
+.pillars{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin-top:34px}
+.pillars li{color:#fff;font-weight:600;font-size:.95rem;letter-spacing:.04em}
+.pillars li::before{content:"";display:inline-block;width:5px;height:5px;background:#fff;border-radius:999px;
+  vertical-align:middle;margin-inline-end:9px}
+
+/* ---------- brands ---------- */
+.brands{padding:46px 24px;text-align:center}
+.brands h2{font-size:1.05rem;font-weight:600;letter-spacing:.14em;color:var(--on-dark);margin-bottom:26px}
+.brand-row{display:flex;align-items:center;justify-content:center;gap:54px;flex-wrap:wrap}
+.brand-row img{height:40px;width:auto;object-fit:contain;filter:brightness(0) invert(1);opacity:.85}
+
+/* ---------- services ---------- */
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}
+@media (max-width:860px){ .services{grid-template-columns:1fr} }
+.services article{background:var(--bg);padding:40px 28px}
+.services .num{font-family:'Playfair Display',serif;direction:ltr;color:var(--red);font-size:.95rem;letter-spacing:.1em;margin-bottom:14px;display:block}
+.services h3{font-size:1.25rem;margin-bottom:10px}
+.services p{color:var(--muted);font-size:1rem;line-height:1.8}
+
+/* ---------- quote ---------- */
+.quote{padding:74px 24px;text-align:center}
+.quote blockquote{margin:0;font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.15rem,2.6vw,1.5rem);
+  line-height:1.9;max-width:54ch;margin-inline:auto}
+.quote cite{display:block;margin-top:18px;font-style:normal;color:var(--red);font-weight:600;font-size:.9rem;letter-spacing:.1em;direction:ltr}
+
+/* ---------- contact ---------- */
+.contact{padding:92px 0}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media (max-width:900px){ .contact-grid{grid-template-columns:1fr;gap:40px} }
+.contact h2{font-family:'Playfair Display',serif;direction:ltr;text-align:right;color:var(--red);
+  font-size:clamp(2.4rem,6vw,3.6rem);font-weight:700;margin-bottom:18px}
+.contact .sub{font-size:clamp(1.1rem,2.4vw,1.4rem);font-weight:600;line-height:1.6;margin-bottom:22px}
+.contact .note{color:var(--muted);margin-bottom:18px}
+.social{display:flex;gap:12px;flex-wrap:wrap}
+.social a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 18px;
+  font-weight:600;font-size:.95rem;transition:border-color .18s,background .18s}
+.social a:hover{border-color:var(--red);color:var(--red)}
+.social svg{width:17px;height:17px;fill:currentColor}
+.form{background:var(--surface);border:1px solid var(--line);padding:30px;box-shadow:var(--shadow)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.88rem;font-weight:600;color:var(--muted);margin-bottom:6px}
+.field input,.field textarea,.field select{
+  width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);
+  padding:12px 14px;font:inherit;font-size:1rem;border-radius:0;transition:border-color .18s
+}
+.field textarea{min-height:92px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--red);outline:none}
+.form .btn{width:100%;margin-top:6px}
+.form-msg{margin-top:14px;font-size:.95rem;font-weight:600;display:none}
+.form-msg.ok{display:block;color:#1C7C4A}
+.form-msg.err{display:block;color:var(--red)}
+:root[data-theme="dark"] .form-msg.ok{color:#56C98A}
+
+/* ---------- footer ---------- */
+.site-footer{border-top:1px solid var(--line);padding:30px 0;background:var(--bg-alt)}
+.footer-in{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  color:var(--muted);font-size:.9rem}
+.footer-in a:hover{color:var(--red)}
+.footer-links{display:flex;gap:18px;flex-wrap:wrap}
+
+/* ---------- lightbox ---------- */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(10,10,11,.94);display:none;place-items:center;padding:20px}
+.lb.open{display:grid}
+.lb-frame{width:min(100%,1100px);aspect-ratio:16/9;background:#000}
+.lb-frame.tall{width:min(100%,420px);aspect-ratio:9/16}
+.lb iframe{width:100%;height:100%;border:0}
+.lb-close{position:absolute;top:18px;inset-inline-end:18px;width:44px;height:44px;border-radius:999px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);color:#fff;cursor:pointer;display:grid;place-items:center}
+.lb-close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+
+/* ---------- floating whatsapp ---------- */
+.wa{
+  position:fixed;inset-block-end:20px;inset-inline-start:20px;z-index:55;width:52px;height:52px;border-radius:999px;
+  background:#25D366;display:grid;place-items:center;box-shadow:0 8px 24px -8px rgba(0,0,0,.5)
+}
+.wa svg{width:26px;height:26px;fill:#fff}
+</style>
 </head>
+<body>
+<a class="skip-link" href="#main">דלג לתוכן הראשי</a>
 
-<body class="bg-shell font-sans text-ink">
-
-  <a href="#top" class="skip-link">דלג לתוכן הראשי</a>
-
-  <!-- ================= NAV ================= -->
-  <header class="fixed inset-x-0 top-0 z-50 border-b border-line bg-shell/85 backdrop-blur-md">
-    <nav class="mx-auto flex h-16 max-w-site flex-row-reverse items-center justify-between px-5 sm:px-8">
-      <!-- Logo - left -->
-      <a href="#top" class="font-mono text-sm font-medium tracking-[0.18em] text-ink" dir="ltr">The&nbsp;Juice</a>
-
-      <!-- Links - center (desktop) -->
-      <ul class="hidden items-center gap-9 text-[15px] font-medium text-slate2 md:flex">
-        <li><a href="#about" class="transition-colors hover:text-ink">אודות</a></li>
-        <li><a href="#works" class="transition-colors hover:text-ink">עבודות</a></li>
-        <li><a href="#services" class="transition-colors hover:text-ink">שירותים</a></li>
-      </ul>
-
-      <!-- CTA - right (desktop) / burger (mobile) -->
-      <div class="flex items-center gap-3">
-        <a href="#contact"
-          class="hidden rounded-full bg-ink px-5 py-2 text-[15px] font-semibold text-shell md:inline-block">
-          צור קשר
-        </a>
-        <button id="themeBtn" type="button"
-          class="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-ink transition-colors hover:border-ink/40"
-          aria-label="מעבר למצב כהה" title="מצב כהה / בהיר">
-          <svg class="theme-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.2" />
-            <path d="M12 2.4v2.2M12 19.4v2.2M4.2 12H2M22 12h-2.2M5.6 5.6 7.2 7.2M16.8 16.8l1.6 1.6M18.4 5.6 16.8 7.2M7.2 16.8 5.6 18.4" />
-          </svg>
-          <svg class="theme-moon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M20.3 14.9A8.5 8.5 0 0 1 9.1 3.7a8.5 8.5 0 1 0 11.2 11.2Z" />
-          </svg>
-        </button>
-        <button id="burgerBtn"
-          class="burger flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-full md:hidden"
-          aria-label="פתיחת תפריט" aria-expanded="false">
-          <span class="block h-[1.5px] w-5 bg-ink"></span>
-          <span class="block h-[1.5px] w-5 bg-ink"></span>
-          <span class="block h-[1.5px] w-5 bg-ink"></span>
-        </button>
-      </div>
+<header class="site-header">
+  <div class="wrap header-in">
+    <a class="logo" href="#top">THE JUICE</a>
+    <nav class="nav" id="nav">
+      <a href="#works">עבודות</a>
+      <a href="#services">שירותים</a>
+      <a href="#me">מי אני</a>
+      <a href="#contact">צרו קשר</a>
     </nav>
-
-    <!-- Mobile menu -->
-    <div id="mobileMenu" class="border-line md:hidden">
-      <div>
-        <ul class="space-y-1 border-t border-line px-5 py-4 text-lg font-medium">
-          <li><a href="#about" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">אודות</a></li>
-          <li><a href="#works" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">עבודות</a></li>
-          <li><a href="#services" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">שירותים</a></li>
-          <li class="pt-2">
-            <a href="#contact"
-              class="mobile-link block rounded-full bg-ink px-4 py-3.5 text-center font-semibold text-shell">צור קשר</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </header>
-
-  <main id="top">
-
-    <!-- ================= HERO ================= -->
-    <section class="hero relative overflow-hidden px-5 pb-24 pt-36 sm:px-8 sm:pt-44 lg:pb-32">
-      <!-- The showreel itself is the backdrop -->
-      <div class="hero-bg" aria-hidden="true">
-        <!-- src is chosen by screen size in JS: phones pull the lighter file -->
-        <video id="heroVideo" class="hero-video-el" autoplay muted loop playsinline preload="metadata"
-          poster="assets/showreel-poster.jpg" tabindex="-1" data-src-lg="assets/showreel-loop.mp4"
-          data-src-sm="assets/showreel-loop-sm.mp4"></video>
-        <div class="hero-scrim"></div>
-      </div>
-
-      <button id="heroPause" type="button" aria-label="עצירת סרטון הרקע"
-        class="absolute bottom-5 right-5 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/35 bg-black/35 text-white backdrop-blur-sm transition-colors hover:bg-black/55">
-        <svg class="hp-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <rect x="6" y="5" width="4" height="14" rx="1" />
-          <rect x="14" y="5" width="4" height="14" rx="1" />
-        </svg>
-        <svg class="hp-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M8 5v14l11-7z" />
-        </svg>
+    <div class="header-tools">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="מעבר בין מצב בהיר לכהה">
+        <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>
-
-
-      <div class="relative z-10 mx-auto w-full max-w-site">
-        <div class="mx-auto max-w-3xl text-center">
-          <p class="font-mono text-xs font-medium tracking-[0.28em] text-white/65" dir="ltr">[
-            AI&nbsp;CREATIVE&nbsp;STUDIO ]</p>
-          <h1
-            class="hero-title mt-7 text-[2.6rem] font-extrabold leading-[1.06] tracking-tight text-white sm:text-6xl lg:text-[5.2rem]">
-            אפשר להפסיק לחפש<br />
-            בואו נתחיל ליצור
-          </h1>
-          <p class="hero-sub mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
-            פרסומות סרטונים ותוכן שפעם היה אפשר רק לדמיין<br />
-            סגנון ייחודי ויצירתי<br />
-            כזה שצופים בו יותר מפעם אחת
-          </p>
-          <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href="#contact"
-              class="rounded-full bg-white px-8 py-3.5 text-base font-semibold text-[#1F2124]">
-              בואו נדבר
-            </a>
-            <a href="#works"
-              class="rounded-full border border-white/35 bg-white/10 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20">
-              צפו בעבודות
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= CLIENT BRANDS ================= -->
-    <section id="brands" class="border-t border-line bg-paper px-5 py-16 sm:px-8 lg:py-20">
-      <div class="mx-auto max-w-site text-center">
-        <h2 class="text-2xl font-extrabold tracking-tight sm:text-3xl">מותגים שעבדנו איתם</h2>
-        <ul class="mt-10 flex flex-wrap items-center justify-center gap-x-14 gap-y-10 sm:gap-x-20">
-          <li><img src="assets/maneki-logo.png" alt="Maneki Wallet" class="brand-logo" loading="lazy" /></li>
-          <!-- Add a <li> per logo. Any size works: height is normalised in CSS. -->
-        </ul>
-      </div>
-    </section>
-
-
-    <!-- ================= ABOUT ================= -->
-    <section id="about" class="border-t border-line bg-shell px-5 py-20 sm:px-8 lg:py-28">
-      <div class="mx-auto max-w-site">
-        <div class="flex items-center justify-between gap-4">
-          <h2 class="text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl">
-            תכל'ס? באנו לעשות וידאו
-          </h2>
-          <p class="shrink-0 font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[
-            00&nbsp;/&nbsp;ABOUT ]</p>
-        </div>
-
-        <div class="mt-12 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <!-- Text (right in RTL) -->
-          <div class="space-y-6 text-lg leading-relaxed text-slate2 sm:text-xl">
-            <p class="font-medium text-ink">אנחנו מפיקים סרטונים למותגים, עסקים ואנשים פרטיים.</p>
-            <p>מה שאפשר לדמיין אפשר ליצור. אתם יכולים להגיע אלינו עם תסריט מוכן מראש, או לתת לנו ליצור עבורכם קריאייטיב מאפס.</p>
-            <p>אנחנו מייצרים פרסומות בסגנון קולנועי, אנימציה, ריאליסטי, סרטוני הדרכה, לאירועים וכל רעיון נוסף
-              שתאתגרו אותנו איתו.</p>
-            <div class="flex flex-wrap gap-3 pt-2">
-              <span class="rounded-full border border-line bg-paper px-5 py-2 text-base font-semibold text-ink">ללא מגבלות</span>
-              <span class="rounded-full border border-line bg-paper px-5 py-2 text-base font-semibold text-ink">מהירות</span>
-              <span class="rounded-full border border-line bg-paper px-5 py-2 text-base font-semibold text-ink">איכות גבוהה</span>
-            </div>
-          </div>
-
-          <!-- Looping video (left in RTL) -->
-          <div class="">
-            <div class="relative aspect-video w-full overflow-hidden rounded-2xl border border-line bg-card sm:rounded-3xl">
-              <video class="absolute inset-0 h-full w-full object-cover" autoplay muted loop playsinline>
-                <source src="assets/about-loop.webm" type="video/webm" />
-              </video>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section id="works" class="scroll-mt-20 border-t border-line bg-shell py-24 sm:py-28 lg:py-32">
-      <div class="mx-auto max-w-[80rem] px-5 sm:px-8">
-        <h2 class="text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-7xl lg:text-[5.5rem]">
-          העבודות<br />שלנו
-        </h2>
-        <div class="work-meta">
-          <span>BY&nbsp;THE&nbsp;JUICE</span>
-          <span>ADS&nbsp;/&nbsp;CAMPAIGNS&nbsp;/&nbsp;CONTENT</span>
-          <span>9:16&nbsp;+&nbsp;16:9</span>
-          <span>AI&nbsp;CREATIVE&nbsp;STUDIO</span>
-        </div>
-      </div>
-
-      <!-- Both rows pan together while the section is pinned; the card nearest
-           the centre of the screen comes forward. -->
-      <div id="reelPin" class="reel-pin mt-14 lg:mt-16">
-        <div class="reel-pin-inner">
-          <div id="reelStrip" class="reel-strip">
-            <div class="reel-track reel-row-a">
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="ZH07ViJvxlY" data-ratio="9/16"
-                  data-title="CONFERENCE AD" aria-label="נגן: CONFERENCE AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">CONFERENCE AD</figcaption>
-            </figure>
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="VfMJoEypc7o" data-ratio="9/16"
-                  data-title="SKATE SKULLS" aria-label="נגן: SKATE SKULLS">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">SKATE SKULLS</figcaption>
-            </figure>
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="F4yyQzu5_sQ" data-ratio="9/16"
-                  data-title="BABA CASINO AD" aria-label="נגן: BABA CASINO AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">BABA CASINO AD</figcaption>
-            </figure>
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="Fe3lmQgQmno" data-ratio="9/16"
-                  data-title="POKER FACE AD" aria-label="נגן: POKER FACE AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">POKER FACE AD</figcaption>
-            </figure>
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="lfK2ZqKTPwo" data-ratio="9/16"
-                  data-title="UGC AD / MANEKI WALLET" aria-label="נגן: UGC AD / MANEKI WALLET">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">UGC AD / MANEKI WALLET</figcaption>
-            </figure>
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="s8VXMFSM2VY" data-ratio="9/16"
-                  data-title="UGC AD / MANEKI WALLET 2" aria-label="נגן: UGC AD / MANEKI WALLET 2">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">UGC AD / MANEKI WALLET 2</figcaption>
-            </figure>
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="0YOPfGrgN4w" data-ratio="9/16"
-                  data-title="DUREX SPEC AD" aria-label="נגן: DUREX SPEC AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">DUREX SPEC AD</figcaption>
-            </figure>
-            <figure class="strip-item is-tall">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="YiYDknTMxqc" data-ratio="9/16"
-                  data-title="F35" aria-label="נגן: F35">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">F35</figcaption>
-            </figure>
-            </div>
-            <div class="reel-track reel-row-b">
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="R48ngAvojF8" data-ratio="16/9"
-                  data-title="FINQ Ad Concept" aria-label="נגן: FINQ Ad Concept">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">FINQ Ad Concept</figcaption>
-            </figure>
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="mBHoNeZBcOY" data-ratio="16/9"
-                  data-title="Surf Skulls" aria-label="נגן: Surf Skulls">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">Surf Skulls</figcaption>
-            </figure>
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="sJV-jwg2zao" data-ratio="16/9"
-                  data-title="GECKO'S Short Action Story" aria-label="נגן: GECKO'S Short Action Story">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">GECKO'S Short Action Story</figcaption>
-            </figure>
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="DJhr-xOOV9k" data-ratio="16/9"
-                  data-title="Short Comedy Action Trailer" aria-label="נגן: Short Comedy Action Trailer">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">Short Comedy Action Trailer</figcaption>
-            </figure>
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="9fpN4EfSm4o" data-ratio="16/9"
-                  data-title="Wildlife" aria-label="נגן: Wildlife">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">Wildlife</figcaption>
-            </figure>
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="eJf6V14qmAg" data-ratio="16/9"
-                  data-title="Extreme Donkey Concept" aria-label="נגן: Extreme Donkey Concept">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">Extreme Donkey Concept</figcaption>
-            </figure>
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="vLnmvSnLq1A" data-ratio="16/9"
-                  data-title="Creative Spec Ad" aria-label="נגן: Creative Spec Ad">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">Creative Spec Ad</figcaption>
-            </figure>
-            <figure class="strip-item is-wide">
-              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
-                <button type="button" class="vid vid-sm" data-yt="CsOnM86RLYM" data-ratio="16/9"
-                  data-title="Funny Viral Video Concept" aria-label="נגן: Funny Viral Video Concept">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <figcaption class="strip-cap" dir="ltr">Funny Viral Video Concept</figcaption>
-            </figure>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= SERVICES / BENTO ================= -->
-    <section id="services" class="relative overflow-hidden border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
-      <!-- DVD-screensaver bouncing doodle, behind the content -->
-
-      <div class="relative z-10 mx-auto max-w-site">
-        <div class="flex flex-col gap-3">
-          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 02&nbsp;/&nbsp;SERVICES ]
-          </p>
-          <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">שירותים</h2>
-        </div>
-
-        <div class="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-12">
-          <!-- Card 1 - large -->
-          <article class="rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-7">
-            <div class="flex h-full flex-col justify-between gap-14">
-              <div class="flex items-start justify-between">
-                <img src="assets/service-camera.png" alt="" aria-hidden="true"
-                     class="h-28 w-auto object-contain sm:h-36" style="filter: drop-shadow(0 10px 12px rgba(31,33,36,.12));" />
-                <span class="font-mono text-xs text-slate2" dir="ltr">/ 01</span>
-              </div>
-              <div>
-                <h3 class="text-2xl font-bold sm:text-3xl">הפקת פרסומות וסרטונים</h3>
-                <p class="mt-3 max-w-md text-base leading-relaxed text-slate2 sm:text-lg">
-                  לעסקים, פרטיים, חברות ומשרדים. מותאמים לכל פלטפורמה.
-                </p>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 2 -->
-          <article class="rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-5">
-            <div class="flex h-full flex-col justify-between gap-14">
-              <div class="flex items-start justify-between">
-                <img src="assets/service-selfie.png" alt="" aria-hidden="true"
-                     class="h-28 w-auto object-contain sm:h-36" style="filter: drop-shadow(0 10px 12px rgba(31,33,36,.12));" />
-                <span class="font-mono text-xs text-slate2" dir="ltr">/ 02</span>
-              </div>
-              <div>
-                <h3 class="text-2xl font-bold sm:text-3xl">תוכן וקמפיינים לסושיאל</h3>
-                <p class="mt-3 text-base leading-relaxed text-slate2 sm:text-lg">
-                  יצירת תוכן קצר ודינמי מבוסס טרנדים עם הבנה שיווקית חדה.
-                </p>
-              </div>
-            </div>
-          </article>
-
-          <!-- Card 3 - wide -->
-          <article class="rounded-2xl border border-line bg-card p-8 sm:p-10 lg:col-span-12">
-            <div class="flex h-full flex-col justify-between gap-14">
-              <div class="flex items-start justify-between">
-                <img src="assets/service-strategy.png" alt="" aria-hidden="true"
-                     class="h-28 w-auto object-contain sm:h-36" style="filter: drop-shadow(0 10px 12px rgba(31,33,36,.12));" />
-                <span class="font-mono text-xs text-slate2" dir="ltr">/ 03</span>
-              </div>
-              <div class="max-w-xl">
-                <h3 class="text-2xl font-bold sm:text-3xl">אסטרטגיה ושפה ויזואלית</h3>
-                <p class="mt-3 text-base leading-relaxed text-slate2 sm:text-lg">
-                  בניית קו עיצובי ייחודי למותג שלך לפני שמתחילים להפיק.
-                </p>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= PROCESS ================= -->
-
-    <!-- ================= ADVANTAGE ================= -->
-    <section id="advantage" class="relative overflow-hidden border-t border-line bg-paper px-5 py-20 sm:px-8 lg:py-28">
-      <!-- Pogo alien hopping along the drawn loop, behind the content -->
-      <div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-      </div>
-
-      <div class="relative z-10 mx-auto max-w-site">
-        <div class="flex flex-col gap-3">
-          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ 03&nbsp;/&nbsp;ABOUT&nbsp;ME
-            ]</p>
-          <h2 id="advTitle" class="text-3xl font-extrabold tracking-tight sm:text-5xl">מי אני</h2>
-        </div>
-
-        <!-- Founder: portrait beside the personal intro -->
-        <div class="mt-12 grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-16">
-          <div class="">
-            <img src="assets/noam.jpg" alt="נעם, היוצר מאחורי The Juice" loading="lazy" decoding="async"
-              onerror="this.parentElement.style.display='none'"
-              class="w-full rounded-2xl border border-line object-cover shadow-sm sm:rounded-3xl" />
-          </div>
-          <div class="">
-            <h3 class="text-2xl font-extrabold sm:text-3xl">היי, אני נעם</h3>
-            <div class="mt-5 space-y-4 text-base leading-relaxed text-slate2 sm:text-lg">
-              <p>יוצר תוכן בבינה מלאכותית. <span dir="ltr">The Juice</span> זה הכינוי וגם השם של הסטודיו.</p>
-              <p>אני מפיק פרסומות, קמפיינים ותוכן לעסקים. אני יוצר ריאליזם, אנימציה, קולנוע וקומדיה, ועובד עם
-                הכלים והמודלים הכי מתקדמים שיש בשוק.</p>
-              <p class="font-medium text-ink">הרקע שלי בשיווק דיגיטלי, קופירייטינג וחשיבה יצירתית הוא מה שגורם
-                לתוכן לא רק להיראות טוב, אלא לעבוד.</p>
-            </div>
-
-            <ul class="mt-7 flex flex-wrap items-center gap-2.5">
-              <li
-                class="inline-flex items-center gap-2 rounded-full border border-line bg-shell px-4 py-2 text-sm font-semibold text-ink">
-                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true"></span>קונספט מקורי
-              </li>
-              <li
-                class="inline-flex items-center gap-2 rounded-full border border-line bg-shell px-4 py-2 text-sm font-semibold text-ink">
-                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true"></span>יחס אישי
-              </li>
-              <li
-                class="inline-flex items-center gap-2 rounded-full border border-line bg-shell px-4 py-2 text-sm font-semibold text-ink">
-                <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden="true"></span>זמינות
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= WORKS ================= -->
-
-    <!-- ================= TESTIMONIALS / CLIENTS ================= -->
-
-
-    <!-- ================= FINAL CTA + FOOTER ================= -->
-    <!-- ================= TESTIMONIAL ================= -->
-    <section id="clients" class="border-t border-line bg-shell px-5 py-20 sm:px-8">
-      <figure class="mx-auto max-w-3xl text-center">
-        <blockquote class="text-xl font-medium leading-relaxed text-ink sm:text-2xl">
-          „היי.. ראיתי את הסרטון, התגובה של האישה נראית דרמטית וטבעית, שזה הוק מעולה... שבוע מעולה!"
-        </blockquote>
-        <figcaption class="mt-7 flex flex-col items-center gap-3">
-          <img src="assets/maneki-logo.png" alt="" class="brand-logo" loading="lazy" />
-          <span class="font-mono text-sm text-slate2" dir="ltr">Maneki Wallet</span>
-        </figcaption>
-      </figure>
-    </section>
-
-    <footer id="contact" class="scroll-mt-20 relative overflow-hidden border-t border-line bg-paper px-5 pt-24 sm:px-8 lg:pt-32">
-      <!-- Aurora background (same treatment as the hero) -->
-      <div class="absolute inset-0 z-0" aria-hidden="true">
-        <div class="aurora-blob aurora-1"></div>
-        <div class="aurora-blob aurora-2"></div>
-        <div class="aurora-blob aurora-4"></div>
-        <div class="aurora-blob aurora-5"></div>
-        <div class="aurora-blob aurora-6"></div>
-        <div class="absolute inset-0 bg-shell/55 backdrop-blur-xl"></div>
-      </div>
-
-      <div class="relative z-10 mx-auto max-w-site">
-        <div class="mx-auto max-w-4xl text-center">
-          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ LET'S&nbsp;TALK ]
-          </p>
-          <h2 class="mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-6xl lg:text-7xl">
-            מוכנים לקחת את המותג שלכם צעד אחד קדימה?
-          </h2>
-
-          <!-- Lead form - posts to the studio's Google Form (responses land in Sheets) -->
-          <form id="leadForm" class="mx-auto mt-12 max-w-xl text-right" novalidate>
-            <div class="rounded-3xl border border-line bg-surface/75 p-6 shadow-sm backdrop-blur-sm sm:p-8">
-              <div class="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label class="field-label" for="leadName">שם</label>
-                  <input class="field" id="leadName" name="name" type="text" required autocomplete="name"
-                    placeholder="איך קוראים לך?" />
-                  <p class="field-error" data-error-for="leadName"></p>
-                </div>
-                <div>
-                  <label class="field-label" for="leadPhone">טלפון ליצירת קשר</label>
-                  <input class="field" id="leadPhone" name="phone" type="tel" required inputmode="tel"
-                    autocomplete="tel" dir="ltr" placeholder="050-0000000" />
-                  <p class="field-error" data-error-for="leadPhone"></p>
-                </div>
-                <div class="sm:col-span-2">
-                  <label class="field-label" for="leadEmail">אימייל</label>
-                  <input class="field" id="leadEmail" name="email" type="email" required inputmode="email"
-                    autocomplete="email" dir="ltr" placeholder="name@example.com" />
-                  <p class="field-error" data-error-for="leadEmail"></p>
-                </div>
-                <div class="sm:col-span-2">
-                  <label class="field-label" for="leadIdea">תיאור העסק</label>
-                  <textarea class="field" id="leadIdea" name="idea" rows="2" required
-                    placeholder="במה העסק שלכם עוסק?"></textarea>
-                  <p class="field-error" data-error-for="leadIdea"></p>
-                </div>
-                <div class="sm:col-span-2">
-                  <label class="field-label" for="leadWant">במה אתם מעוניינים</label>
-                  <textarea class="field" id="leadWant" name="want" rows="2" required
-                    placeholder="מה תרצו שנפיק או ניצור עבורכם?"></textarea>
-                  <p class="field-error" data-error-for="leadWant"></p>
-                </div>
-              </div>
-
-              <!-- Honeypot: real people never see or fill this -->
-              <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true"
-                style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
-
-              <button type="submit" id="leadSubmit"
-                class="mt-6 w-full rounded-full bg-ink px-7 py-3.5 font-semibold text-shell">
-                <span id="leadBtnText">שלחו לי פרטים ואחזור אליכם</span>
-              </button>
-
-              <p id="leadStatus" role="status" aria-live="polite" class="mt-4 hidden text-center text-sm"></p>
-            </div>
-          </form>
-
-          <p class="mt-12 text-base text-slate2">
-            מעדיפים לדבר ישירות? מוזמנים לפנות אליי בוואטסאפ או באינסטגרם
-          </p>
-
-          <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
-            <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
-              target="_blank" rel="noopener"
-              class="inline-flex items-center gap-2.5 rounded-full bg-ink px-7 py-3.5 font-semibold text-shell">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.6.2-.8l.4-.5c.1-.2.2-.3.3-.5v-.5c0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.4-.4Z" />
-              </svg>
-              WhatsApp
-            </a>
-            <a href="https://ig.me/m/bythejuice" target="_blank" rel="noopener"
-              class="inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-                <rect x="3" y="3" width="18" height="18" rx="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
-              </svg>
-              Instagram
-            </a>
-            <a href="https://www.facebook.com/share/1apmCBD7er/?mibextid=wwXIfr" target="_blank" rel="noopener"
-              class="inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 font-semibold text-ink hover:border-ink/30">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.2 0-1-.1-1.9-.1-1.9 0-3.3 1.2-3.3 3.4V11H8.5v3h2.7v7h2.3Z" />
-              </svg>
-              Facebook
-            </a>
-          </div>
-        </div>
-
-        <div
-          class="mt-20 flex flex-col items-center justify-between gap-4 border-t border-line py-8 sm:flex-row lg:mt-28">
-          <span class="font-mono text-sm font-medium tracking-[0.18em]" dir="ltr">The&nbsp;Juice</span>
-          <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-slate2">
-            <a href="privacy.html" class="transition-colors hover:text-ink">מדיניות פרטיות</a>
-            <a href="accessibility.html" class="transition-colors hover:text-ink">הצהרת נגישות</a>
-          </div>
-          <p class="text-sm text-slate2" dir="ltr">© 2026 The Juice. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-  </main>
-
-  <!-- ================= FLOATING WHATSAPP BUBBLE ================= -->
-  <a id="waBubble"
-    href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
-    target="_blank" rel="noopener" aria-label="דברו איתנו בוואטסאפ"
-    class="group fixed bottom-5 left-5 z-50 flex items-center gap-2.5 rounded-full bg-[#25D366] py-3.5 pr-4 pl-4 text-white shadow-lg shadow-black/15 transition-all duration-300 hover:pl-5 hover:shadow-xl">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="shrink-0">
-      <path
-        d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.6.2-.8l.4-.5c.1-.2.2-.3.3-.5v-.5c0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.4-.4Z" />
-    </svg>
-    <span
-      class="max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:max-w-[180px] group-hover:opacity-100">דברו
-      איתנו בוואטסאפ</span>
-  </a>
-
-  <!-- ================= VIDEO LIGHTBOX ================= -->
-  <div id="vidModal" role="dialog" aria-modal="true" aria-label="נגן וידאו">
-    <div id="vidModalInner" data-ratio="16/9">
-      <button id="vidClose" type="button" aria-label="סגירה">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round">
-          <path d="M6 6l12 12M18 6L6 18" />
-        </svg>
+      <button class="icon-btn nav-toggle" id="navBtn" type="button" aria-label="תפריט" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
-      <div id="vidFrame"></div>
-      <p id="vidCaption" class="font-mono" dir="ltr"></p>
     </div>
   </div>
+</header>
 
-  <!-- ================= SCRIPTS ================= -->
-  <script>
-    // --- Mobile menu ---
-    const burgerBtn = document.getElementById('burgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    burgerBtn.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('open');
-      burgerBtn.classList.toggle('open', open);
-      burgerBtn.setAttribute('aria-expanded', open);
+<main id="main">
+  <span id="top"></span>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-media">
+      <video id="reel" muted loop playsinline autoplay preload="metadata"
+             poster="assets/showreel-poster.jpg"
+             data-lg="assets/showreel-loop.mp4" data-sm="assets/showreel-loop-sm.mp4"
+             aria-label="שואוריל של The Juice מתנגן ברקע ללא קול"></video>
+      <div class="hero-mark">
+        <h1>THE JUICE</h1>
+        <p class="tag">סטודיו קריאייטיב בבינה מלאכותית</p>
+      </div>
+      <button class="media-toggle" id="reelBtn" type="button" aria-label="עצירת הווידאו ברקע">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14"/><rect x="13.5" y="5" width="3.5" height="14"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- RED INTRO -->
+  <section class="band-red">
+    <div class="wrap intro">
+      <h2 class="en">THE JUICE</h2>
+      <p>אנחנו מפיקים סרטונים למותגים, לעסקים ולאנשים פרטיים. מה שאפשר לדמיין אפשר ליצור.</p>
+      <p>אפשר להגיע אלינו עם תסריט מוכן מראש, או לתת לנו ליצור עבורכם קריאייטיב מאפס.</p>
+      <p>פרסומות בסגנון קולנועי, אנימציה, ריאליסטי, סרטוני הדרכה, לאירועים וכל רעיון נוסף שתאתגרו אותנו איתו.</p>
+    </div>
+  </section>
+
+  <!-- WORKS -->
+  <section class="section" id="works">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>עבודות</h2>
+        <div class="styles">
+          <span class="lbl">סגנונות :</span>
+          פרסומות<br />קמפיינים לסושיאל<br />סרטוני הדרכה<br />קונספטים
+        </div>
+      </div>
+
+      <div class="grid-wide">
+        <figure class="vid-card">
+          <p class="vid-label en">Surf Skulls</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="mBHoNeZBcOY" data-ratio="wide" aria-label="נגן את הסרטון Surf Skulls">
+            <img src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+        <figure class="vid-card">
+          <p class="vid-label en">FINQ Ad Concept</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="R48ngAvojF8" data-ratio="wide" aria-label="נגן את הסרטון FINQ Ad Concept">
+            <img src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+        <figure class="vid-card">
+          <p class="vid-label en">Gecko's Short Action Story</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="sJV-jwg2zao" data-ratio="wide" aria-label="נגן את הסרטון Gecko's Short Action Story">
+            <img src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+        <figure class="vid-card">
+          <p class="vid-label en">Short Comedy Action Trailer</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="DJhr-xOOV9k" data-ratio="wide" aria-label="נגן את הסרטון Short Comedy Action Trailer">
+            <img src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+        <figure class="vid-card">
+          <p class="vid-label en">Wildlife</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="9fpN4EfSm4o" data-ratio="wide" aria-label="נגן את הסרטון Wildlife">
+            <img src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+        <figure class="vid-card">
+          <p class="vid-label en">Extreme Donkey Concept</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="eJf6V14qmAg" data-ratio="wide" aria-label="נגן את הסרטון Extreme Donkey Concept">
+            <img src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+        <figure class="vid-card">
+          <p class="vid-label en">Creative Spec Ad</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="vLnmvSnLq1A" data-ratio="wide" aria-label="נגן את הסרטון Creative Spec Ad">
+            <img src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+        <figure class="vid-card">
+          <p class="vid-label en">Funny Viral Video Concept</p>
+          <button class="vid-btn ratio-wide" type="button" data-yt="CsOnM86RLYM" data-ratio="wide" aria-label="נגן את הסרטון Funny Viral Video Concept">
+            <img src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9:16 CAROUSEL -->
+  <section class="band-red reels">
+    <div class="wrap">
+      <div class="reels-head">
+        <h3>רילס ותוכן אנכי</h3>
+        <span class="fmt en">9 : 16</span>
+      </div>
+      <div class="reel-scroller" id="reelStrip" tabindex="0" aria-label="גלריית סרטונים אנכיים, ניתן לגלול הצידה">
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="VfMJoEypc7o" data-ratio="tall" aria-label="נגן את הסרטון Skate Skulls">
+            <img src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>Skate Skulls</figcaption>
+        </figure>
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="ZH07ViJvxlY" data-ratio="tall" aria-label="נגן את הסרטון Conference Ad">
+            <img src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>Conference Ad</figcaption>
+        </figure>
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="lfK2ZqKTPwo" data-ratio="tall" aria-label="נגן את הסרטון UGC Ad Maneki Wallet">
+            <img src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>UGC Ad / Maneki Wallet</figcaption>
+        </figure>
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="s8VXMFSM2VY" data-ratio="tall" aria-label="נגן את הסרטון UGC Ad Maneki Wallet 2">
+            <img src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>UGC Ad / Maneki Wallet 2</figcaption>
+        </figure>
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="F4yyQzu5_sQ" data-ratio="tall" aria-label="נגן את הסרטון Baba Casino Ad">
+            <img src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>Baba Casino Ad</figcaption>
+        </figure>
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="Fe3lmQgQmno" data-ratio="tall" aria-label="נגן את הסרטון Poker Face Ad">
+            <img src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>Poker Face Ad</figcaption>
+        </figure>
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="0YOPfGrgN4w" data-ratio="tall" aria-label="נגן את הסרטון Durex Spec Ad">
+            <img src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>Durex Spec Ad</figcaption>
+        </figure>
+        <figure class="reel-item">
+          <button class="vid-btn ratio-tall" type="button" data-yt="YiYDknTMxqc" data-ratio="tall" aria-label="נגן את הסרטון F35">
+            <img src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt="" loading="lazy" />
+            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+          </button>
+          <figcaption>F35</figcaption>
+        </figure>
+      </div>
+      <div class="reel-ctl">
+        <button type="button" id="reelPrev" aria-label="הקודם"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button type="button" id="reelNext" aria-label="הבא"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>יש לכם כבר פרויקט בראש ?<br /><em>אשמח לשמוע</em></h2>
+    <a class="btn" href="#contact">בואו נדבר</a>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services">
+      <article>
+        <span class="num en">/ 01</span>
+        <h3>הפקת פרסומות וסרטונים</h3>
+        <p>לעסקים, פרטיים, חברות ומשרדים. מותאמים לכל פלטפורמה.</p>
+      </article>
+      <article>
+        <span class="num en">/ 02</span>
+        <h3>תוכן וקמפיינים לסושיאל</h3>
+        <p>יצירת תוכן קצר ודינמי מבוסס טרנדים עם הבנה שיווקית חדה.</p>
+      </article>
+      <article>
+        <span class="num en">/ 03</span>
+        <h3>אסטרטגיה ושפה ויזואלית</h3>
+        <p>בניית קו עיצובי ייחודי למותג שלך לפני שמתחילים להפיק.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ABOUT ME -->
+  <section class="band-red about-me" id="me">
+    <h2>קצת עליי</h2>
+    <img class="portrait" src="assets/noam.jpg" alt="נעם יוסטו, מייסד The Juice" loading="lazy" />
+    <p class="lead">היי, אני נעם</p>
+    <p>יוצר תוכן בבינה מלאכותית. The Juice זה הכינוי וגם השם של הסטודיו.</p>
+    <p>אני מפיק פרסומות, קמפיינים ותוכן לעסקים. יוצר ריאליזם, אנימציה, קולנוע וקומדיה, ועובד עם הכלים והמודלים הכי מתקדמים שיש בשוק.</p>
+    <p>הרקע שלי בשיווק דיגיטלי, קופירייטינג וחשיבה יצירתית הוא מה שגורם לתוכן לא רק להיראות טוב, אלא לעבוד.</p>
+    <ul class="pillars">
+      <li>קונספט מקורי</li>
+      <li>יחס אישי</li>
+      <li>זמינות</li>
+    </ul>
+  </section>
+
+  <!-- BRANDS -->
+  <section class="band-dark brands">
+    <h2>מותגים שעבדנו איתם</h2>
+    <div class="brand-row">
+      <img src="assets/maneki-logo.png" alt="Maneki Wallet" loading="lazy" />
+      <!-- הוסיפו כאן לוגואים נוספים: <img src="assets/LOGO.png" alt="שם המותג" loading="lazy" /> -->
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote">
+    <blockquote>„היי.. ראיתי את הסרטון, התגובה של האישה נראית דרמטית וטבעית, שזה הוק מעולה... שבוע מעולה!"</blockquote>
+    <cite class="en">Maneki Wallet</cite>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="wrap contact-grid">
+      <div>
+        <h2 class="en">LET'S TALK!</h2>
+        <p class="sub">מוכנים לקחת את המותג שלכם צעד אחד קדימה?</p>
+        <p class="note">השאירו פרטים ואחזור אליכם. מעדיפים לדבר ישירות? מוזמנים גם בוואטסאפ או באינסטגרם.</p>
+        <div class="social">
+          <a href="https://wa.me/972525377655" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.1-.2-1.2-1.5-1.2-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.3.3c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2 1c.2.1.4.2.4.3.1.2.1.6-.1 1.2z"/></svg>
+            WhatsApp
+          </a>
+          <a href="https://instagram.com/bythejuice" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.3 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .3-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.3-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.3 2.2-.4 1.3-.1 1.7-.1 4.8-.1zm0 3.4A6.4 6.4 0 1 0 18.4 12 6.4 6.4 0 0 0 12 5.6zm0 10.6A4.2 4.2 0 1 1 16.2 12 4.2 4.2 0 0 1 12 16.2zm6.6-10.8a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5z"/></svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <form class="form" id="leadForm" novalidate>
+        <div class="field">
+          <label for="f-name">שם</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="f-email">אימייל</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="f-phone">טלפון</label>
+          <input id="f-phone" name="phone" type="tel" autocomplete="tel" required />
+        </div>
+        <div class="field">
+          <label for="f-biz">תיאור העסק</label>
+          <input id="f-biz" name="biz" type="text" />
+        </div>
+        <div class="field">
+          <label for="f-want">במה אתם מעוניינים</label>
+          <textarea id="f-want" name="want"></textarea>
+        </div>
+        <button class="btn" type="submit" id="leadSubmit">שליחה</button>
+        <p class="form-msg" id="leadMsg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-in">
+    <span>© 2026 The Juice. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="privacy.html">מדיניות פרטיות</a>
+      <a href="accessibility.html">הצהרת נגישות</a>
+      <a href="https://instagram.com/bythejuice" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/972525377655" target="_blank" rel="noopener" aria-label="דברו איתנו בוואטסאפ">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.1-.2-1.2-1.5-1.2-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.3.3c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2 1c.2.1.4.2.4.3.1.2.1.6-.1 1.2z"/></svg>
+</a>
+
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="נגן וידאו">
+  <button class="lb-close" id="lbClose" type="button" aria-label="סגירה"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="lb-frame" id="lbFrame"></div>
+</div>
+
+<script>
+/* each block is isolated so one failure can never kill the rest */
+function block(fn){ try{ fn(); }catch(e){ console.error('[juice]', e); } }
+
+/* hero video: pick the right file for the viewport */
+block(function(){
+  var v = document.getElementById('reel');
+  if(!v) return;
+  var small = window.matchMedia('(max-width: 768px)').matches;
+  v.src = small ? v.dataset.sm : v.dataset.lg;
+  var p = v.play(); if(p && p.catch) p.catch(function(){});
+
+  var btn = document.getElementById('reelBtn');
+  if(!btn) return;
+  var playIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+  var pauseIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14"/><rect x="13.5" y="5" width="3.5" height="14"/></svg>';
+  btn.addEventListener('click', function(){
+    if(v.paused){ v.play(); btn.innerHTML = pauseIcon; btn.setAttribute('aria-label','עצירת הווידאו ברקע'); }
+    else { v.pause(); btn.innerHTML = playIcon; btn.setAttribute('aria-label','הפעלת הווידאו ברקע'); }
+  });
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ v.pause(); btn.innerHTML = playIcon; }
+});
+
+/* theme toggle */
+block(function(){
+  var btn = document.getElementById('themeBtn'); if(!btn) return;
+  btn.addEventListener('click', function(){
+    var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('juice-theme', next); }catch(e){}
+  });
+});
+
+/* mobile nav */
+block(function(){
+  var btn = document.getElementById('navBtn'), nav = document.getElementById('nav');
+  if(!btn || !nav) return;
+  btn.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  nav.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){ nav.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  });
+});
+
+/* reel carousel arrows */
+block(function(){
+  var s = document.getElementById('reelStrip');
+  var prev = document.getElementById('reelPrev'), next = document.getElementById('reelNext');
+  if(!s || !prev || !next) return;
+  function step(dir){
+    var item = s.querySelector('.reel-item');
+    var w = item ? item.getBoundingClientRect().width + 18 : 220;
+    s.scrollBy({ left: dir * w * 2, behavior: 'smooth' });
+  }
+  /* in RTL, "next" (visually left arrow is prev) — arrows are mirrored by the browser's scroll sign */
+  prev.addEventListener('click', function(){ step(1); });
+  next.addEventListener('click', function(){ step(-1); });
+});
+
+/* video lightbox */
+block(function(){
+  var lb = document.getElementById('lightbox'),
+      frame = document.getElementById('lbFrame'),
+      close = document.getElementById('lbClose');
+  if(!lb || !frame || !close) return;
+  var last = null;
+
+  function open(id, ratio){
+    frame.className = 'lb-frame' + (ratio === 'tall' ? ' tall' : '');
+    frame.innerHTML = '<iframe src="https://www.youtube.com/embed/' + id +
+      '?autoplay=1&rel=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen title="נגן וידאו"></iframe>';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    close.focus();
+  }
+  function shut(){
+    lb.classList.remove('open');
+    frame.innerHTML = '';
+    document.body.style.overflow = '';
+    if(last) last.focus();
+  }
+
+  document.querySelectorAll('[data-yt]').forEach(function(b){
+    b.addEventListener('click', function(){ last = b; open(b.dataset.yt, b.dataset.ratio); });
+  });
+  close.addEventListener('click', shut);
+  lb.addEventListener('click', function(e){ if(e.target === lb) shut(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && lb.classList.contains('open')) shut(); });
+
+  /* thumbnail fallback: maxres does not exist for every video */
+  document.querySelectorAll('.vid-btn img').forEach(function(img){
+    img.addEventListener('error', function(){
+      if(img.src.indexOf('maxresdefault') > -1) img.src = img.src.replace('maxresdefault','hqdefault');
     });
-    document.querySelectorAll('.mobile-link').forEach(link =>
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-        burgerBtn.classList.remove('open');
-        burgerBtn.setAttribute('aria-expanded', 'false');
-      })
-    );
+  });
+});
 
-    // --- Floating WhatsApp bubble: hidden until scrolled past the hero ---
-    const waBubble = document.getElementById('waBubble');
-    if (waBubble) {
-      waBubble.style.transform = 'translateY(150%)';
-      waBubble.style.opacity = '0';
-      waBubble.style.pointerEvents = 'none';
-      const onScroll = () => {
-        const past = window.scrollY > window.innerHeight * 0.6;
-        waBubble.style.transform = past ? 'translateY(0)' : 'translateY(150%)';
-        waBubble.style.opacity = past ? '1' : '0';
-        waBubble.style.pointerEvents = past ? 'auto' : 'none';
-      };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive: true });
+/* lead form -> Google Form */
+block(function(){
+  var GFORM = {
+    action: 'https://docs.google.com/forms/d/e/1FAIpQLScjAmkoG73wmd0Z9WAAjeDhx5uOuOysVZUA7d8ziCm416Tsqw/formResponse',
+    name:  'entry.2016780343',
+    phone: 'entry.2036027740',
+    idea:  'entry.154341694',
+    email: '',   /* no question in the Google Form yet */
+    want:  ''    /* no question in the Google Form yet */
+  };
+
+  var form = document.getElementById('leadForm'),
+      msg  = document.getElementById('leadMsg'),
+      btn  = document.getElementById('leadSubmit');
+  if(!form) return;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = form.name.value.trim(),
+        email = form.email.value.trim(),
+        phone = form.phone.value.trim(),
+        biz = form.biz.value.trim(),
+        want = form.want.value.trim();
+
+    if(!name || !phone){
+      msg.className = 'form-msg err';
+      msg.textContent = 'צריך שם וטלפון כדי שאוכל לחזור אליכם.';
+      return;
     }
 
-    // --- Video cards: thumbnail facade → lightbox player ---
-    // Nothing from YouTube loads until a card is clicked, so the grid stays
-    // free of player chrome (Shorts badge, channel bar, "Watch on YouTube").
-    (function () {
-      const modal = document.getElementById('vidModal');
-      if (!modal) return;
-      const inner = document.getElementById('vidModalInner');
-      const frame = document.getElementById('vidFrame');
-      const caption = document.getElementById('vidCaption');
-      const closeBtn = document.getElementById('vidClose');
-      let lastFocus = null;
+    var fd = new FormData();
+    fd.append(GFORM.name, name);
+    fd.append(GFORM.phone, phone);
 
-      // maxresdefault is missing on some uploads - fall back to hqdefault once.
-      document.querySelectorAll('.vid-thumb').forEach(img => {
-        img.addEventListener('error', function () {
-          if (this.dataset.fellBack) return;
-          this.dataset.fellBack = '1';
-          this.src = this.src.replace('maxresdefault', 'hqdefault');
-        });
-      });
+    /* nothing is ever dropped: fields without their own Google question are folded in with labels */
+    var idea = [];
+    if(biz)  idea.push('תיאור העסק: ' + biz);
+    if(want) idea.push('מעוניין ב: ' + want);
+    if(GFORM.email && email) fd.append(GFORM.email, email);
+    else if(email) idea.push('אימייל: ' + email);
+    if(GFORM.want && want){ fd.append(GFORM.want, want); idea = idea.filter(function(l){ return l.indexOf('מעוניין ב:') !== 0; }); }
+    fd.append(GFORM.idea, idea.join(' | ') || '-');
 
-      function openVid(btn) {
-        const id = btn.dataset.yt;
-        if (!id) return;
-        lastFocus = btn;
-        inner.dataset.ratio = btn.dataset.ratio || '16/9';
-        caption.textContent = btn.dataset.title || '';
+    btn.disabled = true;
+    msg.className = 'form-msg';
+    msg.textContent = '';
 
-        const f = document.createElement('iframe');
-        f.src = 'https://www.youtube.com/embed/' + encodeURIComponent(id) +
-          '?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3';
-        f.title = btn.dataset.title || 'Video';
-        f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
-        f.setAttribute('allowfullscreen', '');
-        frame.replaceChildren(f);
-
-        modal.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-        closeBtn.focus();
-      }
-
-      function closeVid() {
-        if (!modal.classList.contains('is-open')) return;
-        modal.classList.remove('is-open');
-        frame.replaceChildren();          // stops playback
-        document.body.style.overflow = '';
-        if (lastFocus) lastFocus.focus();
-      }
-
-      // Any element carrying data-yt opens the player - cards and the hero CTA alike.
-      document.querySelectorAll('[data-yt]').forEach(btn =>
-        btn.addEventListener('click', () => openVid(btn)));
-
-      closeBtn.addEventListener('click', closeVid);
-      modal.addEventListener('click', e => { if (e.target === modal) closeVid(); });
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeVid();
-      });
-    })();
-
-    // --- Work filmstrip: pan sideways while the section is pinned ---
-    (function () {
-      const pin = document.getElementById('reelPin');
-      const strip = document.getElementById('reelStrip');
-      if (!pin || !strip) return;
-
-      const wide = window.matchMedia('(min-width: 1024px)');
-      const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-      let bounds = null;
-
-      // RTL browsers disagree on the sign and origin of scrollLeft, so the
-      // usable range is measured rather than assumed.
-      function measure() {
-        const prev = strip.scrollLeft;
-        strip.scrollLeft = -1e7; const min = strip.scrollLeft;
-        strip.scrollLeft = 1e7; const max = strip.scrollLeft;
-        strip.scrollLeft = prev;
-        // Resting position is 0 in both directions; the far end is whichever
-        // extreme sits further from it. LTR ends positive, RTL ends negative.
-        return Math.abs(min) > Math.abs(max)
-          ? { start: max, end: min }
-          : { start: min, end: max };
-      }
-
-      function enable() {
-        pin.classList.add('is-pinned');
-        bounds = measure();
-        const travel = Math.abs(bounds.end - bounds.start);
-        // 1px of page scroll ~ 1px of pan, plus one screen to hold it pinned
-        pin.style.height = (window.innerHeight + travel) + 'px';
-        onScroll();
-      }
-
-      function disable() {
-        pin.classList.remove('is-pinned');
-        pin.style.height = '';
-        bounds = null;
-      }
-
-      // Done straight on the scroll event: one rect read plus one assignment is
-      // cheap, and a dropped animation frame used to wedge the throttle flag.
-      // Whichever card sits nearest the middle of the screen comes forward.
-      const items = [...strip.querySelectorAll('.strip-item')];
-      const rows = [...strip.querySelectorAll('.reel-track')];
-
-      function focusCentre() {
-        const mid = window.innerWidth / 2;
-        rows.forEach(row => {
-          let best = null, bestDist = Infinity;
-          for (const el of row.children) {
-            const r = el.getBoundingClientRect();
-            const d = Math.abs(r.left + r.width / 2 - mid);
-            if (d < bestDist) { bestDist = d; best = el; }
-          }
-          for (const el of row.children) el.classList.toggle('is-focus', el === best);
-        });
-      }
-
-      function onScroll() {
-        if (bounds) {
-          const total = pin.offsetHeight - window.innerHeight;
-          if (total > 0) {
-            const p = Math.min(1, Math.max(0, -pin.getBoundingClientRect().top / total));
-            strip.scrollLeft = bounds.start + (bounds.end - bounds.start) * p;
-          }
-        }
-        focusCentre();
-      }
-
-      function sync() {
-        if (wide.matches && !calm.matches) enable(); else disable();
-      }
-
-      sync();
-      focusCentre();
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', sync);
-      strip.addEventListener('scroll', focusCentre, { passive: true });
-      wide.addEventListener('change', sync);
-      calm.addEventListener('change', sync);
-    })();
-
-    // --- Theme toggle (initial value is set pre-paint in <head>) ---
-    (function () {
-      const btn = document.getElementById('themeBtn');
-      if (!btn) return;
-      const root = document.documentElement;
-      const media = window.matchMedia('(prefers-color-scheme: dark)');
-
-      function label() {
-        const dark = root.getAttribute('data-theme') === 'dark';
-        btn.setAttribute('aria-label', dark ? 'מעבר למצב בהיר' : 'מעבר למצב כהה');
-        btn.setAttribute('aria-pressed', String(dark));
-      }
-      label();
-
-      btn.addEventListener('click', () => {
-        const dark = root.getAttribute('data-theme') !== 'dark';
-        root.setAttribute('data-theme', dark ? 'dark' : 'light');
-        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { }
-        label();
-      });
-
-      // Keep following the system until the visitor makes their own choice.
-      media.addEventListener('change', e => {
-        let chosen = null;
-        try { chosen = localStorage.getItem('theme'); } catch (err) { }
-        if (chosen) return;
-        root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-        label();
-      });
-    })();
-
-    // --- Hero backdrop: pick the file that suits the screen, then play ---
-    (function () {
-      const v = document.getElementById('heroVideo');
-      if (!v) return;
-
-      // Anyone who asked for less motion keeps the still poster.
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        v.removeAttribute('autoplay');
-        return;
-      }
-
-      v.src = window.matchMedia('(min-width: 768px)').matches
-        ? v.dataset.srcLg
-        : v.dataset.srcSm;
-      v.play().catch(() => { /* poster stays if the browser refuses */ });
-    })();
-
-    // --- Pause control for the looping hero video (WCAG 2.2.2) ---
-    (function () {
-      const v = document.getElementById('heroVideo');
-      const btn = document.getElementById('heroPause');
-      if (!v || !btn) return;
-
-      function sync() {
-        const paused = v.paused;
-        btn.classList.toggle('is-paused', paused);
-        btn.setAttribute('aria-label', paused ? 'הפעלת סרטון הרקע' : 'עצירת סרטון הרקע');
-      }
-
-      btn.addEventListener('click', () => {
-        if (v.paused) v.play().catch(() => { }); else v.pause();
-        sync();
-      });
-      v.addEventListener('play', sync);
-      v.addEventListener('pause', sync);
-
-      // Visitors who asked for less motion get the still poster and a play button.
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) v.pause();
-      sync();
-    })();
-
-    // --- Lead form → Google Form (answers collect in the linked Google Sheet) ---
-    (function () {
-      const form = document.getElementById('leadForm');
-      if (!form) return;
-
-      // "The Juice - צרו איתנו קשר" - responses land in its linked Google Sheet.
-      const GFORM = {
-        action: 'https://docs.google.com/forms/d/e/1FAIpQLScjAmkoG73wmd0Z9WAAjeDhx5uOuOysVZUA7d8ziCm416Tsqw/formResponse',
-        name: 'entry.2016780343',   // שם מלא
-        phone: 'entry.2036027740',  // טלפון ליצירת קשר
-        idea: 'entry.154341694',    // רעיון או סוג העסק
-        // The Google Form has no questions for these yet. Until it does they are
-        // folded into the idea field with labels, so no answer is ever dropped.
-        // Once the questions exist, put their entry IDs here and they split out.
-        email: '',
-        want: ''
-      };
-
-      const btn = document.getElementById('leadSubmit');
-      const btnText = document.getElementById('leadBtnText');
-      const statusEl = document.getElementById('leadStatus');
-      const IDLE_LABEL = btnText.textContent;
-      const honeypot = form.querySelector('[name="company"]');
-
-      const fields = {
-        leadName: { el: document.getElementById('leadName'), msg: 'נא למלא שם' },
-        leadPhone: { el: document.getElementById('leadPhone'), msg: 'נא למלא מספר טלפון תקין' },
-        leadEmail: { el: document.getElementById('leadEmail'), msg: 'נא למלא כתובת אימייל תקינה' },
-        leadIdea: { el: document.getElementById('leadIdea'), msg: 'נא לתאר בקצרה את העסק' },
-        leadWant: { el: document.getElementById('leadWant'), msg: 'נא לכתוב במה אתם מעוניינים' }
-      };
-
-      function showStatus(msg, ok) {
-        statusEl.textContent = msg;
-        statusEl.className = 'mt-4 text-center text-sm ' +
-          (ok ? 'font-semibold text-ink' : 'text-[#D93025]');
-      }
-
-      function setError(key, msg) {
-        fields[key].el.setAttribute('aria-invalid', msg ? 'true' : 'false');
-        form.querySelector('[data-error-for="' + key + '"]').textContent = msg || '';
-      }
-
-      function validate() {
-        let ok = true;
-        const name = fields.leadName.el.value.trim();
-        setError('leadName', name ? '' : fields.leadName.msg);
-        if (!name) ok = false;
-
-        // Accept any format as long as there are enough digits to call back.
-        const digits = (fields.leadPhone.el.value.match(/\d/g) || []).length;
-        setError('leadPhone', digits >= 9 ? '' : fields.leadPhone.msg);
-        if (digits < 9) ok = false;
-
-        const email = fields.leadEmail.el.value.trim();
-        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-        setError('leadEmail', emailOk ? '' : fields.leadEmail.msg);
-        if (!emailOk) ok = false;
-
-        const idea = fields.leadIdea.el.value.trim();
-        setError('leadIdea', idea ? '' : fields.leadIdea.msg);
-        if (!idea) ok = false;
-
-        const want = fields.leadWant.el.value.trim();
-        setError('leadWant', want ? '' : fields.leadWant.msg);
-        if (!want) ok = false;
-        return ok;
-      }
-
-      Object.keys(fields).forEach(key =>
-        fields[key].el.addEventListener('input', () => setError(key, '')));
-
-      form.addEventListener('submit', async e => {
-        e.preventDefault();
-        if (honeypot && honeypot.value) return;   // bot filled the hidden field
-        if (!validate()) return;
-
-        if (!GFORM.action || !GFORM.name) {
-          showStatus('הטופס עדיין בהקמה. בינתיים מוזמנים לפנות אליי בוואטסאפ 🙏', false);
-          console.warn('Lead form: GFORM is not configured - nothing is being saved.');
-          return;
-        }
-
-        btn.disabled = true;
-        btnText.textContent = 'שולח…';
-        showStatus('', true);
-
-        const email = fields.leadEmail.el.value.trim();
-        const idea = fields.leadIdea.el.value.trim();
-        const want = fields.leadWant.el.value.trim();
-
-        const body = new URLSearchParams();
-        body.append(GFORM.name, fields.leadName.el.value.trim());
-        body.append(GFORM.phone, fields.leadPhone.el.value.trim());
-
-        // Anything without its own Google question rides along inside the idea
-        // field, labelled, rather than being silently discarded.
-        const extras = [];
-        if (GFORM.email) body.append(GFORM.email, email);
-        else extras.push('אימייל: ' + email);
-        if (GFORM.want) body.append(GFORM.want, want);
-        else extras.push('במה מעוניין: ' + want);
-
-        body.append(GFORM.idea,
-          extras.length ? 'תיאור העסק: ' + idea + '\n' + extras.join('\n') : idea);
-
-        try {
-          // Google forbids reading this response cross-origin, so success can't be
-          // inspected - but the POST itself does record the answer.
-          await fetch(GFORM.action, { method: 'POST', mode: 'no-cors', body });
-          form.reset();
-          Object.keys(fields).forEach(key => setError(key, ''));
-          showStatus('קיבלתי! אחזור אליכם בהקדם 🙌', true);
-          btnText.textContent = 'נשלח בהצלחה';
-          setTimeout(() => { btnText.textContent = IDLE_LABEL; btn.disabled = false; }, 4000);
-        } catch (err) {
-          showStatus('משהו השתבש בשליחה. אפשר לפנות אליי בוואטסאפ ואטפל בזה מיד.', false);
-          btnText.textContent = IDLE_LABEL;
-          btn.disabled = false;
-        }
-      });
-    })();
-
-  </script>
+    fetch(GFORM.action, { method:'POST', mode:'no-cors', body: fd })
+      .then(function(){
+        form.reset();
+        msg.className = 'form-msg ok';
+        msg.textContent = 'תודה! הפרטים התקבלו, אחזור אליכם בהקדם.';
+      })
+      .catch(function(){
+        msg.className = 'form-msg err';
+        msg.textContent = 'השליחה נכשלה. אפשר לפנות אליי בוואטסאפ.';
+      })
+      .finally(function(){ btn.disabled = false; });
+  });
+});
+</script>
 </body>
-
 </html>
