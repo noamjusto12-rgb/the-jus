@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>הצהרת נגישות | The Juice</title>
+  <meta name="description" content="הצהרת הנגישות של אתר The Juice לפי ת"י 5568 ברמה AA." />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="data:," />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Assistant', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ink: 'rgb(var(--c-ink) / <alpha-value>)',
+            slate2: 'rgb(var(--c-slate2) / <alpha-value>)',
+            shell: 'rgb(var(--c-shell) / <alpha-value>)',
+            paper: 'rgb(var(--c-paper) / <alpha-value>)',
+            line: 'rgb(var(--c-line) / <alpha-value>)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved ? saved === 'dark'
+          : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { }
+    })();
+  </script>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --c-ink: 31 33 36;
+      --c-slate2: 95 99 104;
+      --c-shell: 250 248 244;
+      --c-paper: 244 241 234;
+      --c-line: 231 226 216;
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --c-ink: 240 238 233;
+      --c-slate2: 163 161 155;
+      --c-shell: 16 17 19;
+      --c-paper: 22 24 27;
+      --c-line: 48 51 56;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid rgb(var(--c-ink));
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .prose h2 {
+      margin-top: 2.5rem;
+      margin-bottom: .75rem;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: rgb(var(--c-ink));
+    }
+
+    .prose p,
+    .prose li {
+      color: rgb(var(--c-slate2));
+      line-height: 1.85;
+    }
+
+    .prose p { margin-bottom: 1rem; }
+
+    .prose ul {
+      margin: 0 0 1rem;
+      padding-inline-start: 1.25rem;
+      list-style: disc;
+    }
+
+    .prose li { margin-bottom: .45rem; }
+
+    .prose strong { color: rgb(var(--c-ink)); font-weight: 700; }
+
+    .todo {
+      display: inline-block;
+      border-radius: 6px;
+      background: #FDE68A;
+      color: #7C2D12;
+      padding: 0 .35rem;
+      font-weight: 700;
+    }
+
+    :root[data-theme="dark"] .todo { background: #78350F; color: #FDE68A; }
+  </style>
+</head>
+
+<body class="bg-shell font-sans text-ink">
+  <header class="border-b border-line bg-shell/90 backdrop-blur-md">
+    <nav class="mx-auto flex h-16 max-w-3xl flex-row-reverse items-center justify-between px-5">
+      <a href="index.html" class="font-mono text-sm font-medium tracking-[0.18em] text-ink" dir="ltr">The&nbsp;Juice</a>
+      <a href="index.html" class="text-[15px] font-medium text-slate2 transition-colors hover:text-ink">חזרה לאתר</a>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-5 py-14 sm:py-20">
+    <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ ACCESSIBILITY ]</p>
+    <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">הצהרת נגישות</h1>
+    <p class="mt-3 text-sm text-slate2">עודכן לאחרונה: 6 בנובמבר 2026</p>
+
+    <div class="prose mt-10">
+      <p>אנחנו רואים בנגישות האתר חלק מהשירות ולא תוספת. האתר נבנה כך שיוכל לשמש
+        מגוון רחב של אנשים, לרבות משתמשים בטכנולוגיות מסייעות.</p>
+
+      <h2>רמת הנגישות באתר</h2>
+      <p>האתר הונגש בהתאם לתקן הישראלי <strong>ת"י 5568</strong> ברמה <strong>AA</strong>,
+        המבוסס על הנחיות <span dir="ltr">WCAG 2.0</span>, ובהתאם לתקנות שוויון זכויות
+        לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג-2013.</p>
+
+      <h2>ההתאמות שבוצעו</h2>
+      <ul>
+        <li>ניווט מלא באמצעות מקלדת בכל רכיבי האתר</li>
+        <li>סימון ברור וגלוי של הרכיב הממוקד בעת ניווט במקלדת</li>
+        <li>קישור "דלג לתוכן הראשי" בתחילת העמוד</li>
+        <li>יחסי ניגודיות העומדים בדרישת התקן בשני מצבי התצוגה</li>
+        <li>אפשרות לעבור בין תצוגה בהירה לכהה</li>
+        <li>טקסט חלופי לתמונות, ותוויות מקושרות לכל שדות הטופס</li>
+        <li>הודעות שגיאה בטופס בטקסט ברור, הנקראות גם על ידי קוראי מסך</li>
+        <li>כפתור לעצירת סרטון הרקע בראש העמוד</li>
+        <li>צמצום אוטומטי של אנימציות למשתמשים שהגדירו זאת במערכת ההפעלה</li>
+        <li>מבנה כותרות היררכי ואזורי ניווט מוגדרים לקוראי מסך</li>
+        <li>שמירה על קריאות בהגדלת תצוגה</li>
+      </ul>
+
+      <h2>מגבלות ידועות</h2>
+      <p>אנחנו מצהירים בשקיפות על מה שעדיין אינו נגיש במלואו:</p>
+      <ul>
+        <li><strong>נגן הווידאו של YouTube</strong> — סרטוני התיק מוצגים בנגן חיצוני של
+          YouTube, שאינו בשליטתנו ורמת נגישותו נקבעת על ידי Google.</li>
+        <li><strong>כתוביות לסרטונים</strong> — חלק מהסרטונים בתיק העבודות עדיין ללא
+          כתוביות. אנחנו פועלים להוספתן.</li>
+      </ul>
+      <p>אם נתקלתם ברכיב שאינו נגיש, נשמח לדעת ונטפל בכך בהקדם.</p>
+
+      <h2>רכז הנגישות</h2>
+      <p>
+        שם: <span class="todo">[שם רכז הנגישות]</span><br />
+        טלפון: <span class="todo">[טלפון]</span><br />
+        אימייל: <span class="todo">[כתובת אימייל]</span>
+      </p>
+
+      <h2>פנייה בנושא נגישות</h2>
+      <p>נתקלתם בבעיה? נשמח שתפנו אלינו ותתארו את התקלה, את העמוד שבו היא התרחשה ואת
+        הדפדפן או הטכנולוגיה המסייעת שבה השתמשתם. נשתדל לתת מענה בהקדם האפשרי.</p>
+
+      <h2>תאריך הבדיקה</h2>
+      <p>הצהרה זו עודכנה בעקבות בדיקת נגישות שבוצעה בתאריך
+        <span class="todo">[תאריך הבדיקה]</span>.</p>
+    </div>
+  </main>
+
+  <footer class="border-t border-line bg-paper px-5 py-10">
+    <div class="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 text-sm text-slate2 sm:flex-row">
+      <span class="font-mono tracking-[0.18em]" dir="ltr">The&nbsp;Juice</span>
+      <div class="flex gap-5">
+        <a href="privacy.html" class="transition-colors hover:text-ink">מדיניות פרטיות</a>
+        <a href="accessibility.html" class="transition-colors hover:text-ink">הצהרת נגישות</a>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

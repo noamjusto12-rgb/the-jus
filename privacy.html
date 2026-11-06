@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מדיניות פרטיות | The Juice</title>
+  <meta name="description" content="מדיניות הפרטיות של The Juice: איזה מידע נאסף באתר, למה, והזכויות שלכם." />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="data:," />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Assistant', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ink: 'rgb(var(--c-ink) / <alpha-value>)',
+            slate2: 'rgb(var(--c-slate2) / <alpha-value>)',
+            shell: 'rgb(var(--c-shell) / <alpha-value>)',
+            paper: 'rgb(var(--c-paper) / <alpha-value>)',
+            line: 'rgb(var(--c-line) / <alpha-value>)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved ? saved === 'dark'
+          : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { }
+    })();
+  </script>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --c-ink: 31 33 36;
+      --c-slate2: 95 99 104;
+      --c-shell: 250 248 244;
+      --c-paper: 244 241 234;
+      --c-line: 231 226 216;
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --c-ink: 240 238 233;
+      --c-slate2: 163 161 155;
+      --c-shell: 16 17 19;
+      --c-paper: 22 24 27;
+      --c-line: 48 51 56;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid rgb(var(--c-ink));
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .prose h2 {
+      margin-top: 2.5rem;
+      margin-bottom: .75rem;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: rgb(var(--c-ink));
+    }
+
+    .prose p,
+    .prose li {
+      color: rgb(var(--c-slate2));
+      line-height: 1.85;
+    }
+
+    .prose p { margin-bottom: 1rem; }
+
+    .prose ul {
+      margin: 0 0 1rem;
+      padding-inline-start: 1.25rem;
+      list-style: disc;
+    }
+
+    .prose li { margin-bottom: .45rem; }
+
+    .prose strong { color: rgb(var(--c-ink)); font-weight: 700; }
+
+    .todo {
+      display: inline-block;
+      border-radius: 6px;
+      background: #FDE68A;
+      color: #7C2D12;
+      padding: 0 .35rem;
+      font-weight: 700;
+    }
+
+    :root[data-theme="dark"] .todo { background: #78350F; color: #FDE68A; }
+  </style>
+</head>
+
+<body class="bg-shell font-sans text-ink">
+  <header class="border-b border-line bg-shell/90 backdrop-blur-md">
+    <nav class="mx-auto flex h-16 max-w-3xl flex-row-reverse items-center justify-between px-5">
+      <a href="index.html" class="font-mono text-sm font-medium tracking-[0.18em] text-ink" dir="ltr">The&nbsp;Juice</a>
+      <a href="index.html" class="text-[15px] font-medium text-slate2 transition-colors hover:text-ink">חזרה לאתר</a>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-5 py-14 sm:py-20">
+    <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[ PRIVACY ]</p>
+    <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">מדיניות פרטיות</h1>
+    <p class="mt-3 text-sm text-slate2">עודכן לאחרונה: 6 בנובמבר 2026</p>
+
+    <div class="prose mt-10">
+      <p>הפרטיות שלכם חשובה לנו. המסמך הזה מסביר איזה מידע נאסף באתר
+        <span dir="ltr">The Juice</span>, למה הוא נאסף, מה נעשה בו ואילו זכויות עומדות לכם.</p>
+
+      <h2>מי אנחנו</h2>
+      <p>האתר מופעל על ידי <strong><span class="todo">[שם העסק או שם מלא]</span></strong>
+        <span class="todo">[מספר עוסק / ח.פ., אם יש]</span>.
+        לכל פנייה בנושא פרטיות: <span class="todo">[כתובת אימייל ליצירת קשר]</span>.</p>
+
+      <h2>איזה מידע נאסף</h2>
+      <p><strong>מידע שאתם מוסרים ביוזמתכם</strong> דרך טופס יצירת הקשר באתר:</p>
+      <ul>
+        <li>שם</li>
+        <li>מספר טלפון</li>
+        <li>כתובת אימייל</li>
+        <li>תיאור העסק שלכם</li>
+        <li>פירוט מה תרצו שנפיק או ניצור</li>
+      </ul>
+      <p>אין חובה חוקית למסור את המידע הזה, אבל בלעדיו לא נוכל לחזור אליכם.</p>
+      <p><strong>מידע טכני</strong> שנאסף אוטומטית על ידי ספקי התשתית שלנו, כגון כתובת IP,
+        סוג הדפדפן והמכשיר ודפים שנצפו. מידע זה משמש לתפעול ולאבטחת האתר בלבד.</p>
+
+      <h2>שמירת העדפות במכשיר שלכם</h2>
+      <p>האתר שומר בדפדפן שלכם העדפה אחת בלבד: בחירת מצב תצוגה בהיר או כהה. היא נשמרת
+        מקומית במכשיר שלכם <span dir="ltr">(localStorage)</span>, לא נשלחת לשום מקום ולא
+        משמשת למעקב או לפרסום. אפשר למחוק אותה בכל רגע דרך ניקוי נתוני האתר בדפדפן.</p>
+
+      <h2>למה המידע נאסף</h2>
+      <ul>
+        <li>כדי לחזור אליכם ולהשיב לפנייתכם</li>
+        <li>כדי להכין הצעת מחיר או הצעה יצירתית בהתאם לבקשתכם</li>
+        <li>כדי לנהל את הקשר העסקי מול לקוחות</li>
+      </ul>
+      <p>המידע אינו נמכר, אינו מושכר ואינו מועבר לצדדים שלישיים למטרות שיווק.</p>
+
+      <h2>היכן המידע נשמר</h2>
+      <p>פניות מהטופס נשלחות ונשמרות בשירות <strong>Google Forms</strong> ובגיליון
+        <strong>Google Sheets</strong> המקושר אליו, המסופקים על ידי
+        <span dir="ltr">Google LLC</span>. האתר עצמו מתארח בשירות
+        <span dir="ltr">Vercel Inc.</span> שירותים אלה עשויים לאחסן מידע בשרתים מחוץ לישראל.</p>
+
+      <h2>שירותים של צד שלישי</h2>
+      <ul>
+        <li><strong>YouTube</strong> — סרטוני התיק מוטמעים מיוטיוב. הנגן נטען רק כשאתם
+          לוחצים לצפות, ומרגע זה חלות גם מדיניות הפרטיות ותנאי השימוש של Google.</li>
+        <li><strong>Google Fonts</strong> — הגופנים באתר נטענים משרתי Google.</li>
+        <li><strong>WhatsApp ו-Instagram</strong> — לחיצה על כפתורי יצירת הקשר מעבירה אתכם
+          לשירותים של <span dir="ltr">Meta Platforms</span>, שלהם מדיניות פרטיות נפרדת.</li>
+      </ul>
+
+      <h2>כמה זמן נשמר המידע</h2>
+      <p>פניות נשמרות למשך <strong><span class="todo">[מספר]</span> שנים</strong> מיום
+        הפנייה, או עד שתבקשו את מחיקתן, המוקדם מביניהם.</p>
+
+      <h2>הזכויות שלכם</h2>
+      <p>על פי חוק הגנת הפרטיות, התשמ"א-1981, אתם זכאים:</p>
+      <ul>
+        <li>לעיין במידע שנשמר עליכם</li>
+        <li>לבקש את תיקונו אם הוא שגוי, לא שלם או לא מעודכן</li>
+        <li>לבקש את מחיקתו</li>
+      </ul>
+      <p>לממש כל אחת מהזכויות האלה אפשר בפנייה לכתובת
+        <span class="todo">[כתובת אימייל ליצירת קשר]</span>. נשיב לפנייתכם בתוך זמן סביר.</p>
+
+      <h2>אבטחת מידע</h2>
+      <p>האתר מוגש בחיבור מוצפן <span dir="ltr">(HTTPS)</span>, והגישה לפניות שהתקבלו
+        מוגבלת לבעלי האתר בלבד. יחד עם זאת, אין מערכת מקוונת המוגנת באופן מוחלט, ואיננו
+        יכולים להתחייב לאבטחה מושלמת.</p>
+
+      <h2>שינויים במדיניות</h2>
+      <p>המדיניות עשויה להתעדכן מעת לעת. תאריך העדכון האחרון מופיע בראש העמוד.</p>
+
+      <h2>יצירת קשר</h2>
+      <p>בכל שאלה בנושא פרטיות: <span class="todo">[כתובת אימייל]</span> ·
+        <span class="todo">[טלפון]</span></p>
+    </div>
+  </main>
+
+  <footer class="border-t border-line bg-paper px-5 py-10">
+    <div class="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 text-sm text-slate2 sm:flex-row">
+      <span class="font-mono tracking-[0.18em]" dir="ltr">The&nbsp;Juice</span>
+      <div class="flex gap-5">
+        <a href="privacy.html" class="transition-colors hover:text-ink">מדיניות פרטיות</a>
+        <a href="accessibility.html" class="transition-colors hover:text-ink">הצהרת נגישות</a>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
