@@ -137,7 +137,7 @@
     }
 
     /* ============ Scroll: hero stays, content rises over it ============ */
-    @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    @media (prefers-reduced-motion: no-preference) {
       /* Tailwind's .relative utility is injected after this block, so the
          selector has to out-specify it rather than rely on order. */
       main>section.hero {
@@ -243,15 +243,36 @@
 
 
     /* ============ Work gallery ============ */
-    /* Vertical work runs edge to edge and scrolls sideways, so the 9:16 format
-       gets its own band instead of being squeezed into the wide grid. */
+    /* Metadata line under the title, spread across the full width. */
+    .work-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .75rem 2rem;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgb(var(--c-line));
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .18em;
+      color: rgb(var(--c-slate2));
+      direction: ltr;
+    }
+
+    @media (min-width: 640px) {
+      .work-meta {
+        font-size: 12px;
+      }
+    }
+
+    /* Two rows of small cards that pan together. Padding leaves room for the
+       focused card to grow without being clipped by the scroll container. */
     .reel-strip {
       overflow-x: auto;
       overflow-y: hidden;
-      scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      padding-inline: 1.25rem;
+      padding: 1.5rem 1.25rem;
     }
 
     .reel-strip::-webkit-scrollbar {
@@ -266,37 +287,70 @@
 
     .reel-track {
       display: flex;
-      gap: .75rem;
+      gap: .5rem;
       width: max-content;
     }
 
-    @media (min-width: 640px) {
-      .reel-track {
-        gap: 1rem;
-      }
+    .reel-row-b {
+      margin-top: .5rem;
     }
 
-    .reel-item {
+    .strip-item {
       flex: 0 0 auto;
-      width: 15rem;
       margin: 0;
-      scroll-snap-align: start;
+      opacity: .52;
+      transform: scale(.94);
+      transform-origin: center;
+      transition: opacity .45s ease, transform .45s cubic-bezier(.2, .7, .3, 1);
+    }
+
+    .strip-item.is-tall {
+      width: 8.5rem;
+    }
+
+    .strip-item.is-wide {
+      width: 15rem;
     }
 
     @media (min-width: 1024px) {
-      .reel-item {
-        width: 17rem;
+      .strip-item.is-tall {
+        width: 10rem;
+      }
+
+      .strip-item.is-wide {
+        width: 17.75rem;
       }
     }
 
+    /* The card nearest the centre of the screen comes forward */
+    .strip-item.is-focus {
+      opacity: 1;
+      transform: scale(1.1);
+      position: relative;
+      z-index: 2;
+    }
 
-    /* Pinned pan: the tall outer box provides the scroll distance, the inner
-       box sticks, and JS maps scroll progress onto the strip's own scrollLeft. */
+    .strip-cap {
+      margin-top: .5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .04em;
+      line-height: 1.3;
+      color: rgb(var(--c-slate2));
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+
+    .strip-item.is-focus .strip-cap {
+      opacity: 1;
+    }
+
     .reel-pin-inner {
       position: sticky;
       top: 0;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      justify-content: center;
       min-height: 0;
     }
 
@@ -306,7 +360,12 @@
 
     .reel-pin.is-pinned .reel-strip {
       overflow-x: hidden;
-      scroll-snap-type: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .strip-item {
+        transition: none;
+      }
     }
 
 
@@ -853,24 +912,27 @@
         </div>
       </div>
     </section>
-    <section id="works" class="scroll-mt-20 overflow-hidden border-t border-line bg-shell py-24 sm:py-28 lg:py-32">
+    <section id="works" class="scroll-mt-20 border-t border-line bg-shell py-24 sm:py-28 lg:py-32">
       <div class="mx-auto max-w-[80rem] px-5 sm:px-8">
-        <div class="mx-auto max-w-2xl text-center">
-          <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[
-            01&nbsp;/&nbsp;SELECTED&nbsp;WORK ]</p>
-          <h2 class="mt-5 text-4xl font-extrabold tracking-tight sm:text-6xl">העבודות שלנו</h2>
-          <p class="mt-5 text-lg leading-relaxed text-slate2">פרסומות, קמפיינים ותוכן שנוצרו בסטודיו</p>
+        <h2 class="text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-7xl lg:text-[5.5rem]">
+          העבודות<br />שלנו
+        </h2>
+        <div class="work-meta">
+          <span>BY&nbsp;THE&nbsp;JUICE</span>
+          <span>ADS&nbsp;/&nbsp;CAMPAIGNS&nbsp;/&nbsp;CONTENT</span>
+          <span>9:16&nbsp;+&nbsp;16:9</span>
+          <span>AI&nbsp;CREATIVE&nbsp;STUDIO</span>
         </div>
       </div>
 
-      <!-- Vertical work: an edge-to-edge filmstrip. On wide screens it pans
-           sideways while the section is pinned; elsewhere it is a plain swipe. -->
-      <div id="reelPin" class="reel-pin mt-16 lg:mt-20">
+      <!-- Both rows pan together while the section is pinned; the card nearest
+           the centre of the screen comes forward. -->
+      <div id="reelPin" class="reel-pin mt-14 lg:mt-16">
         <div class="reel-pin-inner">
           <div id="reelStrip" class="reel-strip">
-            <div class="reel-track">
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <div class="reel-track reel-row-a">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="ZH07ViJvxlY" data-ratio="9/16"
                   data-title="CONFERENCE AD" aria-label="נגן: CONFERENCE AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt=""
@@ -880,10 +942,10 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">CONFERENCE AD</figcaption>
+              <figcaption class="strip-cap" dir="ltr">CONFERENCE AD</figcaption>
             </figure>
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="VfMJoEypc7o" data-ratio="9/16"
                   data-title="SKATE SKULLS" aria-label="נגן: SKATE SKULLS">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt=""
@@ -893,10 +955,10 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">SKATE SKULLS</figcaption>
+              <figcaption class="strip-cap" dir="ltr">SKATE SKULLS</figcaption>
             </figure>
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="F4yyQzu5_sQ" data-ratio="9/16"
                   data-title="BABA CASINO AD" aria-label="נגן: BABA CASINO AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt=""
@@ -906,10 +968,10 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">BABA CASINO AD</figcaption>
+              <figcaption class="strip-cap" dir="ltr">BABA CASINO AD</figcaption>
             </figure>
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="Fe3lmQgQmno" data-ratio="9/16"
                   data-title="POKER FACE AD" aria-label="נגן: POKER FACE AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt=""
@@ -919,10 +981,10 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">POKER FACE AD</figcaption>
+              <figcaption class="strip-cap" dir="ltr">POKER FACE AD</figcaption>
             </figure>
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="lfK2ZqKTPwo" data-ratio="9/16"
                   data-title="UGC AD / MANEKI WALLET" aria-label="נגן: UGC AD / MANEKI WALLET">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt=""
@@ -932,10 +994,10 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">UGC AD / MANEKI WALLET</figcaption>
+              <figcaption class="strip-cap" dir="ltr">UGC AD / MANEKI WALLET</figcaption>
             </figure>
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="s8VXMFSM2VY" data-ratio="9/16"
                   data-title="UGC AD / MANEKI WALLET 2" aria-label="נגן: UGC AD / MANEKI WALLET 2">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt=""
@@ -945,10 +1007,10 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">UGC AD / MANEKI WALLET 2</figcaption>
+              <figcaption class="strip-cap" dir="ltr">UGC AD / MANEKI WALLET 2</figcaption>
             </figure>
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="0YOPfGrgN4w" data-ratio="9/16"
                   data-title="DUREX SPEC AD" aria-label="נגן: DUREX SPEC AD">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt=""
@@ -958,10 +1020,10 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">DUREX SPEC AD</figcaption>
+              <figcaption class="strip-cap" dir="ltr">DUREX SPEC AD</figcaption>
             </figure>
-            <figure class="reel-item">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+            <figure class="strip-item is-tall">
+              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-lg bg-card">
                 <button type="button" class="vid vid-sm" data-yt="YiYDknTMxqc" data-ratio="9/16"
                   data-title="F35" aria-label="נגן: F35">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt=""
@@ -971,19 +1033,13 @@
                     </svg></span>
                 </button>
               </div>
-              <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">F35</figcaption>
+              <figcaption class="strip-cap" dir="ltr">F35</figcaption>
             </figure>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Wide work: an even grid, every row the same height -->
-      <div class="mx-auto mt-20 max-w-[80rem] px-5 sm:px-8 lg:mt-24">
-        <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:gap-x-8 lg:gap-y-12">
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="R48ngAvojF8" data-ratio="16/9"
+            <div class="reel-track reel-row-b">
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="R48ngAvojF8" data-ratio="16/9"
                   data-title="FINQ Ad Concept" aria-label="נגן: FINQ Ad Concept">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -991,12 +1047,12 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
-            </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">FINQ Ad Concept</figcaption>
-          </figure>
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="mBHoNeZBcOY" data-ratio="16/9"
+              </div>
+              <figcaption class="strip-cap" dir="ltr">FINQ Ad Concept</figcaption>
+            </figure>
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="mBHoNeZBcOY" data-ratio="16/9"
                   data-title="Surf Skulls" aria-label="נגן: Surf Skulls">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -1004,12 +1060,12 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
-            </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">Surf Skulls</figcaption>
-          </figure>
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="sJV-jwg2zao" data-ratio="16/9"
+              </div>
+              <figcaption class="strip-cap" dir="ltr">Surf Skulls</figcaption>
+            </figure>
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="sJV-jwg2zao" data-ratio="16/9"
                   data-title="GECKO'S Short Action Story" aria-label="נגן: GECKO'S Short Action Story">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -1017,12 +1073,12 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
-            </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">GECKO'S Short Action Story</figcaption>
-          </figure>
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="DJhr-xOOV9k" data-ratio="16/9"
+              </div>
+              <figcaption class="strip-cap" dir="ltr">GECKO'S Short Action Story</figcaption>
+            </figure>
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="DJhr-xOOV9k" data-ratio="16/9"
                   data-title="Short Comedy Action Trailer" aria-label="נגן: Short Comedy Action Trailer">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -1030,12 +1086,12 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
-            </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">Short Comedy Action Trailer</figcaption>
-          </figure>
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="9fpN4EfSm4o" data-ratio="16/9"
+              </div>
+              <figcaption class="strip-cap" dir="ltr">Short Comedy Action Trailer</figcaption>
+            </figure>
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="9fpN4EfSm4o" data-ratio="16/9"
                   data-title="Wildlife" aria-label="נגן: Wildlife">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -1043,12 +1099,12 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
-            </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">Wildlife</figcaption>
-          </figure>
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="eJf6V14qmAg" data-ratio="16/9"
+              </div>
+              <figcaption class="strip-cap" dir="ltr">Wildlife</figcaption>
+            </figure>
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="eJf6V14qmAg" data-ratio="16/9"
                   data-title="Extreme Donkey Concept" aria-label="נגן: Extreme Donkey Concept">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -1056,12 +1112,12 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
-            </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">Extreme Donkey Concept</figcaption>
-          </figure>
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="vLnmvSnLq1A" data-ratio="16/9"
+              </div>
+              <figcaption class="strip-cap" dir="ltr">Extreme Donkey Concept</figcaption>
+            </figure>
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="vLnmvSnLq1A" data-ratio="16/9"
                   data-title="Creative Spec Ad" aria-label="נגן: Creative Spec Ad">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -1069,12 +1125,12 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
-            </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">Creative Spec Ad</figcaption>
-          </figure>
-          <figure>
-            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
-              <button type="button" class="vid" data-yt="CsOnM86RLYM" data-ratio="16/9"
+              </div>
+              <figcaption class="strip-cap" dir="ltr">Creative Spec Ad</figcaption>
+            </figure>
+            <figure class="strip-item is-wide">
+              <div class="work-card relative aspect-video overflow-hidden rounded-lg bg-card">
+                <button type="button" class="vid vid-sm" data-yt="CsOnM86RLYM" data-ratio="16/9"
                   data-title="Funny Viral Video Concept" aria-label="נגן: Funny Viral Video Concept">
                   <img class="vid-thumb" src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt=""
                     loading="lazy" decoding="async" />
@@ -1082,9 +1138,11 @@
                       <path d="M8 5v14l11-7z" />
                     </svg></span>
                 </button>
+              </div>
+              <figcaption class="strip-cap" dir="ltr">Funny Viral Video Concept</figcaption>
+            </figure>
             </div>
-            <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">Funny Viral Video Concept</figcaption>
-          </figure>
+          </div>
         </div>
       </div>
     </section>
@@ -1503,12 +1561,32 @@
 
       // Done straight on the scroll event: one rect read plus one assignment is
       // cheap, and a dropped animation frame used to wedge the throttle flag.
+      // Whichever card sits nearest the middle of the screen comes forward.
+      const items = [...strip.querySelectorAll('.strip-item')];
+      const rows = [...strip.querySelectorAll('.reel-track')];
+
+      function focusCentre() {
+        const mid = window.innerWidth / 2;
+        rows.forEach(row => {
+          let best = null, bestDist = Infinity;
+          for (const el of row.children) {
+            const r = el.getBoundingClientRect();
+            const d = Math.abs(r.left + r.width / 2 - mid);
+            if (d < bestDist) { bestDist = d; best = el; }
+          }
+          for (const el of row.children) el.classList.toggle('is-focus', el === best);
+        });
+      }
+
       function onScroll() {
-        if (!bounds) return;
-        const total = pin.offsetHeight - window.innerHeight;
-        if (total <= 0) return;
-        const p = Math.min(1, Math.max(0, -pin.getBoundingClientRect().top / total));
-        strip.scrollLeft = bounds.start + (bounds.end - bounds.start) * p;
+        if (bounds) {
+          const total = pin.offsetHeight - window.innerHeight;
+          if (total > 0) {
+            const p = Math.min(1, Math.max(0, -pin.getBoundingClientRect().top / total));
+            strip.scrollLeft = bounds.start + (bounds.end - bounds.start) * p;
+          }
+        }
+        focusCentre();
       }
 
       function sync() {
@@ -1516,8 +1594,10 @@
       }
 
       sync();
+      focusCentre();
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', sync);
+      strip.addEventListener('scroll', focusCentre, { passive: true });
       wide.addEventListener('change', sync);
       calm.addEventListener('change', sync);
     })();
