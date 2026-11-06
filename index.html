@@ -778,8 +778,7 @@
 
       <!-- CTA - right (desktop) / burger (mobile) -->
       <div class="flex items-center gap-3">
-        <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
-          target="_blank" rel="noopener"
+        <a href="#contact"
           class="magnetic hidden rounded-full bg-ink px-5 py-2 text-[15px] font-semibold text-shell md:inline-block">
           צור קשר
         </a>
@@ -813,8 +812,7 @@
           <li><a href="#works" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">עבודות</a></li>
           <li><a href="#services" class="mobile-link block rounded-xl px-4 py-3 hover:bg-paper">שירותים</a></li>
           <li class="pt-2">
-            <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
-              target="_blank" rel="noopener"
+            <a href="#contact"
               class="mobile-link block rounded-full bg-ink px-4 py-3.5 text-center font-semibold text-shell">צור קשר</a>
           </li>
         </ul>
@@ -856,8 +854,7 @@
             כזה שצופים בו יותר מפעם אחת
           </p>
           <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-4" style="--reveal-delay:270ms">
-            <a href="https://wa.me/972525377655?text=%D7%94%D7%99%D7%99%20%21%20%D7%94%D7%92%D7%A2%D7%AA%D7%99%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8%20%D7%95%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%3A%29"
-              target="_blank" rel="noopener"
+            <a href="#contact"
               class="magnetic rounded-full bg-white px-8 py-3.5 text-base font-semibold text-[#1F2124]">
               בואו נדבר
             </a>
@@ -1352,7 +1349,7 @@
     </section>
 
     <!-- ================= FINAL CTA + FOOTER ================= -->
-    <footer id="contact" class="relative overflow-hidden border-t border-line bg-paper px-5 pt-24 sm:px-8 lg:pt-32">
+    <footer id="contact" class="scroll-mt-20 relative overflow-hidden border-t border-line bg-paper px-5 pt-24 sm:px-8 lg:pt-32">
       <!-- Aurora background (same treatment as the hero) -->
       <div class="absolute inset-0 z-0" aria-hidden="true">
         <div class="aurora-blob aurora-1"></div>
@@ -1389,10 +1386,22 @@
                   <p class="field-error" data-error-for="leadPhone"></p>
                 </div>
                 <div class="sm:col-span-2">
-                  <label class="field-label" for="leadIdea">רעיון או סוג העסק</label>
-                  <textarea class="field" id="leadIdea" name="idea" rows="3" required
-                    placeholder="ספרו לי בכמה מילים על הרעיון או על העסק שלכם"></textarea>
+                  <label class="field-label" for="leadEmail">אימייל</label>
+                  <input class="field" id="leadEmail" name="email" type="email" required inputmode="email"
+                    autocomplete="email" dir="ltr" placeholder="name@example.com" />
+                  <p class="field-error" data-error-for="leadEmail"></p>
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="field-label" for="leadIdea">תיאור העסק</label>
+                  <textarea class="field" id="leadIdea" name="idea" rows="2" required
+                    placeholder="במה העסק שלכם עוסק?"></textarea>
                   <p class="field-error" data-error-for="leadIdea"></p>
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="field-label" for="leadWant">במה אתם מעוניינים</label>
+                  <textarea class="field" id="leadWant" name="want" rows="2" required
+                    placeholder="מה תרצו שנפיק או ניצור עבורכם?"></textarea>
+                  <p class="field-error" data-error-for="leadWant"></p>
                 </div>
               </div>
 
@@ -1768,7 +1777,12 @@
         action: 'https://docs.google.com/forms/d/e/1FAIpQLScjAmkoG73wmd0Z9WAAjeDhx5uOuOysVZUA7d8ziCm416Tsqw/formResponse',
         name: 'entry.2016780343',   // שם מלא
         phone: 'entry.2036027740',  // טלפון ליצירת קשר
-        idea: 'entry.154341694'     // רעיון או סוג העסק
+        idea: 'entry.154341694',    // רעיון או סוג העסק
+        // The Google Form has no questions for these yet. Until it does they are
+        // folded into the idea field with labels, so no answer is ever dropped.
+        // Once the questions exist, put their entry IDs here and they split out.
+        email: '',
+        want: ''
       };
 
       const btn = document.getElementById('leadSubmit');
@@ -1780,7 +1794,9 @@
       const fields = {
         leadName: { el: document.getElementById('leadName'), msg: 'נא למלא שם' },
         leadPhone: { el: document.getElementById('leadPhone'), msg: 'נא למלא מספר טלפון תקין' },
-        leadIdea: { el: document.getElementById('leadIdea'), msg: 'נא לכתוב כמה מילים' }
+        leadEmail: { el: document.getElementById('leadEmail'), msg: 'נא למלא כתובת אימייל תקינה' },
+        leadIdea: { el: document.getElementById('leadIdea'), msg: 'נא לתאר בקצרה את העסק' },
+        leadWant: { el: document.getElementById('leadWant'), msg: 'נא לכתוב במה אתם מעוניינים' }
       };
 
       function showStatus(msg, ok) {
@@ -1805,9 +1821,18 @@
         setError('leadPhone', digits >= 9 ? '' : fields.leadPhone.msg);
         if (digits < 9) ok = false;
 
+        const email = fields.leadEmail.el.value.trim();
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+        setError('leadEmail', emailOk ? '' : fields.leadEmail.msg);
+        if (!emailOk) ok = false;
+
         const idea = fields.leadIdea.el.value.trim();
         setError('leadIdea', idea ? '' : fields.leadIdea.msg);
         if (!idea) ok = false;
+
+        const want = fields.leadWant.el.value.trim();
+        setError('leadWant', want ? '' : fields.leadWant.msg);
+        if (!want) ok = false;
         return ok;
       }
 
@@ -1829,10 +1854,24 @@
         btnText.textContent = 'שולח…';
         showStatus('', true);
 
+        const email = fields.leadEmail.el.value.trim();
+        const idea = fields.leadIdea.el.value.trim();
+        const want = fields.leadWant.el.value.trim();
+
         const body = new URLSearchParams();
         body.append(GFORM.name, fields.leadName.el.value.trim());
         body.append(GFORM.phone, fields.leadPhone.el.value.trim());
-        body.append(GFORM.idea, fields.leadIdea.el.value.trim());
+
+        // Anything without its own Google question rides along inside the idea
+        // field, labelled, rather than being silently discarded.
+        const extras = [];
+        if (GFORM.email) body.append(GFORM.email, email);
+        else extras.push('אימייל: ' + email);
+        if (GFORM.want) body.append(GFORM.want, want);
+        else extras.push('במה מעוניין: ' + want);
+
+        body.append(GFORM.idea,
+          extras.length ? 'תיאור העסק: ' + idea + '\n' + extras.join('\n') : idea);
 
         try {
           // Google forbids reading this response cross-origin, so success can't be
