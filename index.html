@@ -19,7 +19,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700;800&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700;800&family=Assistant:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 /* ---------- tokens ---------- */
 :root{
@@ -36,6 +36,7 @@
   --dark:#2B2B2D;
   --on-dark:#F4F2EE;
   --shadow:0 1px 2px rgba(23,24,26,.05), 0 12px 32px -18px rgba(23,24,26,.25);
+  --r-sm:10px; --r-md:16px; --r-lg:22px; --r-pill:999px;
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
@@ -85,38 +86,48 @@ button{font:inherit;color:inherit}
 
 /* ---------- header ---------- */
 .site-header{
-  position:sticky;top:0;z-index:60;background:color-mix(in srgb, var(--bg) 88%, transparent);
+  position:fixed;inset-inline:0;top:0;z-index:60;
+  background:color-mix(in srgb, var(--bg) 85%, transparent);
   backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);
 }
-.header-in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:64px}
-.logo{font-family:'Playfair Display',serif;font-size:1.25rem;letter-spacing:.04em;font-weight:600;direction:ltr}
-.nav{display:flex;align-items:center;gap:28px}
-.nav a{font-size:.95rem;font-weight:500;color:var(--muted);transition:color .18s}
+.header-in{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;gap:20px;height:64px}
+.logo{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88rem;font-weight:500;
+  letter-spacing:.18em;direction:ltr;color:var(--ink)}
+.nav{display:flex;align-items:center;gap:36px}
+.nav a{font-size:15px;font-weight:500;color:var(--muted);transition:color .18s}
 .nav a:hover{color:var(--ink)}
-.header-tools{display:flex;align-items:center;gap:10px}
+.header-tools{display:flex;align-items:center;gap:12px}
+.cta-pill{display:inline-block;background:var(--ink);color:var(--bg);border-radius:var(--r-pill);
+  padding:9px 22px;font-size:15px;font-weight:600;transition:opacity .18s}
+.cta-pill:hover{opacity:.88}
 .icon-btn{
-  width:38px;height:38px;display:grid;place-items:center;background:transparent;
-  border:1px solid var(--line);border-radius:999px;cursor:pointer;transition:border-color .18s,background .18s;
+  width:40px;height:40px;display:grid;place-items:center;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-pill);cursor:pointer;transition:border-color .18s;
 }
-.icon-btn:hover{border-color:var(--ink)}
-.icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.icon-btn:hover{border-color:color-mix(in srgb, var(--ink) 40%, transparent)}
+.icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ic-moon{fill:currentColor;stroke:none}
 :root[data-theme="dark"] .ic-sun{display:none}
 :root:not([data-theme="dark"]) .ic-moon{display:none}
-.nav-toggle{display:none}
+.burger{display:none;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  width:40px;height:40px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.burger span{display:block;height:1.5px;width:20px;background:var(--ink)}
+.mobile-menu{display:none;background:var(--bg);border-top:1px solid var(--line);padding:14px 24px 18px}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;border-radius:var(--r-md);padding:12px 16px;font-size:1.05rem;font-weight:500}
+.mobile-menu a:hover{background:var(--bg-alt)}
+.mobile-menu .cta-pill{text-align:center;margin-top:10px;padding:13px 16px}
 @media (max-width:860px){
-  .nav{display:none;position:absolute;inset-inline:0;top:64px;flex-direction:column;align-items:stretch;
-    gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 24px 18px}
-  .nav.open{display:flex}
-  .nav a{padding:12px 0;border-bottom:1px solid var(--line);font-size:1.05rem}
-  .nav a:last-child{border-bottom:0}
-  .nav-toggle{display:grid}
+  .nav,.header-in .cta-pill{display:none}
+  .burger{display:flex}
 }
 
 /* ---------- hero ---------- */
-.hero{padding:18px 18px 0}
+.hero{padding:82px 18px 0}
+[id]{scroll-margin-top:84px}
 .hero-media{
   position:relative;width:100%;aspect-ratio:16/7;min-height:320px;max-height:78vh;
-  overflow:hidden;background:var(--dark);
+  overflow:hidden;background:var(--dark);border-radius:var(--r-lg);
 }
 @media (max-width:700px){ .hero-media{aspect-ratio:4/5;min-height:0} }
 .hero-media video,.hero-media img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -165,45 +176,49 @@ button{font:inherit;color:inherit}
   color:var(--red);font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
   margin-bottom:10px;direction:ltr;text-align:right
 }
+.vid-frame{
+  padding:8px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);box-shadow:var(--shadow);transition:border-color .2s;
+}
+.vid-frame:hover{border-color:color-mix(in srgb, var(--red) 55%, var(--line))}
 .vid-btn{
-  display:block;width:100%;padding:0;border:0;background:var(--bg-alt);cursor:pointer;position:relative;overflow:hidden;
+  display:block;width:100%;padding:0;border:0;background:var(--bg-alt);cursor:pointer;
+  position:relative;overflow:hidden;border-radius:calc(var(--r-lg) - 8px);
 }
 .vid-btn img{width:100%;height:100%;object-fit:cover;transition:opacity .25s}
-.vid-btn:hover img{opacity:.82}
+.vid-frame:hover .vid-btn img{opacity:.85}
 .ratio-wide{aspect-ratio:16/9}
 .ratio-tall{aspect-ratio:9/16}
-.play{
-  position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
-}
+.play{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
 .play span{
   width:56px;height:56px;border-radius:999px;display:grid;place-items:center;
   background:rgba(23,24,26,.55);border:1px solid rgba(255,255,255,.6);backdrop-filter:blur(2px)
 }
 .play svg{width:16px;height:16px;fill:#fff;margin-inline-start:3px}
 
-/* ---------- 9:16 carousel ---------- */
-.reels{padding:72px 0}
-.reels-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px}
-.reels-head h3{color:#fff;font-size:1.5rem;font-weight:700}
-.reels-head .fmt{font-family:'Playfair Display',serif;direction:ltr;color:rgba(255,255,255,.8);letter-spacing:.14em;font-size:.9rem}
-.reel-scroller{
-  display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
-  padding-bottom:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+/* ---------- 9:16 coverflow ---------- */
+.reels{padding:76px 0 90px;overflow:hidden}
+.flow{position:relative;height:clamp(380px,55vw,540px);touch-action:pan-y}
+.flow-item{
+  position:absolute;top:50%;left:50%;margin:0;width:clamp(190px,17vw,272px);
+  transform:translate(-50%,-50%);cursor:pointer;
+  transition:transform .55s cubic-bezier(.22,.61,.36,1), opacity .4s;will-change:transform;
 }
-.reel-scroller::-webkit-scrollbar{display:none}
-.reel-item{flex:0 0 clamp(190px,24vw,250px);scroll-snap-align:center;margin:0}
-.reel-item .vid-btn{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.22)}
-.reel-item figcaption{
-  color:rgba(255,255,255,.92);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
-  margin-top:10px;direction:ltr;text-align:right
+@media (prefers-reduced-motion: reduce){ .flow-item{transition:none} }
+.flow-item .vid-frame{padding:7px;border-radius:var(--r-lg)}
+.flow-item.is-front .vid-frame{border-color:color-mix(in srgb, var(--ink) 55%, var(--line));
+  box-shadow:0 30px 60px -28px rgba(23,24,26,.55)}
+:root[data-theme="dark"] .flow-item.is-front .vid-frame{box-shadow:0 30px 60px -24px rgba(0,0,0,.9)}
+.flow-cap{
+  text-align:center;margin-top:20px;color:var(--muted);font-size:.85rem;letter-spacing:.14em;
+  text-transform:uppercase;direction:ltr;min-height:1.4em
 }
-.reel-ctl{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:26px}
-.reel-ctl button{
-  width:40px;height:40px;border-radius:999px;display:grid;place-items:center;cursor:pointer;
-  background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;transition:background .18s
+.dots{
+  display:flex;justify-content:center;align-items:center;gap:9px;margin:18px auto 0;width:max-content;
+  background:var(--dark);border-radius:var(--r-pill);padding:9px 14px
 }
-.reel-ctl button:hover{background:rgba(255,255,255,.14)}
-.reel-ctl svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dots button{width:8px;height:8px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.38);cursor:pointer;transition:background .2s}
+.dots button[aria-current="true"]{background:#fff}
 
 /* ---------- cta strip ---------- */
 .cta{text-align:center;padding:96px 24px}
@@ -212,7 +227,8 @@ button{font:inherit;color:inherit}
 .cta p{color:var(--muted);margin-top:14px;font-size:1.05rem}
 .btn{
   display:inline-block;margin-top:30px;background:var(--red);color:#fff;font-weight:600;
-  padding:15px 44px;border:1px solid var(--red);cursor:pointer;transition:background .18s,transform .18s;
+  padding:15px 44px;border:1px solid var(--red);border-radius:var(--r-pill);cursor:pointer;
+  transition:background .18s,transform .18s;
 }
 .btn:hover{background:var(--red-deep)}
 .btn-ghost{background:transparent;color:var(--red)}
@@ -225,7 +241,7 @@ button{font:inherit;color:inherit}
 .about-me h2{color:#fff;font-size:clamp(1.9rem,5vw,3rem);margin-bottom:34px}
 .about-me .portrait{
   width:clamp(160px,26vw,230px);aspect-ratio:3/4;object-fit:cover;margin:0 auto 28px;
-  border:1px solid rgba(255,255,255,.35)
+  border:1px solid rgba(255,255,255,.35);border-radius:var(--r-lg)
 }
 .about-me .lead{font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:14px}
 .about-me p{color:rgba(255,255,255,.92);font-weight:300;max-width:62ch;margin:0 auto;line-height:2}
@@ -245,6 +261,7 @@ button{font:inherit;color:inherit}
 .services{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}
 @media (max-width:860px){ .services{grid-template-columns:1fr} }
 .services article{background:var(--bg);padding:40px 28px}
+.media-toggle{border-radius:999px}
 .services .num{font-family:'Playfair Display',serif;direction:ltr;color:var(--red);font-size:.95rem;letter-spacing:.1em;margin-bottom:14px;display:block}
 .services h3{font-size:1.25rem;margin-bottom:10px}
 .services p{color:var(--muted);font-size:1rem;line-height:1.8}
@@ -265,15 +282,15 @@ button{font:inherit;color:inherit}
 .contact .note{color:var(--muted);margin-bottom:18px}
 .social{display:flex;gap:12px;flex-wrap:wrap}
 .social a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 18px;
-  font-weight:600;font-size:.95rem;transition:border-color .18s,background .18s}
+  font-weight:600;font-size:.95rem;border-radius:var(--r-pill);transition:border-color .18s,background .18s}
 .social a:hover{border-color:var(--red);color:var(--red)}
 .social svg{width:17px;height:17px;fill:currentColor}
-.form{background:var(--surface);border:1px solid var(--line);padding:30px;box-shadow:var(--shadow)}
+.form{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px;box-shadow:var(--shadow)}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:.88rem;font-weight:600;color:var(--muted);margin-bottom:6px}
 .field input,.field textarea,.field select{
   width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);
-  padding:12px 14px;font:inherit;font-size:1rem;border-radius:0;transition:border-color .18s
+  padding:12px 14px;font:inherit;font-size:1rem;border-radius:var(--r-sm);transition:border-color .18s
 }
 .field textarea{min-height:92px;resize:vertical}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--red);outline:none}
@@ -293,7 +310,7 @@ button{font:inherit;color:inherit}
 /* ---------- lightbox ---------- */
 .lb{position:fixed;inset:0;z-index:100;background:rgba(10,10,11,.94);display:none;place-items:center;padding:20px}
 .lb.open{display:grid}
-.lb-frame{width:min(100%,1100px);aspect-ratio:16/9;background:#000}
+.lb-frame{width:min(100%,1100px);aspect-ratio:16/9;background:#000;border-radius:var(--r-md);overflow:hidden}
 .lb-frame.tall{width:min(100%,420px);aspect-ratio:9/16}
 .lb iframe{width:100%;height:100%;border:0}
 .lb-close{position:absolute;top:18px;inset-inline-end:18px;width:44px;height:44px;border-radius:999px;
@@ -313,22 +330,28 @@ button{font:inherit;color:inherit}
 
 <header class="site-header">
   <div class="wrap header-in">
-    <a class="logo" href="#top">THE JUICE</a>
-    <nav class="nav" id="nav">
+    <a class="logo" href="#top">The&nbsp;Juice</a>
+    <nav class="nav">
+      <a href="#about">אודות</a>
       <a href="#works">עבודות</a>
       <a href="#services">שירותים</a>
-      <a href="#me">מי אני</a>
-      <a href="#contact">צרו קשר</a>
     </nav>
     <div class="header-tools">
-      <button class="icon-btn" id="themeBtn" type="button" aria-label="מעבר בין מצב בהיר לכהה">
-        <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <a class="cta-pill" href="#contact">צור קשר</a>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="מעבר בין מצב בהיר לכהה" title="מצב כהה / בהיר">
+        <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 12H2M22 12h-2.2M5.6 5.6 7.2 7.2M16.8 16.8l1.6 1.6M18.4 5.6 16.8 7.2M7.2 16.8 5.6 18.4"/></svg>
+        <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 14.9A8.5 8.5 0 0 1 9.1 3.7a8.5 8.5 0 1 0 11.2 11.2Z"/></svg>
       </button>
-      <button class="icon-btn nav-toggle" id="navBtn" type="button" aria-label="תפריט" aria-expanded="false" aria-controls="nav">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <button class="burger" id="burgerBtn" type="button" aria-label="פתיחת תפריט" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
       </button>
     </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about">אודות</a>
+    <a href="#works">עבודות</a>
+    <a href="#services">שירותים</a>
+    <a class="cta-pill" href="#contact">צור קשר</a>
   </div>
 </header>
 
@@ -353,12 +376,13 @@ button{font:inherit;color:inherit}
   </section>
 
   <!-- RED INTRO -->
-  <section class="band-red">
+  <section class="band-red" id="about">
     <div class="wrap intro">
       <h2 class="en">THE JUICE</h2>
-      <p>אנחנו מפיקים סרטונים למותגים, לעסקים ולאנשים פרטיים. מה שאפשר לדמיין אפשר ליצור.</p>
-      <p>אפשר להגיע אלינו עם תסריט מוכן מראש, או לתת לנו ליצור עבורכם קריאייטיב מאפס.</p>
-      <p>פרסומות בסגנון קולנועי, אנימציה, ריאליסטי, סרטוני הדרכה, לאירועים וכל רעיון נוסף שתאתגרו אותנו איתו.</p>
+      <p>הוא סטודיו ליצירת פרסומות וסרטוני תוכן באמצעות בינה מלאכותית.</p>
+      <p>כל פרויקט מתחיל בסיפור שרוצים לספר. משם מתפתח הרעיון, נכתבת השפה הוויזואלית ונבנה הסרטון, מהתסריט ועד המוצר הסופי.</p>
+      <p>אפשר להגיע עם כיוון ברור או עם רעיון שעוד מחפש צורה.</p>
+      <p>העבודה היא להבין מה נכון לעסק שלכם ולמותג שמאחוריו.</p>
     </div>
   </section>
 
@@ -376,132 +400,159 @@ button{font:inherit;color:inherit}
       <div class="grid-wide">
         <figure class="vid-card">
           <p class="vid-label en">Surf Skulls</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="mBHoNeZBcOY" data-ratio="wide" aria-label="נגן את הסרטון Surf Skulls">
-            <img src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="mBHoNeZBcOY" data-ratio="wide" aria-label="נגן את הסרטון Surf Skulls">
+              <img src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
         <figure class="vid-card">
           <p class="vid-label en">FINQ Ad Concept</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="R48ngAvojF8" data-ratio="wide" aria-label="נגן את הסרטון FINQ Ad Concept">
-            <img src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="R48ngAvojF8" data-ratio="wide" aria-label="נגן את הסרטון FINQ Ad Concept">
+              <img src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
         <figure class="vid-card">
           <p class="vid-label en">Gecko's Short Action Story</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="sJV-jwg2zao" data-ratio="wide" aria-label="נגן את הסרטון Gecko's Short Action Story">
-            <img src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="sJV-jwg2zao" data-ratio="wide" aria-label="נגן את הסרטון Gecko's Short Action Story">
+              <img src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
         <figure class="vid-card">
           <p class="vid-label en">Short Comedy Action Trailer</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="DJhr-xOOV9k" data-ratio="wide" aria-label="נגן את הסרטון Short Comedy Action Trailer">
-            <img src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="DJhr-xOOV9k" data-ratio="wide" aria-label="נגן את הסרטון Short Comedy Action Trailer">
+              <img src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
         <figure class="vid-card">
           <p class="vid-label en">Wildlife</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="9fpN4EfSm4o" data-ratio="wide" aria-label="נגן את הסרטון Wildlife">
-            <img src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="9fpN4EfSm4o" data-ratio="wide" aria-label="נגן את הסרטון Wildlife">
+              <img src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
         <figure class="vid-card">
           <p class="vid-label en">Extreme Donkey Concept</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="eJf6V14qmAg" data-ratio="wide" aria-label="נגן את הסרטון Extreme Donkey Concept">
-            <img src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="eJf6V14qmAg" data-ratio="wide" aria-label="נגן את הסרטון Extreme Donkey Concept">
+              <img src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
         <figure class="vid-card">
           <p class="vid-label en">Creative Spec Ad</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="vLnmvSnLq1A" data-ratio="wide" aria-label="נגן את הסרטון Creative Spec Ad">
-            <img src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="vLnmvSnLq1A" data-ratio="wide" aria-label="נגן את הסרטון Creative Spec Ad">
+              <img src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
         <figure class="vid-card">
           <p class="vid-label en">Funny Viral Video Concept</p>
-          <button class="vid-btn ratio-wide" type="button" data-yt="CsOnM86RLYM" data-ratio="wide" aria-label="נגן את הסרטון Funny Viral Video Concept">
-            <img src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
+          <div class="vid-frame">
+            <button class="vid-btn ratio-wide" type="button" data-yt="CsOnM86RLYM" data-ratio="wide" aria-label="נגן את הסרטון Funny Viral Video Concept">
+              <img src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
         </figure>
       </div>
     </div>
   </section>
 
-  <!-- 9:16 CAROUSEL -->
-  <section class="band-red reels">
+  <!-- 9:16 COVERFLOW -->
+  <section class="reels">
     <div class="wrap">
-      <div class="reels-head">
-        <h3>רילס ותוכן אנכי</h3>
-        <span class="fmt en">9 : 16</span>
+      <div class="flow" id="flow" role="group" aria-label="גלריית רילס אנכיים" tabindex="0">
+        <figure class="flow-item" data-i="0" data-title="Skate Skulls">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="VfMJoEypc7o" data-ratio="tall" aria-label="נגן את הסרטון Skate Skulls" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
+        <figure class="flow-item" data-i="1" data-title="Conference Ad">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="ZH07ViJvxlY" data-ratio="tall" aria-label="נגן את הסרטון Conference Ad" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
+        <figure class="flow-item" data-i="2" data-title="UGC Ad / Maneki Wallet">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="lfK2ZqKTPwo" data-ratio="tall" aria-label="נגן את הסרטון UGC Ad / Maneki Wallet" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
+        <figure class="flow-item" data-i="3" data-title="UGC Ad / Maneki Wallet 2">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="s8VXMFSM2VY" data-ratio="tall" aria-label="נגן את הסרטון UGC Ad / Maneki Wallet 2" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
+        <figure class="flow-item" data-i="4" data-title="Baba Casino Ad">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="F4yyQzu5_sQ" data-ratio="tall" aria-label="נגן את הסרטון Baba Casino Ad" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
+        <figure class="flow-item" data-i="5" data-title="Poker Face Ad">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="Fe3lmQgQmno" data-ratio="tall" aria-label="נגן את הסרטון Poker Face Ad" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
+        <figure class="flow-item" data-i="6" data-title="Durex Spec Ad">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="0YOPfGrgN4w" data-ratio="tall" aria-label="נגן את הסרטון Durex Spec Ad" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
+        <figure class="flow-item" data-i="7" data-title="F35">
+          <div class="vid-frame">
+            <button class="vid-btn ratio-tall" type="button" data-yt="YiYDknTMxqc" data-ratio="tall" aria-label="נגן את הסרטון F35" tabindex="-1">
+              <img src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
+            </button>
+          </div>
+        </figure>
       </div>
-      <div class="reel-scroller" id="reelStrip" tabindex="0" aria-label="גלריית סרטונים אנכיים, ניתן לגלול הצידה">
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="VfMJoEypc7o" data-ratio="tall" aria-label="נגן את הסרטון Skate Skulls">
-            <img src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>Skate Skulls</figcaption>
-        </figure>
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="ZH07ViJvxlY" data-ratio="tall" aria-label="נגן את הסרטון Conference Ad">
-            <img src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>Conference Ad</figcaption>
-        </figure>
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="lfK2ZqKTPwo" data-ratio="tall" aria-label="נגן את הסרטון UGC Ad Maneki Wallet">
-            <img src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>UGC Ad / Maneki Wallet</figcaption>
-        </figure>
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="s8VXMFSM2VY" data-ratio="tall" aria-label="נגן את הסרטון UGC Ad Maneki Wallet 2">
-            <img src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>UGC Ad / Maneki Wallet 2</figcaption>
-        </figure>
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="F4yyQzu5_sQ" data-ratio="tall" aria-label="נגן את הסרטון Baba Casino Ad">
-            <img src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>Baba Casino Ad</figcaption>
-        </figure>
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="Fe3lmQgQmno" data-ratio="tall" aria-label="נגן את הסרטון Poker Face Ad">
-            <img src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>Poker Face Ad</figcaption>
-        </figure>
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="0YOPfGrgN4w" data-ratio="tall" aria-label="נגן את הסרטון Durex Spec Ad">
-            <img src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>Durex Spec Ad</figcaption>
-        </figure>
-        <figure class="reel-item">
-          <button class="vid-btn ratio-tall" type="button" data-yt="YiYDknTMxqc" data-ratio="tall" aria-label="נגן את הסרטון F35">
-            <img src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt="" loading="lazy" />
-            <span class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span>
-          </button>
-          <figcaption>F35</figcaption>
-        </figure>
-      </div>
-      <div class="reel-ctl">
-        <button type="button" id="reelPrev" aria-label="הקודם"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-        <button type="button" id="reelNext" aria-label="הבא"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      <p class="flow-cap en" id="flowCap"></p>
+      <div class="dots" id="flowDots">
+        <button type="button" data-go="0" aria-label="סרטון 1"></button>
+        <button type="button" data-go="1" aria-label="סרטון 2"></button>
+        <button type="button" data-go="2" aria-label="סרטון 3"></button>
+        <button type="button" data-go="3" aria-label="סרטון 4"></button>
+        <button type="button" data-go="4" aria-label="סרטון 5"></button>
+        <button type="button" data-go="5" aria-label="סרטון 6"></button>
+        <button type="button" data-go="6" aria-label="סרטון 7"></button>
+        <button type="button" data-go="7" aria-label="סרטון 8"></button>
       </div>
     </div>
   </section>
@@ -663,32 +714,84 @@ block(function(){
   });
 });
 
-/* mobile nav */
+/* mobile menu */
 block(function(){
-  var btn = document.getElementById('navBtn'), nav = document.getElementById('nav');
-  if(!btn || !nav) return;
+  var btn = document.getElementById('burgerBtn'), menu = document.getElementById('mobileMenu');
+  if(!btn || !menu) return;
   btn.addEventListener('click', function(){
-    var open = nav.classList.toggle('open');
+    var open = menu.classList.toggle('open');
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
-  nav.addEventListener('click', function(e){
-    if(e.target.tagName === 'A'){ nav.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  menu.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
   });
 });
 
-/* reel carousel arrows */
+/* 9:16 coverflow: the front reel floats, the rest hide behind it */
 block(function(){
-  var s = document.getElementById('reelStrip');
-  var prev = document.getElementById('reelPrev'), next = document.getElementById('reelNext');
-  if(!s || !prev || !next) return;
-  function step(dir){
-    var item = s.querySelector('.reel-item');
-    var w = item ? item.getBoundingClientRect().width + 18 : 220;
-    s.scrollBy({ left: dir * w * 2, behavior: 'smooth' });
+  var flow = document.getElementById('flow');
+  var cap  = document.getElementById('flowCap');
+  var dots = document.getElementById('flowDots');
+  if(!flow) return;
+
+  var items = [].slice.call(flow.querySelectorAll('.flow-item'));
+  var n = items.length;
+  if(!n) return;
+  var active = 0;
+
+  function layout(){
+    items.forEach(function(el, i){
+      var off = i - active;
+      if(off >  n/2) off -= n;
+      if(off < -n/2) off += n;
+      var a = Math.abs(off);
+      var w = el.offsetWidth || 240;
+      var hidden = a > 2;
+      el.style.transform = 'translate(calc(-50% + ' + (off * w * 0.78) + 'px), -50%) scale(' + (1 - a * 0.13) + ')';
+      el.style.zIndex = String(10 - a);
+      el.style.opacity = hidden ? '0' : (a === 0 ? '1' : '.92');
+      el.style.pointerEvents = hidden ? 'none' : 'auto';
+      el.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+      el.classList.toggle('is-front', a === 0);
+      var btn = el.querySelector('.vid-btn');
+      if(btn) btn.tabIndex = a === 0 ? 0 : -1;
+    });
+    if(cap) cap.textContent = items[active].dataset.title || '';
+    if(dots) [].slice.call(dots.children).forEach(function(d, i){
+      d.setAttribute('aria-current', i === active ? 'true' : 'false');
+    });
   }
-  /* in RTL, "next" (visually left arrow is prev) — arrows are mirrored by the browser's scroll sign */
-  prev.addEventListener('click', function(){ step(1); });
-  next.addEventListener('click', function(){ step(-1); });
+  function go(i){ active = ((i % n) + n) % n; layout(); }
+
+  /* a click on a card that is not in front brings it forward instead of opening it */
+  flow.addEventListener('click', function(e){
+    var item = e.target.closest ? e.target.closest('.flow-item') : null;
+    if(!item) return;
+    var i = parseInt(item.dataset.i, 10);
+    if(i !== active){ e.preventDefault(); e.stopPropagation(); go(i); }
+  }, true);
+
+  if(dots) dots.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('[data-go]') : null;
+    if(b) go(parseInt(b.dataset.go, 10));
+  });
+
+  flow.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); go(active + 1); }
+    if(e.key === 'ArrowRight'){ e.preventDefault(); go(active - 1); }
+  });
+
+  /* swipe */
+  var x0 = null;
+  flow.addEventListener('pointerdown', function(e){ x0 = e.clientX; });
+  flow.addEventListener('pointerup', function(e){
+    if(x0 === null) return;
+    var d = e.clientX - x0; x0 = null;
+    if(Math.abs(d) > 45) go(active + (d < 0 ? 1 : -1));
+  });
+
+  window.addEventListener('resize', layout);
+  layout();
 });
 
 /* video lightbox */
