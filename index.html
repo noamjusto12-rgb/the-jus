@@ -127,7 +127,6 @@
     }
 
 
-    /* ============ Reels carousel ============ */
     .no-scrollbar {
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -137,11 +136,34 @@
       display: none;
     }
 
-    /* Soft edges so the rail reads as "continues off-screen" */
-    .rail-fade {
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent);
-      mask-image: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent);
+    /* ============ Unified work gallery ============ */
+    /* One gallery for every format. CSS columns let a 9:16 card and a 16:9 card
+       sit in the same flow at their true ratio, with no ragged rows. */
+    .work-grid {
+      column-count: 1;
+      column-gap: 1.25rem;
     }
+
+    @media (min-width: 640px) {
+      .work-grid {
+        column-count: 2;
+        column-gap: 1.5rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .work-grid {
+        column-count: 3;
+        column-gap: 1.75rem;
+      }
+    }
+
+    .work-item {
+      break-inside: avoid;
+      margin: 0 0 1.75rem;
+      -webkit-column-break-inside: avoid;
+    }
+
 
     /* ============ Video cards (lite facade - no player chrome until clicked) ============ */
     .vid {
@@ -230,9 +252,7 @@
     }
 
     .work-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 18px 42px rgb(var(--shadow) / .18);
-      border-color: rgb(var(--c-ink) / .22);
+      box-shadow: 0 14px 34px rgb(var(--shadow) / .16);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -349,10 +369,14 @@
     }
 
     /* ============ Accessibility ============ */
+    /* Parked above the viewport, not off to the side: a negative `left` in an
+       RTL document extends the scrollable width and causes a page-wide
+       horizontal scrollbar. */
     .skip-link {
       position: absolute;
-      left: -9999px;
-      top: 0;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 200;
       padding: .75rem 1.25rem;
       border-radius: 0 0 12px 12px;
@@ -362,8 +386,7 @@
     }
 
     .skip-link:focus {
-      left: 50%;
-      transform: translateX(-50%);
+      top: 0;
     }
 
     /* A visible focus ring on every interactive element, not just the cards */
@@ -673,291 +696,240 @@
         </div>
       </div>
     </section>
-    <section id="works" class="border-t border-line bg-shell px-5 py-20 sm:px-8 lg:py-28">
-      <div class="relative mx-auto max-w-[88rem]">
-
-        <div class="flex flex-col gap-3">
+    <section id="works" class="scroll-mt-20 border-t border-line bg-shell px-5 py-24 sm:px-8 lg:py-32">
+      <div class="mx-auto max-w-[80rem]">
+        <div class="mx-auto max-w-2xl text-center">
           <p class="font-mono text-xs font-medium tracking-[0.28em] text-slate2" dir="ltr">[
             01&nbsp;/&nbsp;SELECTED&nbsp;WORK ]</p>
-          <h2 class="text-3xl font-extrabold tracking-tight sm:text-5xl">עבודות</h2>
+          <h2 class="mt-5 text-4xl font-extrabold tracking-tight sm:text-6xl">עבודות</h2>
+          <p class="mt-5 text-lg leading-relaxed text-slate2">פרסומות, קמפיינים ותוכן שנוצרו בסטודיו</p>
         </div>
 
-        <!-- Vertical reels carousel (9:16) - placeholder slides, swap in real reels later -->
-        <div class="mt-14">
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <p class="font-mono text-[11px] font-medium tracking-[0.28em] text-slate2" dir="ltr">[
-                VERTICAL&nbsp;/&nbsp;9:16 ]</p>
-              <h3 class="mt-2 text-xl font-bold sm:text-2xl">רילסים ותוכן אנכי</h3>
-            </div>
-            <div class="flex gap-2">
-              <button id="reelNext" type="button" aria-label="הבא"
-                class="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface transition-colors hover:border-ink/40">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-              <button id="reelPrev" type="button" aria-label="הקודם"
-                class="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface transition-colors hover:border-ink/40">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M15 5l-7 7 7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div id="reelTrack"
-            class="no-scrollbar rail-fade mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="ZH07ViJvxlY" data-ratio="9/16"
-                  data-title="CONFERENCE AD" aria-label="נגן: CONFERENCE AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">CONFERENCE&nbsp;AD</p>
-            </div>
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="VfMJoEypc7o" data-ratio="9/16"
-                  data-title="SKATE SKULLS" aria-label="נגן: SKATE SKULLS">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">SKATE&nbsp;SKULLS</p>
-            </div>
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="F4yyQzu5_sQ" data-ratio="9/16"
-                  data-title="BABA CASINO AD" aria-label="נגן: BABA CASINO AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">BABA&nbsp;CASINO&nbsp;AD</p>
-            </div>
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="Fe3lmQgQmno" data-ratio="9/16"
-                  data-title="POKER FACE AD" aria-label="נגן: POKER FACE AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">POKER&nbsp;FACE&nbsp;AD</p>
-            </div>
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="lfK2ZqKTPwo" data-ratio="9/16"
-                  data-title="UGC AD / MANEKI WALLET" aria-label="נגן: UGC AD / MANEKI WALLET">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">UGC&nbsp;AD&nbsp;/&nbsp;MANEKI&nbsp;WALLET</p>
-            </div>
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="s8VXMFSM2VY" data-ratio="9/16"
-                  data-title="UGC AD / MANEKI WALLET 2" aria-label="נגן: UGC AD / MANEKI WALLET 2">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">UGC&nbsp;AD&nbsp;/&nbsp;MANEKI&nbsp;WALLET&nbsp;2</p>
-            </div>
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="0YOPfGrgN4w" data-ratio="9/16"
-                  data-title="DUREX SPEC AD" aria-label="נגן: DUREX SPEC AD">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">DUREX&nbsp;SPEC&nbsp;AD</p>
-            </div>
-            <div class="w-[168px] shrink-0 snap-start sm:w-[200px] lg:w-[214px]">
-              <div class="work-card relative aspect-[9/16] overflow-hidden rounded-2xl border border-line bg-card">
-                <button type="button" class="vid vid-sm" data-yt="YiYDknTMxqc" data-ratio="9/16" data-title="F35"
-                  aria-label="נגן: F35">
-                  <img class="vid-thumb" src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt=""
-                    loading="lazy" decoding="async" />
-                  <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg></span>
-                </button>
-              </div>
-              <p class="mt-3 min-h-[2.4em] px-1 font-mono text-[11px] leading-[1.2] tracking-wide text-slate2"
-                dir="ltr">F35</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Main video gallery (16:9) -->
-        <div class="mt-20 border-t border-line pt-14 lg:mt-24">
-          <p class="font-mono text-[11px] font-medium tracking-[0.28em] text-slate2" dir="ltr">[
-            HORIZONTAL&nbsp;/&nbsp;16:9 ]</p>
-          <h3 class="mt-2 text-xl font-bold sm:text-2xl">פרסומות וסרטונים</h3>
-        </div>
-
-        <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
-          <article class="sm:col-span-2">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <button type="button" class="vid" data-yt="R48ngAvojF8" data-ratio="16/9" data-title="FINQ Ad Concept"
-                aria-label="נגן: FINQ Ad Concept">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+        <div class="work-grid mt-16 lg:mt-20">
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid" data-yt="R48ngAvojF8" data-ratio="16/9"
+                data-title="FINQ Ad Concept" aria-label="נגן: FINQ Ad Concept">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/R48ngAvojF8/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-xl font-bold sm:text-3xl" dir="ltr">FINQ Ad Concept</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">AD&nbsp;CONCEPT</span>
-            </div>
-          </article>
-          <article class="">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <button type="button" class="vid" data-yt="mBHoNeZBcOY" data-ratio="16/9" data-title="Surf Skulls"
-                aria-label="נגן: Surf Skulls">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">FINQ Ad Concept</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="ZH07ViJvxlY" data-ratio="9/16"
+                data-title="CONFERENCE AD" aria-label="נגן: CONFERENCE AD">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/ZH07ViJvxlY/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Surf Skulls</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SURF</span>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">CONFERENCE AD</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="VfMJoEypc7o" data-ratio="9/16"
+                data-title="SKATE SKULLS" aria-label="נגן: SKATE SKULLS">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/VfMJoEypc7o/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-          </article>
-          <article class="">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">SKATE SKULLS</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid" data-yt="mBHoNeZBcOY" data-ratio="16/9"
+                data-title="Surf Skulls" aria-label="נגן: Surf Skulls">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/mBHoNeZBcOY/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
+            </div>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">Surf Skulls</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="F4yyQzu5_sQ" data-ratio="9/16"
+                data-title="BABA CASINO AD" aria-label="נגן: BABA CASINO AD">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/F4yyQzu5_sQ/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
+            </div>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">BABA CASINO AD</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="Fe3lmQgQmno" data-ratio="9/16"
+                data-title="POKER FACE AD" aria-label="נגן: POKER FACE AD">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/Fe3lmQgQmno/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
+            </div>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">POKER FACE AD</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
               <button type="button" class="vid" data-yt="sJV-jwg2zao" data-ratio="16/9"
                 data-title="GECKO'S Short Action Story" aria-label="נגן: GECKO'S Short Action Story">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/sJV-jwg2zao/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">GECKO'S Short Action Story</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">ACTION&nbsp;SHORT</span>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">GECKO'S Short Action Story</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="lfK2ZqKTPwo" data-ratio="9/16"
+                data-title="UGC AD / MANEKI WALLET" aria-label="נגן: UGC AD / MANEKI WALLET">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/lfK2ZqKTPwo/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-          </article>
-          <article class="">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">UGC AD / MANEKI WALLET</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="s8VXMFSM2VY" data-ratio="9/16"
+                data-title="UGC AD / MANEKI WALLET 2" aria-label="נגן: UGC AD / MANEKI WALLET 2">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/s8VXMFSM2VY/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
+            </div>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">UGC AD / MANEKI WALLET 2</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
               <button type="button" class="vid" data-yt="DJhr-xOOV9k" data-ratio="16/9"
                 data-title="Short Comedy Action Trailer" aria-label="נגן: Short Comedy Action Trailer">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/DJhr-xOOV9k/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Short Comedy Action Trailer</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">TRAILER</span>
-            </div>
-          </article>
-          <article class="">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <button type="button" class="vid" data-yt="9fpN4EfSm4o" data-ratio="16/9" data-title="Wildlife"
-                aria-label="נגן: Wildlife">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">Short Comedy Action Trailer</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="0YOPfGrgN4w" data-ratio="9/16"
+                data-title="DUREX SPEC AD" aria-label="נגן: DUREX SPEC AD">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/0YOPfGrgN4w/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Wildlife</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">WILDLIFE</span>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">DUREX SPEC AD</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid vid-sm" data-yt="YiYDknTMxqc" data-ratio="9/16"
+                data-title="F35" aria-label="נגן: F35">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/YiYDknTMxqc/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
             </div>
-          </article>
-          <article class="">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">F35</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid" data-yt="9fpN4EfSm4o" data-ratio="16/9"
+                data-title="Wildlife" aria-label="נגן: Wildlife">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/9fpN4EfSm4o/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
+                <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14l11-7z" />
+                  </svg></span>
+              </button>
+            </div>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">Wildlife</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
               <button type="button" class="vid" data-yt="eJf6V14qmAg" data-ratio="16/9"
                 data-title="Extreme Donkey Concept" aria-label="נגן: Extreme Donkey Concept">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/eJf6V14qmAg/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Extreme Donkey Concept</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">CONCEPT</span>
-            </div>
-          </article>
-          <article class="">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
-              <button type="button" class="vid" data-yt="vLnmvSnLq1A" data-ratio="16/9" data-title="Creative Spec Ad"
-                aria-label="נגן: Creative Spec Ad">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">Extreme Donkey Concept</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
+              <button type="button" class="vid" data-yt="vLnmvSnLq1A" data-ratio="16/9"
+                data-title="Creative Spec Ad" aria-label="נגן: Creative Spec Ad">
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/vLnmvSnLq1A/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Creative Spec Ad</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">SPEC&nbsp;AD</span>
-            </div>
-          </article>
-          <article class="">
-            <div class="work-card relative aspect-video overflow-hidden rounded-2xl border border-line bg-card">
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">Creative Spec Ad</figcaption>
+          </figure>
+          <figure class="work-item">
+            <div class="work-card relative aspect-video overflow-hidden rounded-xl bg-card">
               <button type="button" class="vid" data-yt="CsOnM86RLYM" data-ratio="16/9"
                 data-title="Funny Viral Video Concept" aria-label="נגן: Funny Viral Video Concept">
-                <img class="vid-thumb" src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt="" loading="lazy"
-                  decoding="async" />
+                <img class="vid-thumb" src="https://i.ytimg.com/vi/CsOnM86RLYM/maxresdefault.jpg" alt=""
+                  loading="lazy" decoding="async" />
                 <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg></span>
               </button>
             </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 px-1">
-              <h3 class="text-lg font-bold sm:text-xl" dir="ltr">Funny Viral Video Concept</h3>
-              <span class="shrink-0 font-mono text-xs text-slate2" dir="ltr">VIRAL</span>
-            </div>
-          </article>
+            <figcaption class="mt-3 px-0.5 font-mono text-[11px] leading-[1.35] tracking-wide text-slate2"
+              dir="ltr">Funny Viral Video Concept</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -1274,17 +1246,6 @@
       };
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
-    }
-
-    // --- Reels carousel arrows ---
-    const reelTrack = document.getElementById('reelTrack');
-    if (reelTrack) {
-      const amount = () => Math.round(reelTrack.clientWidth * 0.7);
-      // In RTL, advancing through content means scrolling toward negative left
-      document.getElementById('reelNext').addEventListener('click', () =>
-        reelTrack.scrollBy({ left: -amount(), behavior: 'smooth' }));
-      document.getElementById('reelPrev').addEventListener('click', () =>
-        reelTrack.scrollBy({ left: amount(), behavior: 'smooth' }));
     }
 
     // --- Video cards: thumbnail facade → lightbox player ---
