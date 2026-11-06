@@ -136,6 +136,25 @@
       display: none;
     }
 
+    /* ============ Scroll: hero stays, content rises over it ============ */
+    @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+      /* Tailwind's .relative utility is injected after this block, so the
+         selector has to out-specify it rather than rely on order. */
+      main>section.hero {
+        position: sticky;
+        top: 0;
+        z-index: 0;
+      }
+
+      /* Everything after the hero rides above it on its own opaque surface */
+      main > section:not(.hero),
+      main > footer {
+        position: relative;
+        z-index: 1;
+      }
+    }
+
+
     /* ============ Footer colour wash ============ */
     /* The original blobs drifted; the colour is kept, the motion is not. */
     .aurora-blob {
@@ -268,6 +287,26 @@
       .reel-item {
         width: 17rem;
       }
+    }
+
+
+    /* Pinned pan: the tall outer box provides the scroll distance, the inner
+       box sticks, and JS maps scroll progress onto the strip's own scrollLeft. */
+    .reel-pin-inner {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      min-height: 0;
+    }
+
+    .reel-pin.is-pinned .reel-pin-inner {
+      min-height: 100vh;
+    }
+
+    .reel-pin.is-pinned .reel-strip {
+      overflow-x: hidden;
+      scroll-snap-type: none;
     }
 
 
@@ -824,9 +863,12 @@
         </div>
       </div>
 
-      <!-- Vertical work: an edge-to-edge filmstrip you scroll sideways -->
-      <div class="reel-strip mt-16 lg:mt-20">
-        <div class="reel-track">
+      <!-- Vertical work: an edge-to-edge filmstrip. On wide screens it pans
+           sideways while the section is pinned; elsewhere it is a plain swipe. -->
+      <div id="reelPin" class="reel-pin mt-16 lg:mt-20">
+        <div class="reel-pin-inner">
+          <div id="reelStrip" class="reel-strip">
+            <div class="reel-track">
             <figure class="reel-item">
               <div class="work-card relative aspect-[9/16] overflow-hidden rounded-xl bg-card">
                 <button type="button" class="vid vid-sm" data-yt="ZH07ViJvxlY" data-ratio="9/16"
@@ -931,6 +973,8 @@
               </div>
               <figcaption class="mt-3 px-0.5 font-mono text-[11px] tracking-wide text-slate2" dir="ltr">F35</figcaption>
             </figure>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1416,6 +1460,66 @@
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeVid();
       });
+    })();
+
+    // --- Work filmstrip: pan sideways while the section is pinned ---
+    (function () {
+      const pin = document.getElementById('reelPin');
+      const strip = document.getElementById('reelStrip');
+      if (!pin || !strip) return;
+
+      const wide = window.matchMedia('(min-width: 1024px)');
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let bounds = null;
+
+      // RTL browsers disagree on the sign and origin of scrollLeft, so the
+      // usable range is measured rather than assumed.
+      function measure() {
+        const prev = strip.scrollLeft;
+        strip.scrollLeft = -1e7; const min = strip.scrollLeft;
+        strip.scrollLeft = 1e7; const max = strip.scrollLeft;
+        strip.scrollLeft = prev;
+        // Resting position is 0 in both directions; the far end is whichever
+        // extreme sits further from it. LTR ends positive, RTL ends negative.
+        return Math.abs(min) > Math.abs(max)
+          ? { start: max, end: min }
+          : { start: min, end: max };
+      }
+
+      function enable() {
+        pin.classList.add('is-pinned');
+        bounds = measure();
+        const travel = Math.abs(bounds.end - bounds.start);
+        // 1px of page scroll ~ 1px of pan, plus one screen to hold it pinned
+        pin.style.height = (window.innerHeight + travel) + 'px';
+        onScroll();
+      }
+
+      function disable() {
+        pin.classList.remove('is-pinned');
+        pin.style.height = '';
+        bounds = null;
+      }
+
+      // Done straight on the scroll event: one rect read plus one assignment is
+      // cheap, and a dropped animation frame used to wedge the throttle flag.
+      function onScroll() {
+        if (!bounds) return;
+        const total = pin.offsetHeight - window.innerHeight;
+        if (total <= 0) return;
+        const p = Math.min(1, Math.max(0, -pin.getBoundingClientRect().top / total));
+        strip.scrollLeft = bounds.start + (bounds.end - bounds.start) * p;
+      }
+
+      function sync() {
+        if (wide.matches && !calm.matches) enable(); else disable();
+      }
+
+      sync();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', sync);
+      wide.addEventListener('change', sync);
+      calm.addEventListener('change', sync);
     })();
 
     // --- Theme toggle (initial value is set pre-paint in <head>) ---
