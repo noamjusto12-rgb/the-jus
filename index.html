@@ -97,6 +97,12 @@ button{font:inherit;color:inherit}
 .nav a{font-size:15px;font-weight:500;color:var(--muted);transition:color .18s}
 .nav a:hover{color:var(--ink)}
 .header-tools{display:flex;align-items:center;gap:12px}
+.lang-btn{
+  height:40px;padding:0 15px;border:1px solid var(--line);background:var(--surface);
+  border-radius:var(--r-pill);font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.78rem;font-weight:500;letter-spacing:.1em;cursor:pointer;transition:border-color .18s;
+}
+.lang-btn:hover{border-color:color-mix(in srgb, var(--ink) 40%, transparent)}
 .cta-pill{display:inline-block;background:var(--ink);color:var(--bg);border-radius:var(--r-pill);
   padding:9px 22px;font-size:15px;font-weight:600;transition:opacity .18s}
 .cta-pill:hover{opacity:.88}
@@ -167,8 +173,8 @@ main>section.band-dark{background:var(--dark)}
 /* ---------- red band ---------- */
 .band-red{background:var(--red);color:var(--on-red)}
 .band-dark{background:var(--dark);color:var(--on-dark)}
-.intro{padding:72px 24px;text-align:right}
-.intro h2{font-family:'Playfair Display',serif;direction:ltr;text-align:right;font-size:1.45rem;letter-spacing:.08em;font-weight:600;margin-bottom:22px}
+.intro{padding:72px 24px;text-align:start}
+.intro h2{font-family:'Playfair Display',serif;direction:ltr;text-align:start;font-size:1.45rem;letter-spacing:.08em;font-weight:600;margin-bottom:22px}
 .intro p{font-size:clamp(1.02rem,2.1vw,1.22rem);line-height:2;font-weight:300;color:rgba(255,255,255,.95);
   max-width:62ch;margin-inline-start:0;margin-inline-end:auto}
 .intro p + p{margin-top:16px}
@@ -195,6 +201,7 @@ main>section.band-dark{background:var(--dark)}
   color:var(--red);font-weight:700;font-size:clamp(1rem,1.8vw,1.45rem);letter-spacing:.05em;
   text-transform:uppercase;margin-bottom:14px;direction:ltr;text-align:right
 }
+[dir="ltr"] .vid-label{text-align:left}
 .vid-frame{
   padding:0;background:var(--bg-alt);border:1px solid var(--line);
   border-radius:4px;overflow:hidden;transition:border-color .2s;
@@ -307,7 +314,7 @@ main>section.band-dark{background:var(--dark)}
 .contact{padding:92px 0}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 @media (max-width:900px){ .contact-grid{grid-template-columns:1fr;gap:40px} }
-.contact h2{font-family:'Playfair Display',serif;direction:ltr;text-align:right;color:var(--red);
+.contact h2{font-family:'Playfair Display',serif;direction:ltr;text-align:start;color:var(--red);
   font-size:clamp(2.4rem,6vw,3.6rem);font-weight:700;margin-bottom:18px}
 .contact .sub{font-size:clamp(1.1rem,2.4vw,1.4rem);font-weight:600;line-height:1.6;margin-bottom:22px}
 .contact .note{color:var(--muted);margin-bottom:18px}
@@ -368,6 +375,7 @@ main>section.band-dark{background:var(--dark)}
     </nav>
     <div class="header-tools">
       <a class="cta-pill" href="#contact">צור קשר</a>
+      <button class="lang-btn" id="langBtn" type="button" aria-label="Switch to English">EN</button>
       <button class="icon-btn" id="themeBtn" type="button" aria-label="מעבר בין מצב בהיר לכהה" title="מצב כהה / בהיר">
         <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 12H2M22 12h-2.2M5.6 5.6 7.2 7.2M16.8 16.8l1.6 1.6M18.4 5.6 16.8 7.2M7.2 16.8 5.6 18.4"/></svg>
         <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 14.9A8.5 8.5 0 0 1 9.1 3.7a8.5 8.5 0 1 0 11.2 11.2Z"/></svg>
@@ -861,6 +869,90 @@ block(function(){
   [].slice.call(track.children).forEach(function(el){ track.appendChild(el.cloneNode(true)); });
 });
 
+/* ---- English version: one dictionary keyed by the Hebrew on the page ---- */
+block(function(){
+  var EN = {
+    /* header */
+    "אודות":"About", "עבודות":"Work", "צור קשר":"Contact", "דלג לתוכן הראשי":"Skip to main content",
+    /* hero */
+    "אפשר להפסיק לחפש<br>בואו נתחיל ליצור":"Stop looking<br>let's start creating",
+    "פרסומות סרטונים ותוכן שפעם היה אפשר רק לדמיין<br>סגנון ייחודי ויצירתי<br>כזה שצופים בו יותר מפעם אחת":
+      "Ads, films and content that used to be imaginable only<br>a creative style of its own<br>the kind people watch more than once",
+    "בואו נדבר":"Let's talk", "צפו בעבודות":"See the work",
+    /* intro */
+    "הוא סטודיו ליצירת פרסומות וסרטוני תוכן באמצעות בינה מלאכותית.":
+      "is a studio making ads and content films with artificial intelligence.",
+    "כל פרויקט מתחיל בסיפור שרוצים לספר. משם מתפתח הרעיון, נכתבת השפה הוויזואלית ונבנה הסרטון, מהתסריט ועד המוצר הסופי.":
+      "Every project starts with a story worth telling. From there the idea grows, the visual language is written and the film is built, from script to final cut.",
+    "אפשר להגיע עם כיוון ברור או עם רעיון שעוד מחפש צורה.":
+      "You can come with a clear direction, or with an idea still looking for its shape.",
+    "העבודה היא להבין מה נכון לעסק שלכם ולמותג שמאחוריו.":
+      "The work is understanding what is right for your business and the brand behind it.",
+    /* works */
+    "סגנונות :":"Styles:", "פרסומות":"Ads", "קליפים":"Clips",
+    "סרטוני הדרכה":"Explainers", "קונספטים":"Concepts",
+    /* cta */
+    "יש לכם כבר פרויקט בראש ?<br><em>אשמח לשמוע</em>":"Already have a project in mind?<br><em>I'd love to hear it</em>",
+    /* about me */
+    "קצת עליי":"A bit about me", "אני נעם":"I'm Noam",
+    "היוצר מאחורי – <span class=\"en\">THE JUICE</span>":"The creator behind <span class=\"en\">THE JUICE</span>",
+    "עם רקע בשיווק דיגיטלי יצירת וידאו ואהבה לקריאייטיב חד ושנון.":
+      "With a background in digital marketing, video making and a love for sharp, witty creative.",
+    "אני אוהב לקחת רעיון שעוד נמצא בראש ולתת לו צורה על המסך":
+      "I like taking an idea that still lives in someone's head and giving it a shape on screen.",
+    "להבין מה עובד ומה מוכר, מה גורם לאנשים לעצור.":
+      "Understanding what works and what sells, what makes people stop.",
+    "היום אפשר ליצור מהמחשב פרסומות סצנות שפעם דרשו הפקה שלמה, ולתת מקום גם לרעיון וגם לפרטים הקטנים שבביצוע":
+      "Today a laptop can create ads and scenes that once needed a full production, leaving room for both the idea and the small details of the craft.",
+    "קונספט מקורי":"Original concept", "יחס אישי":"Personal attention", "זמינות":"Availability",
+    /* brands */
+    "מותגים שעבדנו איתם":"Brands we have worked with",
+    /* contact */
+    "מוכנים לקחת את המותג שלכם צעד אחד קדימה?":"Ready to take your brand one step forward?",
+    "השאירו פרטים ואחזור אליכם. מעדיפים לדבר ישירות? מוזמנים גם בוואטסאפ או באינסטגרם.":
+      "Leave your details and I'll get back to you. Prefer to talk directly? WhatsApp and Instagram are open.",
+    "שם":"Name", "אימייל":"Email", "טלפון":"Phone",
+    "תיאור העסק":"About your business", "במה אתם מעוניינים":"What are you looking for",
+    "שליחה":"Send",
+    /* footer */
+    "מדיניות פרטיות":"Privacy policy", "הצהרת נגישות":"Accessibility statement"
+  };
+
+  var TITLE = { he: document.title, en: "The Juice — AI creative studio" };
+  var btn = document.getElementById('langBtn');
+  if(!btn) return;
+
+  var nodes = [].slice.call(document.querySelectorAll('h1,h2,h3,p,li,a,span,label,button,figcaption'));
+  var targets = [];
+  nodes.forEach(function(el){
+    /* only leaves: anything holding another translatable block is skipped */
+    if(el.querySelector('h1,h2,h3,p,li,a,label,button,figcaption')) return;
+    var key = el.innerHTML.replace(/<br\s*\/?>/gi,'<br>').replace(/\s+/g,' ').trim();
+    if(EN[key] !== undefined) targets.push([el, el.innerHTML, EN[key]]);
+  });
+
+  function apply(lang){
+    var en = lang === 'en';
+    document.documentElement.lang = en ? 'en' : 'he';
+    document.documentElement.dir  = en ? 'ltr' : 'rtl';
+    document.title = en ? TITLE.en : TITLE.he;
+    targets.forEach(function(t){ t[0].innerHTML = en ? t[2] : t[1]; });
+    btn.textContent = en ? 'עב' : 'EN';
+    btn.setAttribute('aria-label', en ? 'מעבר לעברית' : 'Switch to English');
+    window.JUICE_LANG = lang;
+  }
+
+  btn.addEventListener('click', function(){
+    var next = window.JUICE_LANG === 'en' ? 'he' : 'en';
+    apply(next);
+    try{ localStorage.setItem('juice-lang', next); }catch(e){}
+  });
+
+  var saved = 'he';
+  try{ saved = localStorage.getItem('juice-lang') || 'he'; }catch(e){}
+  apply(saved);
+});
+
 /* lead form -> Google Form */
 block(function(){
   var GFORM = {
@@ -887,7 +979,7 @@ block(function(){
 
     if(!name || !phone){
       msg.className = 'form-msg err';
-      msg.textContent = 'צריך שם וטלפון כדי שאוכל לחזור אליכם.';
+      msg.textContent = window.JUICE_LANG === 'en' ? 'A name and a phone number are needed so I can get back to you.' : 'צריך שם וטלפון כדי שאוכל לחזור אליכם.';
       return;
     }
 
@@ -912,11 +1004,11 @@ block(function(){
       .then(function(){
         form.reset();
         msg.className = 'form-msg ok';
-        msg.textContent = 'תודה! הפרטים התקבלו, אחזור אליכם בהקדם.';
+        msg.textContent = window.JUICE_LANG === 'en' ? 'Thank you! Your details came through, I will be in touch shortly.' : 'תודה! הפרטים התקבלו, אחזור אליכם בהקדם.';
       })
       .catch(function(){
         msg.className = 'form-msg err';
-        msg.textContent = 'השליחה נכשלה. אפשר לפנות אליי בוואטסאפ.';
+        msg.textContent = window.JUICE_LANG === 'en' ? 'Sending failed. You can reach me on WhatsApp.' : 'השליחה נכשלה. אפשר לפנות אליי בוואטסאפ.';
       })
       .finally(function(){ btn.disabled = false; });
   });
