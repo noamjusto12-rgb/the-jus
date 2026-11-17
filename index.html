@@ -28,7 +28,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700;800&family=Assistant:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Playfair+Display:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 /* ---------- tokens ---------- */
 :root{
@@ -68,12 +68,12 @@ html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none !important} }
 body{
   margin:0; background:var(--bg); color:var(--ink);
-  font-family:'Assistant',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-family:'Heebo',system-ui,-apple-system,'Segoe UI',sans-serif;
   font-size:17px; line-height:1.75; font-weight:400;
   -webkit-font-smoothing:antialiased;
 }
 img,video{display:block;max-width:100%}
-h1,h2,h3,h4{margin:0;font-family:'Frank Ruhl Libre',Georgia,serif;font-weight:700;line-height:1.12;letter-spacing:-.01em}
+h1,h2,h3,h4{margin:0;font-family:'Heebo',system-ui,sans-serif;font-weight:800;line-height:1.15;letter-spacing:-.02em}
 p{margin:0}
 ul{margin:0;padding:0;list-style:none}
 a{color:inherit;text-decoration:none}
@@ -83,9 +83,10 @@ button{font:inherit;color:inherit}
 
 .wrap{max-width:1180px;margin-inline:auto;padding-inline:24px}
 .wrap-narrow{max-width:860px;margin-inline:auto;padding-inline:24px}
-.en{font-family:'Playfair Display',Georgia,serif;direction:ltr;unicode-bidi:isolate}
+.en{direction:ltr;unicode-bidi:isolate}
+.wordmark{font-family:'Playfair Display',Georgia,serif}
 .eyebrow{
-  font-family:'Assistant',sans-serif;font-size:.72rem;font-weight:600;
+  font-family:'Heebo',sans-serif;font-size:.72rem;font-weight:600;
   letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
 }
 
@@ -318,13 +319,13 @@ main>section.band-dark{background:var(--dark)}
 @media (max-width:860px){ .services{grid-template-columns:1fr} }
 .services article{background:var(--bg);padding:40px 28px}
 .media-toggle{border-radius:999px}
-.services .num{font-family:'Playfair Display',serif;direction:ltr;color:var(--red);font-size:.95rem;letter-spacing:.1em;margin-bottom:14px;display:block}
+.services .num{direction:ltr;color:var(--red);font-size:.95rem;letter-spacing:.1em;margin-bottom:14px;display:block}
 .services h3{font-size:1.25rem;margin-bottom:10px}
 .services p{color:var(--muted);font-size:1rem;line-height:1.8}
 
 /* ---------- quote ---------- */
 .quote{padding:74px 24px;text-align:center}
-.quote blockquote{margin:0;font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.15rem,2.6vw,1.5rem);
+.quote blockquote{margin:0;font-size:clamp(1.15rem,2.6vw,1.5rem);
   line-height:1.9;max-width:54ch;margin-inline:auto}
 .quote cite{display:block;margin-top:18px;font-style:normal;color:var(--red);font-weight:600;font-size:.9rem;letter-spacing:.1em;direction:ltr}
 
@@ -332,8 +333,8 @@ main>section.band-dark{background:var(--dark)}
 .contact{padding:92px 0}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 @media (max-width:900px){ .contact-grid{grid-template-columns:1fr;gap:40px} }
-.contact h2{font-family:'Playfair Display',serif;direction:ltr;color:var(--red);
-  font-size:clamp(2.4rem,6vw,3.6rem);font-weight:700;margin-bottom:18px}
+.contact h2{direction:ltr;color:var(--red);
+  font-size:clamp(2.4rem,6vw,3.6rem);font-weight:900;letter-spacing:-.01em;margin-bottom:18px}
 .contact .sub{font-size:clamp(1.1rem,2.4vw,1.4rem);font-weight:600;line-height:1.6;margin-bottom:22px}
 .contact .note{color:var(--muted);margin-bottom:18px}
 .social{display:flex;gap:12px;flex-wrap:wrap}
