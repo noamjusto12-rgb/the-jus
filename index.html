@@ -218,12 +218,15 @@ main>section.band-dark{background:var(--dark)}
   text-transform:uppercase;margin-bottom:14px;direction:ltr;text-align:right
 }
 [dir="ltr"] .vid-label{text-align:left}
+[dir="ltr"] .hero-mark h1,[dir="ltr"] .cta h2{text-transform:uppercase;letter-spacing:-.01em}
 [dir="rtl"] .intro h2,[dir="rtl"] .contact h2{text-align:right}
 [dir="ltr"] .intro h2,[dir="ltr"] .contact h2{text-align:left}
 .vid-frame{
   padding:0;background:var(--bg-alt);border:1px solid var(--line);
   border-radius:4px;overflow:hidden;transition:border-color .2s;
 }
+.vid-card .vid-frame{border:2px solid var(--red)}
+.vid-card .vid-frame:hover{border-color:var(--red-deep)}
 .vid-frame:hover{border-color:color-mix(in srgb, var(--red) 55%, var(--line))}
 .vid-btn{
   display:block;width:100%;padding:0;border:0;background:var(--bg-alt);cursor:pointer;
@@ -250,6 +253,8 @@ main>section.band-dark{background:var(--dark)}
 }
 @media (prefers-reduced-motion: reduce){ .flow-item{transition:none} }
 .flow-item .vid-frame{padding:7px;background:var(--surface);border-radius:var(--r-lg)}
+.flow-item .vid-btn{border-radius:calc(var(--r-lg) - 7px);overflow:hidden}
+.flow-item .vid-btn img{border-radius:inherit}
 .flow-item.is-front .vid-frame{border-color:color-mix(in srgb, var(--ink) 55%, var(--line));
   box-shadow:0 30px 60px -28px rgba(23,24,26,.55)}
 :root[data-theme="dark"] .flow-item.is-front .vid-frame{box-shadow:0 30px 60px -24px rgba(0,0,0,.9)}
@@ -909,48 +914,48 @@ block(function(){
     /* hero */
     "אפשר להפסיק לחפש<br>בואו נתחיל ליצור":"Stop looking<br>let's start creating",
     "פרסומות סרטונים ותוכן שפעם היה אפשר רק לדמיין<br>סגנון ייחודי ויצירתי<br>כזה שצופים בו יותר מפעם אחת":
-      "Ads, films and content that used to be imaginable only<br>a creative style of its own<br>the kind people watch more than once",
-    "בואו נדבר":"Let's talk", "צפו בעבודות":"See the work",
+      "Ads, films and content that used to live only in your imagination<br>A creative style of its own<br>The kind people watch more than once",
+    "בואו נדבר":"Let's talk", "צפו בעבודות":"See our work",
     /* intro */
     "הוא סטודיו ליצירת פרסומות וסרטוני תוכן באמצעות בינה מלאכותית.":
-      "is a studio making ads and content films with artificial intelligence.",
+      "is a studio creating ads and branded content with artificial intelligence.",
     "כל פרויקט מתחיל בסיפור שרוצים לספר. משם מתפתח הרעיון, נכתבת השפה הוויזואלית ונבנה הסרטון, מהתסריט ועד המוצר הסופי.":
-      "Every project starts with a story worth telling. From there the idea grows, the visual language is written and the film is built, from script to final cut.",
+      "Every project starts with a story worth telling. From there the idea takes shape, the visual language is defined and the film is built, from script to final cut.",
     "אפשר להגיע עם כיוון ברור או עם רעיון שעוד מחפש צורה.":
-      "You can come with a clear direction, or with an idea still looking for its shape.",
+      "Come to us with a clear direction, or with an idea that is still taking shape.",
     "העבודה היא להבין מה נכון לעסק שלכם ולמותג שמאחוריו.":
-      "The work is understanding what is right for your business and the brand behind it.",
+      "Our job is to work out what is right for your business and for the brand behind it.",
     /* works */
     "סגנונות :":"Styles:", "פרסומות":"Ads", "קליפים":"Clips",
-    "סרטוני הדרכה":"Explainers", "קונספטים":"Concepts",
+    "סרטוני הדרכה":"Explainer videos", "קונספטים":"Concepts",
     /* cta */
     "יש לכם כבר פרויקט בראש ?<br><em>אשמח לשמוע</em>":"Already have a project in mind?<br><em>I'd love to hear it</em>",
     /* about me */
     "קצת עליי":"A bit about me", "אני נעם":"I'm Noam",
     "היוצר מאחורי – <span class=\"en\">THE JUICE</span>":"The creator behind <span class=\"en\">THE JUICE</span>",
     "עם רקע בשיווק דיגיטלי יצירת וידאו ואהבה לקריאייטיב חד ושנון.":
-      "With a background in digital marketing, video making and a love for sharp, witty creative.",
+      "I come from digital marketing and video production, with a love for sharp, witty creative work.",
     "אני אוהב לקחת רעיון שעוד נמצא בראש ולתת לו צורה על המסך":
-      "I like taking an idea that still lives in someone's head and giving it a shape on screen.",
+      "I like taking an idea that still lives in someone's head and giving it shape on screen.",
     "להבין מה עובד ומה מוכר, מה גורם לאנשים לעצור.":
-      "Understanding what works and what sells, what makes people stop.",
+      "Knowing what works, what sells, and what makes people stop scrolling.",
     "היום אפשר ליצור מהמחשב פרסומות סצנות שפעם דרשו הפקה שלמה, ולתת מקום גם לרעיון וגם לפרטים הקטנים שבביצוע":
-      "Today a laptop can create ads and scenes that once needed a full production, leaving room for both the idea and the small details of the craft.",
-    "קונספט מקורי":"Original concept", "יחס אישי":"Personal attention", "זמינות":"Availability",
+      "Today a single computer can produce ads and scenes that once took a full crew, which leaves room for the idea and for the small details of the craft.",
+    "קונספט מקורי":"Original concept", "יחס אישי":"Personal attention", "זמינות":"Always reachable",
     /* brands */
     "מותגים שעבדנו איתם":"Brands we have worked with",
     /* contact */
     "מוכנים לקחת את המותג שלכם צעד אחד קדימה?":"Ready to take your brand one step forward?",
     "השאירו פרטים ואחזור אליכם. מעדיפים לדבר ישירות? מוזמנים גם בוואטסאפ או באינסטגרם.":
-      "Leave your details and I'll get back to you. Prefer to talk directly? WhatsApp and Instagram are open.",
+      "Leave your details and I will get back to you. Prefer to talk directly? Find me on WhatsApp or Instagram.",
     "שם":"Name", "אימייל":"Email", "טלפון":"Phone",
-    "תיאור העסק":"About your business", "במה אתם מעוניינים":"What are you looking for",
+    "תיאור העסק":"Tell us about your business", "במה אתם מעוניינים":"What are you looking for?",
     "שליחה":"Send",
     /* footer */
     "מדיניות פרטיות":"Privacy policy", "הצהרת נגישות":"Accessibility statement"
   };
 
-  var TITLE = { he: document.title, en: "The Juice — AI creative studio" };
+  var TITLE = { he: document.title, en: "The Juice | AI Creative Studio" };
   var btn = document.getElementById('langBtn');
   if(!btn) return;
 
@@ -1011,7 +1016,7 @@ block(function(){
 
     if(!name || !phone){
       msg.className = 'form-msg err';
-      msg.textContent = window.JUICE_LANG === 'en' ? 'A name and a phone number are needed so I can get back to you.' : 'צריך שם וטלפון כדי שאוכל לחזור אליכם.';
+      msg.textContent = window.JUICE_LANG === 'en' ? 'Please add your name and phone number so I can get back to you.' : 'צריך שם וטלפון כדי שאוכל לחזור אליכם.';
       return;
     }
 
@@ -1036,11 +1041,11 @@ block(function(){
       .then(function(){
         form.reset();
         msg.className = 'form-msg ok';
-        msg.textContent = window.JUICE_LANG === 'en' ? 'Thank you! Your details came through, I will be in touch shortly.' : 'תודה! הפרטים התקבלו, אחזור אליכם בהקדם.';
+        msg.textContent = window.JUICE_LANG === 'en' ? 'Thanks! Your details came through. I will be in touch shortly.' : 'תודה! הפרטים התקבלו, אחזור אליכם בהקדם.';
       })
       .catch(function(){
         msg.className = 'form-msg err';
-        msg.textContent = window.JUICE_LANG === 'en' ? 'Sending failed. You can reach me on WhatsApp.' : 'השליחה נכשלה. אפשר לפנות אליי בוואטסאפ.';
+        msg.textContent = window.JUICE_LANG === 'en' ? 'Something went wrong. You can reach me on WhatsApp instead.' : 'השליחה נכשלה. אפשר לפנות אליי בוואטסאפ.';
       })
       .finally(function(){ btn.disabled = false; });
   });
